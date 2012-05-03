@@ -5,6 +5,17 @@
 
 package controlador;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.TimeZone;
+import javax.swing.JOptionPane;
 import negocios.EncabezadoCP;
 import negocios.EncabezadoCT;
 import negocios.EncabezadoPago;
@@ -34,9 +45,7 @@ public class Algoritmos
         char letra;
         for(int i=0;i<cadena.length();i++)
         {
-            System.out.println("El valor de i es: "+i);
             letra = cadena.charAt(i);
-            System.out.println("EL valor de la letra es: "+letra);
             if((letra == ':') || (letra == '-'))
             {
                 contador++;
@@ -52,7 +61,6 @@ public class Algoritmos
     
     private void cargarCP(int i, StringBuffer cadena )
     {
-        System.out.println("La cadena que recive cargar es: "+cadena.toString());
         switch(i)
         {
             case 2:
@@ -94,7 +102,6 @@ public class Algoritmos
     
     private void cargarCT(int i, StringBuffer cadena )
     {
-        System.out.println("La cadena que recive cargar es: "+cadena.toString());
         switch(i)
         {
             case 2:
@@ -111,23 +118,29 @@ public class Algoritmos
         }
     }
     
-    public EncabezadoPago getEncabezadoPago(String cadena){        
+    public EncabezadoPago getEncabezadoPago(String cadena)
+    {
         int contador = 0;
         StringBuffer subCadena = new StringBuffer();
         char letra;
-        for(int i=0;i<cadena.length();i++){
+        for(int i=0;i<cadena.length();i++)
+        {
             letra = cadena.charAt(i);
-            
-            if(letra == '-'){
+            if(letra == '-')
+            {
                 contador++;
-                this.cargarPago(contador, subCadena);
+                this.cargarPago(contador, subCadena);                
                 break;
-            }else{
-                if(letra == ':'){
+            }
+            else
+            {
+                if(letra == ':')
+                {
                     contador++;
                     this.cargarPago(contador, subCadena);
                     subCadena.delete(0, subCadena.length());
-                }else
+                }
+                else
                     subCadena.append(letra);
             }
         }
@@ -136,19 +149,82 @@ public class Algoritmos
     
     private void cargarPago(int i, StringBuffer cadena )
     {
-//        System.out.println("el indice es: "+ i);
-//        System.out.println("La cadena que recive cargar es: "+cadena.toString());
-        
-        
         switch(i)
-        {
+        {           
             case 2:
-                    this.encPago.setIdencabezado(Long.parseLong(cadena.toString()));
+                    System.out.println("cadena dos: "+cadena.toString().trim());
+                    this.encPago.setIdencabezado(Long.parseLong(cadena.toString().trim()));
                     break;
             case 3:
+                System.out.println("cadena tres: "+cadena.toString().trim());
                     this.encPago.setMatricula(Long.parseLong(cadena.toString().trim()));
                     break;
         }
     }
+    
+    public Collection devolverCPImpaga()
+    {
+        CListar listar = new CListar();
+        Collection constancias = new ArrayList();
+        constancias = listar.hacerListadoEncabezadoCP(new EncabezadoCP(),1,"0","0");
+        listar = null;
+        return constancias;
+    }
+    
+    public Collection devolverCTImpaga()
+    {
+        CListar listar = new CListar();
+        Collection constancias = new ArrayList();
+        constancias = listar.hacerListadoEncabezadoCT(new EncabezadoCT(),1,"0","0");
+        listar = null;
+        return constancias;
+    }
+    
+    public Collection devolverCuotaImpaga()
+    {
+        CListar listar = new CListar();
+        Collection vCuotas = new ArrayList();
+        Collection temp = new ArrayList();
+        EncabezadoPago encabezado = new EncabezadoPago();
+        encabezado.setIdencabezado(0);
+        temp = listar.hacerListado(encabezado);
+        Iterator it = temp.iterator();
+        while(it.hasNext())
+        {
+            EncabezadoPago e = (EncabezadoPago)it.next();
+            if(e.getNrofactura() == 0)
+                vCuotas.add(e);
+            e = null;
+        }
+        temp = null;
+        it = null;
+        listar = null;
+        encabezado = null;
+        return vCuotas;
+    }
+    
+    public Timestamp obtenerFechayHoraDeSistema(){
+        //permite obtener lafecha correcta del sistema operativo con zona
+        //horaria indicada,
+        // ay q tener correctamente configurado el sistemaopertivo con su hora
+        //y zona horaria
+        Locale l = new Locale("es","AR");
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/Jujuy"),l);
+//        System.out.println("FECHA CORRECTA: " + cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH)+1) + "-" + cal.get(Calendar.DATE) + " " + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND));        
+        String fecha=(cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH)+1) + "-" + cal.get(Calendar.DATE) + " " + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND));
+
+      Date date=null;      
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");      
+        try{
+             date = sdf.parse(fecha);
+        }catch(ParseException pe){
+            JOptionPane.showMessageDialog(null, "Admin: hubo problemas con lafecha de cierre de caja, revise la configuracion horaria", "No se pudo parsear la fecha de cierre",JOptionPane.WARNING_MESSAGE);
+        }      
+      Timestamp fechaSistema = new Timestamp(date.getTime());      
+//      System.out.println(fechaSistema.toString());      
+        
+      return fechaSistema;
+    }
+
 
 }

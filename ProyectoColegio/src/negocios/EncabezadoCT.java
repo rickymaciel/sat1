@@ -62,6 +62,9 @@ public class EncabezadoCT extends Transaccion {
     
     private String ordenTrabajo;
     
+    private String descripcionPlano;
+    
+    private String leyenda;
     
 
     public EncabezadoCT () {
@@ -281,6 +284,22 @@ public class EncabezadoCT extends Transaccion {
 
     public void setOrdenTrabajo(String ordenTrabajo) {
         this.ordenTrabajo = ordenTrabajo;
+    }
+
+    public String getDescripcionPlano() {
+        return descripcionPlano;
+    }
+
+    public void setDescripcionPlano(String descripcionPlano) {
+        this.descripcionPlano = descripcionPlano;
+    }
+
+    public String getLeyenda() {
+        return leyenda;
+    }
+
+    public void setLeyenda(String leyenda) {
+        this.leyenda = leyenda;
     }
 
 }

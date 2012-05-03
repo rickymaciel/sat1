@@ -16,6 +16,7 @@ public class TasaSeleccionada
     private int idTasa;
     private double monto;
     private long idMatriculado;
+    private double superficie;
     
     public TasaSeleccionada()
     {
@@ -64,5 +65,13 @@ public class TasaSeleccionada
 
     public void setIdMatriculado(long idMatriculado) {
         this.idMatriculado = idMatriculado;
+    }
+
+    public double getSuperficie() {
+        return superficie;
+    }
+
+    public void setSuperficie(double superficie) {
+        this.superficie = superficie;
     }
 }

@@ -11,12 +11,8 @@ package controlador;
 
 import java.util.Collection;
 import java.util.Iterator;
-import negocios.DetalleCP;
-import negocios.DetalleCT;
 import negocios.DetalleFactura;
 import negocios.DetallePago;
-import negocios.EncabezadoCP;
-import negocios.EncabezadoCT;
 import negocios.EncabezadoFactura;
 import negocios.EncabezadoPago;
 
@@ -105,7 +101,7 @@ public class CFacturacion
         boolean bandera = true;
         CAlta calta = new CAlta();
         int registrosAlmacenados = calta.hacerAlta(e);
-        System.out.println("Cuando se guarda el encabezado pago, el metodo devuelve: "+String.valueOf(registrosAlmacenados));
+//        System.out.println("Cuando se guarda el encabezado pago, el metodo devuelve: "+String.valueOf(registrosAlmacenados));
         //System.out.println(e.get)
         respuesta = registrosAlmacenados; // si es 4 es porque esta fuera del rango establecido en Configuraicon.codigomaximoCP
         if (respuesta != 4)
@@ -118,7 +114,7 @@ public class CFacturacion
                 {
                     DetallePago d = (DetallePago)it.next();
                     registrosAlmacenados = calta.hacerAlta(d);
-                    System.out.println("Cuando se guarda el detalle pago, el metodo devuelve: "+String.valueOf(registrosAlmacenados));
+//                    System.out.println("Cuando se guarda el detalle pago, el metodo devuelve: "+String.valueOf(registrosAlmacenados));
                     if(registrosAlmacenados != 0)
                         bandera = false;
                 }
@@ -137,7 +133,7 @@ public class CFacturacion
         boolean bandera = true;
         CAlta calta = new CAlta();
         int registrosAlmacenados = calta.hacerAlta(e);
-        System.out.println("Cuando se guarda el encabezado pago, el metodo devuelve: "+String.valueOf(registrosAlmacenados));
+//        System.out.println("Cuando se guarda el encabezado pago, el metodo devuelve: "+String.valueOf(registrosAlmacenados));
         //System.out.println(e.get)
         respuesta = registrosAlmacenados; // si es 4 es porque esta fuera del rango establecido en Configuraicon.codigomaximoCP
         if (respuesta != 4)
@@ -145,7 +141,7 @@ public class CFacturacion
             if(respuesta == 0) // solo se guarda el detalle de la factura si se guardo correctamente el encabezado
             {
                 
-                System.out.println("SE GUARDO CORRECTAMENTE EL ENCABEZADO...");
+//                System.out.println("SE GUARDO CORRECTAMENTE EL ENCABEZADO...");
 //                 se almacenan los detalles de la factura
                 Iterator it = detalleFactura.iterator();
                 while(it.hasNext()){

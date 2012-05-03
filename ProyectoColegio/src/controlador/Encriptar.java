@@ -26,8 +26,6 @@ public class Encriptar
     private int ascii(char letra)
     {
         int codigo = 0;
-        char le;
-        
         if(letra == 'A')
             codigo=0;
         if(letra == 'B')

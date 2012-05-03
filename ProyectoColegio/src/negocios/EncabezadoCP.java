@@ -47,6 +47,8 @@ public class EncabezadoCP extends Transaccion {
     
     private String ordenTrabajo;
     
+    private String leyenda;
+    
     
 
     public EncabezadoCP () {
@@ -210,6 +212,16 @@ public class EncabezadoCP extends Transaccion {
 
     public void setOrdenTrabajo(String ordenTrabajo) {
         this.ordenTrabajo = ordenTrabajo;
+    }
+
+    public String getLeyenda()
+    {
+        return leyenda;
+    }
+
+    public void setLeyenda(String leyenda)
+    {
+        this.leyenda = leyenda;
     }
 
 }

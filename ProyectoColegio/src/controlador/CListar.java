@@ -45,6 +45,7 @@ import negocios.Nacionalidad;
 import negocios.PlanoCTotal;
 import negocios.PlanoTasa;
 import negocios.Producto;
+import negocios.ProductoTasa;
 import negocios.Provincia;
 import negocios.Rol;
 import negocios.SerieConstancia;
@@ -64,7 +65,45 @@ public class CListar
     public CListar() 
     {
     }
-       
+    public Collection listarAnuladosCP()
+    {
+        Consulta consulta = new Consulta();
+        Collection co = new ArrayList();
+        co = consulta.getAnuladoCP();
+        return co;
+    }
+    public Collection hacerListado(ProductoTasa pt)
+    {
+        Consulta con = new Consulta();
+        Collection co = new ArrayList();
+        co = con.getProductoTasa();
+        return co;
+    }
+
+    public Collection listarAnuladosCT()
+    {
+        Consulta consulta = new Consulta();
+        Collection co = new ArrayList();
+        co = consulta.getAnuladoCT();
+        return co;
+    }
+    
+    public boolean buscarCodigoProducto(ProductoTasa pt)
+    {
+        Consulta con = new Consulta();
+        Collection co = new ArrayList();
+        boolean resp = false;
+        co = con.getProductoTasa();
+        Iterator it = co.iterator();
+        while(it.hasNext())
+        {
+            ProductoTasa prodtasa = (ProductoTasa)it.next();
+//            System.out.println("comparacion en la busqueda = "+pt.getCodigoproducto()+"=="+prodtasa.getCodigoproducto());
+            if(pt.getCodigoproducto()== prodtasa.getCodigoproducto() || pt.getCodigotasa()==prodtasa.getCodigotasa()) resp = true;
+        }
+        return resp;
+    }
+
     public Collection hacerListado(EncabezadoPago encp)
     {
         Consulta con = new Consulta();
@@ -216,7 +255,7 @@ public class CListar
                     co = con.getEncabezadoCPxMatricula(encCP.getMatriculado().getMatricula());
                     break;
             case 2:
-                    co = con.getEncabezadoCP(fecha1, fecha2, encCP.getMatriculado().getMatricula());
+                    co = con.getEncabezadoCP(fecha1+" 00:00:00", fecha2+" 23:59:59", encCP.getMatriculado().getMatricula());
                     break;
         }
         
@@ -243,7 +282,7 @@ public class CListar
         int respuesta = filtro.filtrar(encCT,fecha1);
         Consulta con = new Consulta();
         Collection co = new ArrayList();
-        System.out.println("La fecha que recibe CLIstar es: "+fecha1+" y el filtro devuelve: "+respuesta);
+//        System.out.println("La fecha que recibe CLIstar es: "+fecha1+" y el filtro devuelve: "+respuesta);
         switch(respuesta)
         {
             case 0:
@@ -253,7 +292,7 @@ public class CListar
                     co = con.getEncabezadoCTxMatricula(encCT.getMatriculado().getMatricula());
                     break;
             case 2:
-                    co = con.getEncabezadoCT(fecha1, fecha2, encCT.getMatriculado().getMatricula());
+                    co = con.getEncabezadoCT(fecha1+" 00:00:00", fecha2+" 23:59:59", encCT.getMatriculado().getMatricula());
                     break;
         }
         if(filtrar == 1)
@@ -855,7 +894,7 @@ public class CListar
             {
                 c = (Caja)it.next();
                 caja = c;
-                System.out.println("ID CAJA EN COLLECTION: "+caja.getIdcaja());
+//                System.out.println("ID CAJA EN COLLECTION: "+caja.getIdcaja());
             }
         }
         return caja;
@@ -899,5 +938,24 @@ public class CListar
         Consulta con = new Consulta();
         Date resp = con.getFechaEncabezadoPago(idmatriculado);
         return resp;
+    }
+     public Caja unaCaja(long idcaja)
+    {
+        Caja resp = new Caja();
+        Consulta consulta = new Consulta();
+        resp = consulta.getUnaCaja(idcaja);
+        return resp;
+    }
+    public int cantidadCajas()
+    {
+        Consulta con = new Consulta();
+        int cantidad = con.cantidadCajas();
+        return cantidad;
+    }
+    public int cantidadMat(String tipo)
+    {
+        Consulta con = new Consulta();
+        int cantidad = con.cantidadMatriculados(tipo);
+        return cantidad;
     }
 }

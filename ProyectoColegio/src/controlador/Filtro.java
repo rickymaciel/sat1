@@ -415,7 +415,7 @@ public int filtrar(EncabezadoCT encCT, String fecha1)
         while(i.hasNext())
         {
             EncabezadoCT cp = (EncabezadoCT)i.next();
-            if(cp.getNumeroFactura() == 0)
+            if((cp.getNumeroFactura() == 0) && (cp.getAnulado().trim().equals("N")))
                 temp.add(cp);
             cp = null;
         }
