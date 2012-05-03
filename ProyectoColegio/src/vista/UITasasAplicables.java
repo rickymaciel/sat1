@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import negocios.Documento;
 import negocios.Tasa;
 import negocios.TasaAplicable;
@@ -38,6 +39,7 @@ public class UITasasAplicables extends javax.swing.JFrame
     public UITasasAplicables() 
     {
         initComponents();
+        this.ajustarTamanioColumna();
         Dimension pantalla, cuadro;
         pantalla = Toolkit.getDefaultToolkit().getScreenSize();
 	cuadro = this.getSize();
@@ -67,6 +69,8 @@ public class UITasasAplicables extends javax.swing.JFrame
         jTableDocumentos = new javax.swing.JTable();
         jLLocalidad1 = new javax.swing.JLabel();
         jTNombre = new javax.swing.JTextField();
+        jLLocalidad2 = new javax.swing.JLabel();
+        jTLeyenda = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Administracion de Tasas Aplicables");
@@ -91,6 +95,11 @@ public class UITasasAplicables extends javax.swing.JFrame
                 return canEdit [columnIndex];
             }
         });
+        jTableTasas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableTasasMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTableTasas);
 
         jBAgregar.setText("->");
@@ -108,15 +117,20 @@ public class UITasasAplicables extends javax.swing.JFrame
 
             },
             new String [] {
-                "Nombre"
+                "Nombre", "Leyenda"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTableNuevasTasas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableNuevasTasasMouseClicked(evt);
             }
         });
         jTableNuevasTasas.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -214,40 +228,66 @@ public class UITasasAplicables extends javax.swing.JFrame
             }
         });
 
+        jLLocalidad2.setBackground(new java.awt.Color(255, 255, 204));
+        jLLocalidad2.setText("Leyenda");
+        jLLocalidad2.setOpaque(true);
+        jLLocalidad2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jLLocalidad2KeyPressed(evt);
+            }
+        });
+
+        jTLeyenda.setText("-");
+        jTLeyenda.setToolTipText("ingrese letras para realizar un filtrado del listado.");
+        jTLeyenda.setDisabledTextColor(new java.awt.Color(51, 51, 51));
+        jTLeyenda.setEnabled(false);
+        jTLeyenda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTLeyendaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTLeyendaKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jBAgregar)
-                .addGap(11, 11, 11)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 728, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(91, 91, 91)
+                        .addComponent(jBGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLLocalidad1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLLocalidad2, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTLeyenda))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jBAgregar)
+                                .addGap(11, 11, 11)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(190, Short.MAX_VALUE)
-                .addComponent(jLLocalidad1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(184, 184, 184))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 713, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(91, 91, 91)
-                .addComponent(jBGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jBNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jBModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jBCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(118, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -258,11 +298,13 @@ public class UITasasAplicables extends javax.swing.JFrame
                         .addComponent(jBAgregar))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
                     .addComponent(jScrollPane3, 0, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLLocalidad1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jTNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLLocalidad2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTLeyenda, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(11, 11, 11)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -271,7 +313,7 @@ public class UITasasAplicables extends javax.swing.JFrame
                     .addComponent(jBModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
@@ -331,6 +373,7 @@ public class UITasasAplicables extends javax.swing.JFrame
         this.guardar = false;
         this.modificar = true;
         this.jTNombre.setEnabled(true);
+        this.jTLeyenda.setEnabled(true);
     }//GEN-LAST:event_jBModificarActionPerformed
 
     private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
@@ -377,6 +420,53 @@ public class UITasasAplicables extends javax.swing.JFrame
     private void jTNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTNombreKeyReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_jTNombreKeyReleased
+
+private void jLLocalidad2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jLLocalidad2KeyPressed
+// TODO add your handling code here:
+}//GEN-LAST:event_jLLocalidad2KeyPressed
+
+private void jTLeyendaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTLeyendaKeyPressed
+// TODO add your handling code here:
+    boolean band = false;
+    System.out.println("Tecla: "+evt.getKeyCode());
+    if(evt.getKeyCode() == 10)
+    {
+        for(int i=0;i<this.jTableTasas.getRowCount();i++)
+            if(this.jTableTasas.isRowSelected(i))
+                band = true;
+        if(band)
+        {
+            int fila = this.jTableTasas.getSelectedRow();
+            int codigo = Integer.parseInt(String.valueOf(this.jTableTasas.getValueAt(fila, 0)));
+            if(codigo != 0)
+                this.agregarTasa();
+            else 
+            {
+                this.limpiarPlanosTasas();
+                this.tasasAplicables.clear();
+                this.limpiarTasas();
+                this.llenarTasas();
+            }
+        }
+//            this.jTableNuevasTasas.setValueAt(this.jTLeyenda.getText().trim().toUpperCase(), this.jTableNuevasTasas.getSelectedRow(), 1);
+    }
+    
+    
+}//GEN-LAST:event_jTLeyendaKeyPressed
+
+private void jTLeyendaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTLeyendaKeyReleased
+// TODO add your handling code here:
+}//GEN-LAST:event_jTLeyendaKeyReleased
+
+private void jTableNuevasTasasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableNuevasTasasMouseClicked
+// TODO add your handling code here:
+    this.jTLeyenda.setText(String.valueOf(this.jTableNuevasTasas.getValueAt(this.jTableNuevasTasas.getSelectedRow(), 1)));
+}//GEN-LAST:event_jTableNuevasTasasMouseClicked
+
+private void jTableTasasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableTasasMouseClicked
+// TODO add your handling code here:
+    this.jTLeyenda.setText(String.valueOf(this.jTableTasas.getValueAt(this.jTableTasas.getSelectedRow(), 1)).trim().toUpperCase());
+}//GEN-LAST:event_jTableTasasMouseClicked
     
     /**
      * @param args the command line arguments
@@ -397,16 +487,52 @@ public class UITasasAplicables extends javax.swing.JFrame
     private javax.swing.JButton jBNuevo;
     private javax.swing.JButton jBSalir;
     private javax.swing.JLabel jLLocalidad1;
+    private javax.swing.JLabel jLLocalidad2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextField jTLeyenda;
     private javax.swing.JTextField jTNombre;
     private javax.swing.JTable jTableDocumentos;
     private javax.swing.JTable jTableNuevasTasas;
     private javax.swing.JTable jTableTasas;
     // End of variables declaration//GEN-END:variables
+   
+    private void ajustarTamanioColumna()
+    {
+        TableColumn columnaTasas = (TableColumn) jTableTasas.getColumnModel().getColumn(0);
+        TableColumn columnaDoc = (TableColumn) jTableDocumentos.getColumnModel().getColumn(0);
+        columnaTasas.setPreferredWidth(15);
+        columnaDoc.setPreferredWidth(15);
+/*
+        for (int i = 0; i < 1; i++) 
+        {
+            column = jTableTasas.getColumnModel().getColumn(i);
+            switch(i)
+            {
+                case 0:
+                        column.setPreferredWidth(15);
+                        break;
+                case 1:
+                        column.setPreferredWidth(400);
+                        break;
+                case 2:
+                        column.setPreferredWidth(110); 
+                        break;
+                case 3:
+                        column.setPreferredWidth(70); 
+                        break;
+                case 4:
+                        column.setPreferredWidth(85); 
+                        break;
+            }
+ 
+        }
+ */
+    }
+   
     
-    private void llenarTablas()
+   private void llenarTablas()
    {
        CListar listar = new CListar();
        this.tasas.clear();
@@ -424,6 +550,8 @@ public class UITasasAplicables extends javax.swing.JFrame
        this.llenarTasas();
        this.llenarDocumentos();
    }
+    
+    
    
    private void llenarTasas()
    {
@@ -491,8 +619,9 @@ public class UITasasAplicables extends javax.swing.JFrame
    {
        DefaultTableModel modelo = (DefaultTableModel)this.jTableNuevasTasas.getModel();
        Tasa tasa = this.obtenerTasa();
-       String datos[] = new String[1];
-       datos[0] = tasa.getDenominacion();
+       String datos[] = new String[2];
+       datos[0] = tasa.getDenominacion().trim();
+       datos[1] = this.jTLeyenda.getText().trim().toUpperCase();
        modelo.addRow(datos);
        this.nuevasTasas.add(tasa);
    }
@@ -536,6 +665,10 @@ public class UITasasAplicables extends javax.swing.JFrame
            {
                tasa = this.obtenerTasaNombre(String.valueOf(this.jTableNuevasTasas.getValueAt(i, 0)).trim());
                tasaAplicable.setIdtasa(tasa.getIdtasa());
+               if(i == this.jTableNuevasTasas.getSelectedRow())
+                   tasaAplicable.setLeyenda(this.jTLeyenda.getText().trim().toUpperCase());
+               else
+                   tasaAplicable.setLeyenda(String.valueOf(this.jTableNuevasTasas.getValueAt(i, 1)));
                int res = alta.hacerAlta(tasaAplicable);
                if( res != 0)
                    bandera = false;
@@ -553,6 +686,7 @@ public class UITasasAplicables extends javax.swing.JFrame
                this.modificar = false;
                this.guardar = true;
                this.jTNombre.setText("");
+               this.jTLeyenda.setText("");
                this.limpiarPlanosTasas();
            }
        }
@@ -630,7 +764,8 @@ public class UITasasAplicables extends javax.swing.JFrame
    private void guardar()
    {
        // tengo que guardar el nuevo tipo de documento
-       
+       // esto me asegura que me voy a posicionar justo en el primer registro que tenga la nueva tasa
+       int cont = this.jTableNuevasTasas.getRowCount() - this.nuevasTasas.size(); 
        boolean bandera = false;
        Documento doc = new Documento();
            //PlanoCTotal p = new PlanoCTotal();
@@ -646,10 +781,13 @@ public class UITasasAplicables extends javax.swing.JFrame
                while(it.hasNext())
                {
                    t = (Tasa)it.next();
+                   
                    TasaAplicable ta = new TasaAplicable();
                    ta.setIdtasa(t.getIdtasa());
                    ta.setIdTipoConstancia(doc.getIdDocumento());
                    ta.setExiste("S");
+                   ta.setLeyenda(String.valueOf(this.jTableNuevasTasas.getValueAt(cont, 1)).trim());
+                   cont++;
                    // en el metodo encargado de hacer el alta en la tabla tasasaplicables
                    // hay que asignarle el id de tipo de documento al objeto ta y recien dar el 
                    // alta.
@@ -690,7 +828,7 @@ public class UITasasAplicables extends javax.swing.JFrame
        Documento d = new Documento();
        Documento documento = new Documento();
        DefaultTableModel modelo = (DefaultTableModel)this.jTableNuevasTasas.getModel();
-       String datos[] = new String[1];
+       String datos[] = new String[2];
        int indice;
        while(it.hasNext())
        {
@@ -713,6 +851,7 @@ public class UITasasAplicables extends javax.swing.JFrame
                tasa = this.obtenerTasa(t.getIdtasa());
                this.nuevasTasas.add(tasa);
                datos[0] = tasa.getDenominacion().trim();
+               datos[1] = t.getLeyenda().trim();
                modelo.addRow(datos);
            }
        }

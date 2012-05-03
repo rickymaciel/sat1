@@ -24,6 +24,7 @@ import negocios.Caja;
 import negocios.CondicionVenta;
 import negocios.Configuracion;
 import negocios.DetalleCP;
+import negocios.DetalleCPParaFacturacion;
 import negocios.DetalleCT;
 import negocios.DetalleFactura;
 import negocios.DetallePago;
@@ -41,6 +42,7 @@ import negocios.Nacionalidad;
 import negocios.PlanoCTotal;
 import negocios.PlanoTasa;
 import negocios.Producto;
+import negocios.ProductoTasa;
 import negocios.PuntodeVenta;
 import negocios.Rol;
 import negocios.SerieConstancia;
@@ -95,8 +97,8 @@ public class Alta extends DataManager
         { 
             conn = super.getConection();
             stmt = conn.createStatement();
-            registrosInsertados = stmt.executeUpdate("INSERT INTO tasasaplicables (idtasaaplicable, idtasa, idtipoconstancia, existe) VALUES ("
-            +tasaA.getIdTasaAplicable()+","+tasaA.getIdtasa()+","+tasaA.getIdTipoConstancia()+",'"+tasaA.getExiste()+"')");  
+            registrosInsertados = stmt.executeUpdate("INSERT INTO tasasaplicables (idtasaaplicable, idtasa, idtipoconstancia, existe, leyenda) VALUES ("
+            +tasaA.getIdTasaAplicable()+","+tasaA.getIdtasa()+","+tasaA.getIdTipoConstancia()+",'"+tasaA.getExiste()+"', '"+tasaA.getLeyenda().trim()+"')");  
             this.cerrar();
         }
         catch (SQLException ex)
@@ -108,10 +110,13 @@ public class Alta extends DataManager
         }
      }
         return registrosInsertados;
-    } 
+    }
+ 
     
     public int almacenar(EncabezadoPago encP)
     {
+        System.out.println("INSERT INTO encabezadopago (idencabezadopago, idmatriculado, total, fechapago, habilitacionhasta, seriefactura, nrofactura, matricula) VALUES ("
+            +encP.getIdencabezado()+","+encP.getIdmatriculado()+","+encP.getTotal()+",'"+encP.getFechapago()+"','"+encP.getHabilitacionhasta()+"',"+encP.getSeriefactura()+","+encP.getNrofactura()+","+encP.getMatricula()+")");
         int registrosInsertados = 0;
         try 
         { 
@@ -134,7 +139,7 @@ public class Alta extends DataManager
     public int almacenar(EncabezadoFactura encF)
     {
         int registrosInsertados = 0;
-        System.out.println("ALAMCENAMIENTO: " +encF.getSerieFactura()+",NRO FACTURA:"+encF.getNumeroFactura()+","+encF.getIdempresa()+","+encF.getUsuario().getIdusuario()+","+encF.getCaja().getIdcaja()+",'"+encF.getFecha()+"',"+encF.getCondicionVenta().getIdcondicionVenta()+","+encF.getIva().getIdiva()+",'"+encF.getNumeroRemito()+"',"+encF.getTotal()+",'"+encF.getCuit()+"','"+encF.getDomicilio()+"',"+encF.getMatriculado().getIdmatriculado()+",'"+encF.getNombreCliente()+"','"+encF.getAnulado()+"'");
+//        System.out.println("ALAMCENAMIENTO: " +encF.getSerieFactura()+",NRO FACTURA:"+encF.getNumeroFactura()+","+encF.getIdempresa()+","+encF.getUsuario().getIdusuario()+","+encF.getCaja().getIdcaja()+",'"+encF.getFecha()+"',"+encF.getCondicionVenta().getIdcondicionVenta()+","+encF.getIva().getIdiva()+",'"+encF.getNumeroRemito()+"',"+encF.getTotal()+",'"+encF.getCuit()+"','"+encF.getDomicilio()+"',"+encF.getMatriculado().getIdmatriculado()+",'"+encF.getNombreCliente()+"','"+encF.getAnulado()+"'");
         
         
         try 
@@ -179,6 +184,7 @@ public class Alta extends DataManager
       
     public int almacenar(DetallePago detp)
     {
+        System.out.println("INSERT INTO detallepago (idencabezadopago, anio, mes, importe, idproducto) VALUES ("+detp.getIdencabezadopago()+","+detp.getAnio()+","+detp.getMes()+","+detp.getImporte()+","+detp.getIdproducto()+")");
         int registrosInsertados = 0;
         try 
         { 
@@ -214,8 +220,8 @@ public class Alta extends DataManager
             if (detF.getProducto().getPrecio()==0.0){
                 pu=detF.getSubTotal();
             }
-            System.out.println("INSERT INTO detallefacturas (seriefactura,numerofactura,iddetalle,idproducto,detalle,descripcion,cantidad,subtotal,pu) VALUES ("
-                                +detF.getSerieFactura()+","+detF.getNumeroFactura()+","+detF.getIddetalle()+","+detF.getProducto().getIdproducto()+",'"+detF.getProducto().getDenominacion().trim().toUpperCase()+"','"+detF.getDetalle().trim().toUpperCase()+"',"+detF.getCantidad()+","+detF.getSubTotal()+","+pu+")");                     
+//            System.out.println("INSERT INTO detallefacturas (seriefactura,numerofactura,iddetalle,idproducto,detalle,descripcion,cantidad,subtotal,pu) VALUES ("
+//                                +detF.getSerieFactura()+","+detF.getNumeroFactura()+","+detF.getIddetalle()+","+detF.getProducto().getIdproducto()+",'"+detF.getProducto().getDenominacion().trim().toUpperCase()+"','"+detF.getDetalle().trim().toUpperCase()+"',"+detF.getCantidad()+","+detF.getSubTotal()+","+pu+")");                     
             //+++++++++++++++++++++++++++++++++++++++++++++
             registrosInsertados = stmt.executeUpdate("INSERT INTO detallefacturas (seriefactura,numerofactura,iddetalle,idproducto,detalle,descripcion,cantidad,subtotal,pu) VALUES ("
                         +detF.getSerieFactura()+","+detF.getNumeroFactura()+","+detF.getIddetalle()+","+detF.getProducto().getIdproducto()+",'"+detF.getProducto().getDenominacion().trim().toUpperCase()+"','"+detF.getDetalle().trim().toUpperCase()+"',"+detF.getCantidad()+","+detF.getSubTotal()+","+pu+")"); 
@@ -308,14 +314,15 @@ public class Alta extends DataManager
             " fecha, idplanoctotal," +
             " nombreproyectista, nombredirector, nombreconductor, nombreconstructor," +
             " estadofindeobra, calle, numero, manzana, lote, anulado," +
-            " idusuario, idmatriculado,superficie,total,ordentrabajo)" 
+            " idusuario, idmatriculado,superficie,total,ordentrabajo,descripcionplano,leyenda)" 
             +" VALUES ('"+encCT.getSerieCT()+"',"+encCT.getCodigoCT()+","+encCT.getProvincia().getIdprovincia()+","+encCT.getDepartamento().getIddepartamento()+","+encCT.getLocalidad().getIdlocalidad()+","+encCT.getBarrio().getIdbarrio()+
             ","+encCT.getSerieFactura()+","+encCT.getNumeroFactura()+
             ",'"+encCT.getPerito()+"','"+encCT.getPropietario()+"','"+encCT.getComitente()+"','"+encCT.getResponsable()+
             "','"+String.valueOf(encCT.getFecha())+"',"+encCT.getPlanoCTotal().getIdplanoCTotal()+
             ",'"+encCT.getNombreProyectista()+"','"+encCT.getNombreDirector()+"','"+encCT.getNombreConductor()+"','"+encCT.getNombreConstructor()+
             "','"+encCT.getEstadoFinDeObra()+"','"+encCT.getCalle()+"','"+encCT.getNumero()+"','"+encCT.getManzana()+"','"+encCT.getLote()+"','"+encCT.getAnulado()+
-            "',"+encCT.getUsuario().getIdusuario()+","+encCT.getMatriculado().getIdmatriculado()+","+encCT.getSuperficie()+","+encCT.getTotal()+",'"+encCT.getOrdenTrabajo()+"')");  
+            "',"+encCT.getUsuario().getIdusuario()+","+encCT.getMatriculado().getIdmatriculado()+","+encCT.getSuperficie()+","+encCT.getTotal()+",'"+encCT.getOrdenTrabajo()+
+            "','"+encCT.getDescripcionPlano().toUpperCase().trim()+"','"+encCT.getLeyenda().toUpperCase().trim()+"')");
 
             this.cerrar();
         }
@@ -341,9 +348,9 @@ public class Alta extends DataManager
         { 
             conn = super.getConection();
             stmt = conn.createStatement();
-            registrosInsertados = stmt.executeUpdate("INSERT INTO encabezadocp (seriecp, codigocp, idprovincia, iddepartamento, idlocalidad, idbarrio, calle, numero, manzana, lote, seriefactura, numerofactura, fecha, propietario, comitente, anulado, idusuario, idmatriculado,superficierelevada,superficieproyecto,total,ordentrabajo) " +
+            registrosInsertados = stmt.executeUpdate("INSERT INTO encabezadocp (seriecp, codigocp, idprovincia, iddepartamento, idlocalidad, idbarrio, calle, numero, manzana, lote, seriefactura, numerofactura, fecha, propietario, comitente, anulado, idusuario, idmatriculado,superficierelevada,superficieproyecto,total,ordentrabajo, leyenda) " +
             "VALUES ('"+encCP.getSerieCP()+"',"+encCP.getCodigoCP()+","+encCP.getProvincia().getIdprovincia()+","+encCP.getDepartamento().getIddepartamento()+","+encCP.getLocalidad().getIdlocalidad()+","+encCP.getBarrrio().getIdbarrio()+",'"+encCP.getCalle()+"','"+encCP.getNumero()+"','"+
-            encCP.getManzana()+"','"+encCP.getLote()+"',"+encCP.getSerieFactura()+","+encCP.getNumeroFactura()+",'"+encCP.getFecha()+"','"+encCP.getPropietario()+"','"+encCP.getComitente()+"','"+encCP.getAnulado()+"',"+encCP.getUsuario().getIdusuario()+","+encCP.getMatriculado().getIdmatriculado()+","+encCP.getSuperficieRelevada()+","+encCP.getSuperficieProyecto()+","+encCP.getTotal()+",'"+encCP.getOrdenTrabajo()+"')");  
+            encCP.getManzana()+"','"+encCP.getLote()+"',"+encCP.getSerieFactura()+","+encCP.getNumeroFactura()+",'"+encCP.getFecha()+"','"+encCP.getPropietario()+"','"+encCP.getComitente()+"','"+encCP.getAnulado()+"',"+encCP.getUsuario().getIdusuario()+","+encCP.getMatriculado().getIdmatriculado()+","+encCP.getSuperficieRelevada()+","+encCP.getSuperficieProyecto()+","+encCP.getTotal()+",'"+encCP.getOrdenTrabajo()+"','"+encCP.getLeyenda().trim()+"')");  
             this.cerrar();
         }
         catch (SQLException ex)
@@ -958,8 +965,8 @@ public int almacenar(TasaSeleccionada t)
         { 
             conn = super.getConection();
             stmt = conn.createStatement();
-            registrosInsertados = stmt.executeUpdate("INSERT INTO enc_mat_ct (serieCT, codigoct, idtasa, monto) VALUES ('"
-            +t.getSerieCT()+"',"+t.getCodigoCT()+","+t.getIdTasa()+","+t.getMonto()+")");  
+            registrosInsertados = stmt.executeUpdate("INSERT INTO enc_mat_ct (serieCT, codigoct, idtasa, monto,superficie) VALUES ('"
+            +t.getSerieCT()+"',"+t.getCodigoCT()+","+t.getIdTasa()+","+t.getMonto()+","+t.getSuperficie()+")");  
             this.cerrar();
         }
         catch (SQLException ex)
@@ -972,5 +979,51 @@ public int almacenar(TasaSeleccionada t)
      }
         return registrosInsertados;
     }
+
+public int almacenar(DetalleCPParaFacturacion detCP)
+    {
+        int registrosInsertados = 0;
+        try 
+        { 
+            conn = super.getConection();
+            stmt = conn.createStatement();
+            
+           registrosInsertados = stmt.executeUpdate("INSERT INTO detallecpparafacturacion (seriecp, codigocp, iddetalle, idproducto, detalle, cantidad, tiposuperficie, valorsuperficie, nombretasa, valorindicedetasa, tasaminimaaplicada, subtotal) " +
+            "VALUES ('"+detCP.getSerieCP().trim()+"',"+detCP.getCodigoCP()+","+detCP.getIddetalle()+","+detCP.getProducto().getIdproducto()+",'"+detCP.getDetalle().trim()+"',"+detCP.getCantidad()+
+            ",'"+detCP.getTipoSuperficie().trim()+"',"+detCP.getValorSuperficie()+",'"+detCP.getNombreTasa().trim()+"',"+detCP.getValorIndiceDeTasa()+","+detCP.getTasaMinimaAplicada()+","+detCP.getSubTotal()+")");  
+            this.cerrar();
+        }
+        catch (SQLException ex)
+        {
+          while (ex !=null)
+        {
+          ex.printStackTrace();
+          ex = ex.getNextException();
+        }
+     }
+        return registrosInsertados;
+    }
+public int almacenar(ProductoTasa pt)
+    {
+        int registrosInsertados = 0;
+        try 
+        { 
+            conn = super.getConection();
+            stmt = conn.createStatement();
+            registrosInsertados = stmt.executeUpdate("INSERT INTO productos_tasas (codigoproducto, codigotasa) VALUES ("
+            +pt.getCodigoproducto()+","+pt.getCodigotasa()+")");  
+            this.cerrar();
+        }
+        catch (SQLException ex)
+        {
+          while (ex !=null)
+        {
+          ex.printStackTrace();
+          ex = ex.getNextException();
+        }
+     }
+        return registrosInsertados;
+    } 
+
 
 }

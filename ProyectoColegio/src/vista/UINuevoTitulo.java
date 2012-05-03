@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import negocios.Titulo;
 import reportes.cExport_thread;
 
@@ -40,6 +41,7 @@ public class UINuevoTitulo extends javax.swing.JFrame
 	this.setLocation(((pantalla.width - cuadro.width)/2), (pantalla.height - cuadro.height)/2);
         //Fin del centrado
         this.llenarTabla(new Titulo());
+        this.ajustarColumnas();
     }
     
     /** This method is called from within the constructor to
@@ -192,11 +194,11 @@ public class UINuevoTitulo extends javax.swing.JFrame
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTNombreTitulo1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
+                        .addComponent(jTNombreTitulo1, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTAbreviatura, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)))
+                        .addComponent(jTAbreviatura, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -209,7 +211,7 @@ public class UINuevoTitulo extends javax.swing.JFrame
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTNombreTitulo1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTAbreviatura, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -324,7 +326,7 @@ public class UINuevoTitulo extends javax.swing.JFrame
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jBImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
@@ -547,9 +549,9 @@ public class UINuevoTitulo extends javax.swing.JFrame
         while(it.hasNext())
         {
             t = (Titulo)it.next();
-            datos[0] = String.valueOf(t.getIdtitulo());
-            datos[1] = t.getNombre();
-            datos[2] = t.getAbreviacion();
+            datos[0] = String.valueOf(t.getIdtitulo()).trim();
+            datos[1] = t.getNombre().trim();
+            datos[2] = t.getAbreviacion().trim();
             modelo.addRow(datos);
         }
     }
@@ -645,9 +647,31 @@ public class UINuevoTitulo extends javax.swing.JFrame
         this.llenarTabla(new Titulo());
         this.limpiarCampos();
     }
-     private void limpiarCampos(){
+     private void limpiarCampos()
+     {
         this.jTCodigo.setText("");
         this.jTNombreTitulo1.setText("");
         this.jTAbreviatura.setText("");        
+     }
+     
+     private void ajustarColumnas()
+     {
+         TableColumn column = null;
+         for (int i = 0; i < 3; i++) 
+        {
+            column = jTable1.getColumnModel().getColumn(i);
+            switch(i)
+            {
+                case 0:
+                        column.setPreferredWidth(17);
+                        break;
+                case 1:
+                        column.setPreferredWidth(165);
+                        break;
+                case 2:
+                        column.setPreferredWidth(108); 
+                        break;
+            }
+        }
      }
 }

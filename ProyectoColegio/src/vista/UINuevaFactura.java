@@ -15,7 +15,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,13 +23,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
-import java.util.Vector;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import negocios.Caja;
 import negocios.CondicionVenta;
-import negocios.DetalleCP;
+import negocios.DetalleCPParaFacturacion;
 import negocios.DetalleCT;
 import negocios.DetalleFactura;
 import negocios.DetallePago;
@@ -41,6 +39,7 @@ import negocios.EncabezadoPago;
 import negocios.Iva;
 import negocios.Matriculado;
 import negocios.Producto;
+import negocios.Redondear;
 import negocios.SerieFactura;
 import negocios.Tasa;
 import negocios.TasaSeleccionada;
@@ -70,6 +69,11 @@ public class UINuevaFactura extends javax.swing.JFrame {
     private Collection bloquedas = new ArrayList();    
     
     private Collection cuotas = new ArrayList();
+    
+    private String pagoMatricula="104";
+    private String inscripcion="101";
+    private String reinscripcion="102";
+    private String reinscripcion2vez="103";
     
     /** Creates new form UINuevaFactura */
     public UINuevaFactura() {
@@ -110,7 +114,7 @@ public class UINuevaFactura extends javax.swing.JFrame {
 		this.setLocation(((pantalla.width - cuadro.width)/2), (pantalla.height - cuadro.height)/2);
                 this.inicializarFormulario();
                 
-                System.out.println("La caja Abierta recibida en Facturacion es: " +ca.getIdcaja());
+//                System.out.println("La caja Abierta recibida en Facturacion es: " +ca.getIdcaja());
                 
         }   
     }
@@ -167,8 +171,9 @@ public class UINuevaFactura extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jBFacturar = new javax.swing.JButton();
-        jBImprimir3 = new javax.swing.JButton();
+        jBVer = new javax.swing.JButton();
         jBNuevo = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nueva Factura");
@@ -185,6 +190,18 @@ public class UINuevaFactura extends javax.swing.JFrame {
         jLabel2.setText("Fecha ");
         jLabel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabel2.setOpaque(true);
+
+        jTNumeroFactura.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jTNumeroFactura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTNumeroFacturaActionPerformed(evt);
+            }
+        });
+        jTNumeroFactura.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTNumeroFacturaKeyPressed(evt);
+            }
+        });
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 204));
         jLabel3.setText("Matricula");
@@ -300,12 +317,12 @@ public class UINuevaFactura extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
-                    .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 702, Short.MAX_VALUE)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 702, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCIva, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -318,66 +335,70 @@ public class UINuevaFactura extends javax.swing.JFrame {
                         .addComponent(jTNumeroRemito, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jBAgregarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(2, 2, 2)
                         .addComponent(jBQuitarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jBTotalizar))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLNombreMatriculado, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE))
+                                .addComponent(jTMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLNombreMatriculado, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jCSeries, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTNumeroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(40, 40, 40))
+                                .addComponent(jTNumeroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(11, 11, 11))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jTNombreClientes)
-                                    .addComponent(jTCuilCuit, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addGap(35, 35, 35)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(125, 125, 125)
-                                .addComponent(jTFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)))
+                                    .addComponent(jTCuilCuit, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1)
-                        .addComponent(jCSeries, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTNumeroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jCSeries, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTNumeroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
                     .addComponent(jTFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
+                    .addComponent(jLNombreMatriculado, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
-                    .addComponent(jLNombreMatriculado, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTNombreClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -385,24 +406,22 @@ public class UINuevaFactura extends javax.swing.JFrame {
                     .addComponent(jTDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
                     .addComponent(jTCuilCuit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jCCondicionVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jCIva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6)
-                            .addComponent(jLabel5)
                             .addComponent(jLabel9)
-                            .addComponent(jTNumeroRemito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jBQuitarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jBAgregarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jBTotalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jTNumeroRemito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5)))
+                    .addComponent(jBAgregarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBQuitarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBTotalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -444,14 +463,14 @@ public class UINuevaFactura extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Ord.", "Producto", "Detalle", "Descripcion", "Cantidad", "PU", "Subtotal"
+                "Ord.", "Producto", "Detalle", "Descripcion", "Cantidad", "PU ($)", "Subtotal ($)"
             }
         ) {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Double.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, true, true, true, true, false
+                false, false, false, true, true, true, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -466,9 +485,12 @@ public class UINuevaFactura extends javax.swing.JFrame {
 
         jLabel10.setBackground(new java.awt.Color(255, 255, 204));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("TOTAL");
+        jLabel10.setText("TOTAL ($):");
         jLabel10.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabel10.setOpaque(true);
+
+        jTTotal.setEditable(false);
+        jTTotal.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
 
         jBImprimeDetalle.setText("Imprimir Detalle");
         jBImprimeDetalle.addActionListener(new java.awt.event.ActionListener() {
@@ -495,10 +517,10 @@ public class UINuevaFactura extends javax.swing.JFrame {
             }
         });
 
-        jBImprimir3.setText("Ver");
-        jBImprimir3.addActionListener(new java.awt.event.ActionListener() {
+        jBVer.setText("Ver");
+        jBVer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBImprimir3ActionPerformed(evt);
+                jBVerActionPerformed(evt);
             }
         });
 
@@ -506,24 +528,29 @@ public class UINuevaFactura extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(jBImprimir3, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jBFacturar, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jBVer, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jBFacturar, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jBImprimir3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jBFacturar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addComponent(jBFacturar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jBVer, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jBNuevo.setText("Nuevo");
+        jBNuevo.setEnabled(false);
         jBNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBNuevoActionPerformed(evt);
@@ -537,40 +564,40 @@ public class UINuevaFactura extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(59, 59, 59)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jBNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6)
-                                .addComponent(jBGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jBAnular, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jBImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jBImprimeDetalle)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jBNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(jBGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBAnular, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBImprimeDetalle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addGap(55, 55, 55))
+                    .addComponent(jSeparator3, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTTotal)
                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -579,7 +606,7 @@ public class UINuevaFactura extends javax.swing.JFrame {
                     .addComponent(jBImprimeDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBAnular, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(19, Short.MAX_VALUE))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -588,9 +615,9 @@ public class UINuevaFactura extends javax.swing.JFrame {
 
     private void jBImprimeDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBImprimeDetalleActionPerformed
         for (int i=0;i<this.array1TipoDoc.length;i++){
-            System.out.println("SE IMPRIME TIPODOC: "+ this.array1TipoDoc[i]);
-            System.out.println("SE IMPRIME SERIE: "+ this.array2Serie[i]);
-            System.out.println("SE IMPRIME ID: "+ this.array3Id[i]);
+//            System.out.println("SE IMPRIME TIPODOC: "+ this.array1TipoDoc[i]);
+//            System.out.println("SE IMPRIME SERIE: "+ this.array2Serie[i]);
+//            System.out.println("SE IMPRIME ID: "+ this.array3Id[i]);
             if(this.array1TipoDoc[i].equals("CP")){
                 String encCPSerie = this.array2Serie[i];
                 String encCPCodigo = this.array3Id[i];
@@ -624,7 +651,7 @@ public class UINuevaFactura extends javax.swing.JFrame {
         boolean numeroCorrecto=true;
         if (!((Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) ||(c == KeyEvent.VK_ENTER) ||(c == KeyEvent.VK_DELETE)  ||(c == KeyEvent.VK_ESCAPE))))        {    
             getToolkit().beep();
-            JOptionPane.showMessageDialog(null,"Debe introducir un valor valido ej: 12","Atencion",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,"Debe introducir un valor valido ej: 12","Atencion",JOptionPane.ERROR_MESSAGE);
             this.jTMatricula.setText("");
             this.jTMatricula.requestFocus();
             numeroCorrecto=false;
@@ -696,7 +723,7 @@ public class UINuevaFactura extends javax.swing.JFrame {
          * Abre una ventana de dialgo donde se puede seleccionar un producto
          * para agregar una linea de detalle a la jtable
          */
-        System.out.println("VALOR DEL ULTIMO ID DETALLE: "+this.jTableDetalleFactura.getValueAt(this.jTableDetalleFactura.getRowCount()-1,0));
+        //System.out.println("VALOR DEL ULTIMO ID DETALLE: "+this.jTableDetalleFactura.getValueAt(this.jTableDetalleFactura.getRowCount()-1,0));
         
         if (this.jTableDetalleFactura.getRowCount()<19){
             UINuevaFacturaDetalle1 ventanaDetalle=new UINuevaFacturaDetalle1(this,true);        
@@ -713,7 +740,18 @@ public class UINuevaFactura extends javax.swing.JFrame {
     private void jBGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarActionPerformed
         // TODO add your handling code here:
         if(this.controlarCampos()){
-            this.guardar();
+            if (this.jTableDetalleFactura.getRowCount()>0){//sihay mas de una linea de detalle
+                int n = JOptionPane.showConfirmDialog(this, "Realmente desea almacenar, ya controlo los datos a almacenar?","Control de datos",JOptionPane.YES_NO_OPTION);
+                if (n==JOptionPane.YES_OPTION){
+                    this.guardar();
+                }else{
+                    if (n==JOptionPane.NO_OPTION){
+                        JOptionPane.showMessageDialog(this, "Almacenamiento cancelado","Operacion cancelada",JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            }else{
+                JOptionPane.showMessageDialog(this, "No hay linea de detalle, debe abregar al menos una linea para facturar","No podra facturar sin lineas de detalle",JOptionPane.INFORMATION_MESSAGE);
+            }            
         }
     }//GEN-LAST:event_jBGuardarActionPerformed
 
@@ -761,14 +799,31 @@ public class UINuevaFactura extends javax.swing.JFrame {
         this.calcularTotal();        
 }//GEN-LAST:event_jBTotalizarActionPerformed
 
-    private void jBImprimir3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBImprimir3ActionPerformed
-        // TODO add your handling code here:
-        this.actualizar();
-    }//GEN-LAST:event_jBImprimir3ActionPerformed
-
     private void jBNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBNuevoActionPerformed
         this.nuevaFactura();
+        this.actualizar();
+        this.jBVer.setEnabled(false);
 }//GEN-LAST:event_jBNuevoActionPerformed
+
+    private void jBVerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBVerActionPerformed
+        // TODO add your handling code here:
+        this.actualizar();
+        this.jBVer.setEnabled(false);
+}//GEN-LAST:event_jBVerActionPerformed
+
+private void jTNumeroFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTNumeroFacturaActionPerformed
+// TODO add your handling code here:
+    
+    
+}//GEN-LAST:event_jTNumeroFacturaActionPerformed
+
+private void jTNumeroFacturaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTNumeroFacturaKeyPressed
+// TODO add your handling code here:
+    if(evt.getKeyCode()==27)
+            this.dispose();
+    if(evt.getKeyChar()==10)
+            this.jTMatricula.requestFocus();
+}//GEN-LAST:event_jTNumeroFacturaKeyPressed
     
     /**
      * @param args the command line arguments
@@ -788,11 +843,11 @@ public class UINuevaFactura extends javax.swing.JFrame {
     private javax.swing.JButton jBGuardar;
     private javax.swing.JButton jBImprimeDetalle;
     private javax.swing.JButton jBImprimir;
-    private javax.swing.JButton jBImprimir3;
     private javax.swing.JButton jBNuevo;
     private javax.swing.JButton jBQuitarDetalle;
     private javax.swing.JButton jBSalir;
     private javax.swing.JButton jBTotalizar;
+    private javax.swing.JButton jBVer;
     private javax.swing.JComboBox jCCondicionVenta;
     private javax.swing.JComboBox jCIva;
     private javax.swing.JComboBox jCSeries;
@@ -813,6 +868,7 @@ public class UINuevaFactura extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTextField jTCuilCuit;
     private javax.swing.JTextField jTDomicilio;
     private javax.swing.JTextField jTFecha;
@@ -833,6 +889,8 @@ public class UINuevaFactura extends javax.swing.JFrame {
         this.cargarNroFactura();
         this.cargarFecha();                
         this.habilitarBotones(true);
+        this.ajustarColumnas();
+        
     }
     
     private void nuevaFactura(){
@@ -850,11 +908,22 @@ public class UINuevaFactura extends javax.swing.JFrame {
         this.cargarNroFactura();
         this.habilitarBotones(true);
         this.detallesFactura.clear();
+        
+        //--------------------PROBANDO
+//        array1TipoDoc=null;    
+//        array2Serie=null;
+//        array3Id=null;
+//        bloquedas.clear();    
+//        cuotas.clear();
+        //--------------
+        
     }
     private void habilitarBotones(Boolean habilitar){
         //False es antes de guardar, MODO EDICION
         //True es MODO BLOQUEO        
+        
         this.jBNuevo.setEnabled(!habilitar);
+        
         this.jBGuardar.setEnabled(habilitar);
         this.jBFacturar.setEnabled(habilitar);
 //        this.jBPagarCuota.setEnabled(habilitar);
@@ -913,8 +982,20 @@ public class UINuevaFactura extends javax.swing.JFrame {
 //        Obtenemos la fecha actual del sistema
         Date fecha=new Date();//fecha actual
         //DateFormat df=DateFormat.getInstance();
-        DateFormat df=DateFormat.getDateInstance();        
-        this.jTFecha.setText(df.format(fecha)); 
+        
+        DateFormat df=DateFormat.getDateInstance();
+        
+//        Calendar cal=Calendar.getInstance();
+//        cal.setTime(fecha);
+        
+        SimpleDateFormat sdf= new SimpleDateFormat("dd/MM/yyyy");
+        
+        this.jTFecha.setText(sdf.format(fecha)); 
+        
+        
+        //this.jTFecha.setText(df.format(fecha)); 
+        //this.jTFecha.setText(String.valueOf(cal.get(cal.DAY_OF_MONTH))+"/"+String.valueOf(cal.get(cal.get(cal.MONTH))+"/"+String.valueOf(cal.get(cal.get(cal.YEAR)))));
+        
     }
     private void cargarCombos(){
         Collection iva=new ArrayList();
@@ -995,8 +1076,101 @@ public class UINuevaFactura extends javax.swing.JFrame {
         this.jTCuilCuit.setText("");
         this.jTDomicilio.setText("");        
     }
+//    private void guardar(){
+//        //**********ENCABEZADO DE FACTURA        
+//        EncabezadoFactura encFactura=new EncabezadoFactura();
+//        //encFactura.setSerieFactura(Integer.valueOf(this.jTSerieFactura.getText().trim()));
+//        encFactura.setSerieFactura(Integer.valueOf(String.valueOf(this.jCSeries.getSelectedItem()).trim()));
+//                
+//        if(this.nroAutomatico==true){
+//            Long nroFactura=this.obtenerNumeroDeFactura(encFactura);
+//            encFactura.setNumeroFactura(nroFactura);
+//            
+//        }else{
+//            if(!this.controlarNumeroRepetido()){
+//                JOptionPane.showMessageDialog(this, "El numero de factura ingresado ya existe, cargue otro numero", "Error de duplicacion de clave", JOptionPane.ERROR_MESSAGE);
+//            }else{    
+//                CUltimo compruebaNumeroFactura=new CUltimo();
+//                encFactura.setNumeroFactura(Long.valueOf(this.jTNumeroFactura.getText().trim()));                
+//                //Controlo si el nro es valido, es decir si no supera al limite establecido para la serie
+//                //por eso paso el objeto encabezadoFactura con el nro y serie cargados
+//                //Si no es valido recibe un cero 0, entonces no va a entrar a guardar la factura
+//                Long nroFacturaValido=compruebaNumeroFactura.getUltimoManual(encFactura);
+//                encFactura.setNumeroFactura(nroFacturaValido);       
+//                if (nroFacturaValido==0)
+//                    JOptionPane.showMessageDialog(this, "Se llego al limite del numero de factura", "Tiene que generar una nueva serie de factura para seguir facturando", JOptionPane.WARNING_MESSAGE);
+//            }
+//        }
+//          
+//        
+//        if (encFactura.getNumeroFactura()!=0){// si el numero de factura es permitido (no supero al limite permitido por la serie)
+//            encFactura.setUsuario(this.usuario);        
+//            
+//            //DateFormat df=DateFormat.getInstance(); //funciona OK si esta
+//            
+//            SimpleDateFormat sdf= new SimpleDateFormat("dd/MM/yyyy");
+//            
+//            //Date fecha=new Date();//fecha actual por defecto            
+//            java.util.Date fecha=null;
+//            try{
+//                fecha=sdf.parse(this.jTFecha.getText().trim());
+//            }catch(ParseException pe){
+////                System.out.println(pe.getMessage()+" FECHA no válida");
+//            }        
+//            encFactura.setFecha(fecha);
+//            encFactura.setCaja(this.caja);
+//            
+//            CondicionVenta condVenta=this.obtenerCondicionVenta();
+//            encFactura.setCondicionVenta(condVenta);            
+//            Iva iva=this.obtenerIva();            
+//            encFactura.setIva(iva);
+//            
+//            encFactura.setIdempresa(1);//LE ASIGNO EL CODIGO DE EMPRESA 1 por defecto CAMBIAR!!!!!!
+//            encFactura.setNumeroRemito(this.jTNumeroRemito.getText().trim());
+//            encFactura.setTotal(Double.parseDouble(this.jTTotal.getText().trim()));
+//            encFactura.setCuit(this.jTCuilCuit.getText().trim());
+//            encFactura.setDomicilio(this.jTDomicilio.getText().trim());
+//            encFactura.setMatriculado(this.matriculado);
+//            
+//            encFactura.setNombreCliente(this.jLNombreMatriculado.getText().trim()+"-"+this.jTNombreClientes.getText().toUpperCase().trim());
+//            //encFactura.setNombreCliente(this.jTNombreClientes.getText().trim());
+//            
+//            
+//            encFactura.setAnulado("N");
+//            //**********ENCABEZADO DE FACTURA**FIN
+//            CFacturacion factura=new CFacturacion();            
+//            this.armarCollectionDetallesFactura(encFactura);            
+//            
+//            //----------Solo muestra por consola la collection - BORRAR LUEGO
+///*            Iterator it = detallesFactura.iterator();        
+//            while(it.hasNext()){
+//                DetalleFactura d = (DetalleFactura)it.next();            
+//                System.out.println("Se cargaron: "+d.getIddetalle()+"-"+d.getDetalle()+"-IDDETALLE:"+d.getIddetalle()+"-"+d.getProducto().getDenominacion());
+//                d=null;
+//            }
+//            it=null;*/
+//            //----------
+//            
+//            int respuesta=factura.facturar(encFactura, detallesFactura);            
+//            if (respuesta==1){
+//                JOptionPane.showMessageDialog(this, "Se ha guardado la factura correctamente", "Guardar Factura",JOptionPane.INFORMATION_MESSAGE);
+//                this.armarVectorImpresion();//JORGE AGREGO ESTA LINEA PARA HACER IMPRESIONES DE CT CP CUOTA                
+//                this.jTNumeroFactura.setText(String.valueOf(encFactura.getNumeroFactura()));
+//                this.habilitarBotones(false);//Pone a los botones en modo bloqueo (NO EDICION)
+//                this.actualizarDocumentos();
+//                this.actualizar();
+//            } else {
+//                if (respuesta==0){
+//                    JOptionPane.showMessageDialog(this, "No se pudo almacenar la factura correctamente, revise el formulario", "Guardar Factura",JOptionPane.WARNING_MESSAGE);
+//                }
+//            }
+//        }
+//    }    
     private void guardar(){
-        //**********ENCABEZADO DE FACTURA        
+        //**********ENCABEZADO DE FACTURA 
+        boolean repetido=false;///////**************
+        boolean llegoAlLimite=false;///////**************
+        
         EncabezadoFactura encFactura=new EncabezadoFactura();
         //encFactura.setSerieFactura(Integer.valueOf(this.jTSerieFactura.getText().trim()));
         encFactura.setSerieFactura(Integer.valueOf(String.valueOf(this.jCSeries.getSelectedItem()).trim()));
@@ -1007,6 +1181,7 @@ public class UINuevaFactura extends javax.swing.JFrame {
         }else{
             if(!this.controlarNumeroRepetido()){
                 JOptionPane.showMessageDialog(this, "El numero de factura ingresado ya existe, cargue otro numero", "Error de duplicacion de clave", JOptionPane.ERROR_MESSAGE);
+                repetido=true;///////**************
             }else{    
                 CUltimo compruebaNumeroFactura=new CUltimo();
                 encFactura.setNumeroFactura(Long.valueOf(this.jTNumeroFactura.getText().trim()));                
@@ -1014,14 +1189,18 @@ public class UINuevaFactura extends javax.swing.JFrame {
                 //por eso paso el objeto encabezadoFactura con el nro y serie cargados
                 //Si no es valido recibe un cero 0, entonces no va a entrar a guardar la factura
                 Long nroFacturaValido=compruebaNumeroFactura.getUltimoManual(encFactura);
-                encFactura.setNumeroFactura(nroFacturaValido);       
-                if (nroFacturaValido==0)
+//                encFactura.setNumeroFactura(nroFacturaValido);       
+                if (nroFacturaValido==0){
                     JOptionPane.showMessageDialog(this, "Se llego al limite del numero de factura", "Tiene que generar una nueva serie de factura para seguir facturando", JOptionPane.WARNING_MESSAGE);
+                    llegoAlLimite=true;///////**************
+                }
             }
         }
           
         
-        if (encFactura.getNumeroFactura()!=0){// si el numero de factura es permitido (no supero al limite permitido por la serie)
+        if (encFactura.getNumeroFactura()!=0 && !repetido && !llegoAlLimite){// si el numero de factura es permitido (no supero al limite permitido por la serie)
+            System.out.println("nro de factura q deberia guardar es: "+encFactura.getNumeroFactura());
+            
             encFactura.setUsuario(this.usuario);        
             
             //DateFormat df=DateFormat.getInstance(); //funciona OK si esta
@@ -1033,7 +1212,7 @@ public class UINuevaFactura extends javax.swing.JFrame {
             try{
                 fecha=sdf.parse(this.jTFecha.getText().trim());
             }catch(ParseException pe){
-                System.out.println(pe.getMessage()+" FECHA no válida");
+//                System.out.println(pe.getMessage()+" FECHA no válida");
             }        
             encFactura.setFecha(fecha);
             encFactura.setCaja(this.caja);
@@ -1045,7 +1224,11 @@ public class UINuevaFactura extends javax.swing.JFrame {
             
             encFactura.setIdempresa(1);//LE ASIGNO EL CODIGO DE EMPRESA 1 por defecto CAMBIAR!!!!!!
             encFactura.setNumeroRemito(this.jTNumeroRemito.getText().trim());
-            encFactura.setTotal(Double.parseDouble(this.jTTotal.getText().trim()));
+            if (this.jTTotal.getText().trim().length()==0){
+                encFactura.setTotal(0);                
+            }else{
+                encFactura.setTotal(Double.parseDouble(this.jTTotal.getText().trim()));
+            }            
             encFactura.setCuit(this.jTCuilCuit.getText().trim());
             encFactura.setDomicilio(this.jTDomicilio.getText().trim());
             encFactura.setMatriculado(this.matriculado);
@@ -1070,29 +1253,31 @@ public class UINuevaFactura extends javax.swing.JFrame {
             //----------
             
             int respuesta=factura.facturar(encFactura, detallesFactura);            
+             
+//            System.out.println("respuesta es: "+respuesta);
+            
             if (respuesta==1){
-                System.out.println("SE GUARDO CORRECTAMENTE!");
-                
-                this.armarVectorImpresion();//JORGE AGREGO ESTA LINEA PARA HACER IMPRESIONES DE CT CP CUOTA
-                
+                JOptionPane.showMessageDialog(this, "Se ha guardado la factura correctamente", "Guardar Factura",JOptionPane.INFORMATION_MESSAGE);
+                this.armarVectorImpresion();//JORGE AGREGO ESTA LINEA PARA HACER IMPRESIONES DE CT CP CUOTA                
                 this.jTNumeroFactura.setText(String.valueOf(encFactura.getNumeroFactura()));
                 this.habilitarBotones(false);//Pone a los botones en modo bloqueo (NO EDICION)
                 this.actualizarDocumentos();
                 this.actualizar();
             } else {
-                if (respuesta==0)
-                    System.out.println("NO SE PUDO GUARDAR HAY ERRORES!");
+                if (respuesta==0){
+                    JOptionPane.showMessageDialog(this, "No se pudo almacenar la factura correctamente, revise el formulario", "Guardar Factura",JOptionPane.WARNING_MESSAGE);
+                }
             }
         }
-    }    
-    
+    }
+
     private void armarVectorImpresion(){
                 //+++++++++++++++++++
                 this.array1TipoDoc=new String[this.bloquedas.size()];
                 this.array2Serie=new String[this.bloquedas.size()];
                 this.array3Id=new String[this.bloquedas.size()];
 
-                System.out.println("LOS ARRAY BLOQUEDAS TIENEN LENGHT= A: "+this.bloquedas.size());
+//                System.out.println("LOS ARRAY BLOQUEDAS TIENEN LENGHT= A: "+this.bloquedas.size());
 
                 Iterator it = this.bloquedas.iterator();
                 int fil;
@@ -1104,11 +1289,11 @@ public class UINuevaFactura extends javax.swing.JFrame {
                     this.array3Id[indice] = String.valueOf(this.jTable2.getValueAt(fil, 2));
                     indice++;
                 }
-                for (int i=0;i<this.array1TipoDoc.length;i++){
-                    System.out.println("SE IMPRIME TIPODOC: "+ this.array1TipoDoc[i]);
-                    System.out.println("SE IMPRIME SERIE: "+ this.array2Serie[i]);
-                    System.out.println("SE IMPRIME ID: "+ this.array3Id[i]);
-                }
+//                for (int i=0;i<this.array1TipoDoc.length;i++){
+//                    System.out.println("SE IMPRIME TIPODOC: "+ this.array1TipoDoc[i]);
+//                    System.out.println("SE IMPRIME SERIE: "+ this.array2Serie[i]);
+//                    System.out.println("SE IMPRIME ID: "+ this.array3Id[i]);
+//                }
                 //+++++++++++++++++++
     }
     
@@ -1132,11 +1317,16 @@ public class UINuevaFactura extends javax.swing.JFrame {
             det.setCantidad(Integer.parseInt(String.valueOf(this.jTableDetalleFactura.getValueAt(fila,4))));
             det.setSubTotal(Double.parseDouble(String.valueOf(this.jTableDetalleFactura.getValueAt(fila,6))));
             
+            
+            
             Producto prod=new Producto();
             CListar obtenerProducto=new CListar();
             prod = obtenerProducto.obtenerProducto(Integer.parseInt(String.valueOf(this.jTableDetalleFactura.getValueAt(fila,1))));
-            
+            //------------Agrgue nada mas
+            prod.setPrecio(Double.parseDouble(String.valueOf(this.jTableDetalleFactura.getValueAt(fila,5))));
+            //------------
             det.setProducto(prod);
+            
             
             this.detallesFactura.add(det);
             //det=null;
@@ -1159,21 +1349,24 @@ public class UINuevaFactura extends javax.swing.JFrame {
      */ 
         DetalleFactura detAux=new DetalleFactura();
         detAux=detalle;
-        
         detalle.setIddetalle(this.jTableDetalleFactura.getRowCount()+1);        
-        System.out.println("idDetalle: " + detalle.getIddetalle() + "descricpion: "+detalle.getProducto().getDenominacion());        
         //Obtengo un modelo de la jtable
         DefaultTableModel modelo=(DefaultTableModel)this.jTableDetalleFactura.getModel();        
         //armo la linea de detalle para agregar a la jtable        
+        Redondear r = new Redondear();
+        
+        detalle.setSubTotal(r.redondear(detalle.getSubTotal(), 2));
+        
+        r = null;
         Object[] datos={detalle.getIddetalle(),detalle.getProducto().getIdproducto(),detalle.getProducto().getDenominacion(),detalle.getDetalle(),detalle.getCantidad(),detalle.getProducto().getPrecio(),detalle.getSubTotal()};        
         //agrego la linea de detalle datos a la jtable
         modelo.addRow(datos);        
-
         detalle=null;
         detAux=null;
         //---------------        
         this.calcularTotal();
    }
+
    public void agregarACollectionDeImpresion(int itemTabla){
     /**Metodo que agrega lo que viene de el boton FACTURAR
      * es decir, los docuementos,su serie y codigo para agregarlos
@@ -1194,16 +1387,13 @@ public class UINuevaFactura extends javax.swing.JFrame {
                 montoTotal = montoTotal + subtot;             
             }
         }        
-        //Finalmente asigno al textfield el valor delmonto total
-//        NumberFormat nf = NumberFormat.getInstance(); 
-//        //Establecemos el numero de decimales 
-//        nf.setMaximumFractionDigits(2); 
-        //Convertimos el numero porque obtengo un string 
+        Redondear r = new Redondear();
+        montoTotal = r.redondear(montoTotal, 2);
+        r = null;
+        this.jTTotal.setText(String.valueOf(montoTotal));  
         
-//        NumberFormat nf = NumberFormat.getCurrencyInstance();
-//        this.jTTotal.setText(nf.format(String.valueOf(montoTotal)));  
+      
         
-        this.jTTotal.setText(String.valueOf(montoTotal));         
    }
 
    private void quitarLineaDetalle() {
@@ -1462,9 +1652,9 @@ public class UINuevaFactura extends javax.swing.JFrame {
         return devolver;
     }
     
-    private DetalleFactura llenarDetalleFactura(DetalleFactura d, StringBuffer detalle, double subtotal, Producto prod){
+    private DetalleFactura llenarDetalleFactura(DetalleFactura d, String detalle, double subtotal, Producto prod){
         d.setCantidad(1);
-        d.setDetalle(detalle.toString());
+        d.setDetalle(detalle.trim());
         d.setSubTotal(subtotal);
         prod.setPrecio(subtotal);
         d.setProducto(prod);
@@ -1498,9 +1688,9 @@ public class UINuevaFactura extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"La Factura: "+enca.getSerieFactura()+"-"+enca.getNumeroFactura()+" a sido anulada","Anulacion de Factura",JOptionPane.INFORMATION_MESSAGE);
             //pasar los documentos a ventana izquierda
             for (int i=0;i<this.array1TipoDoc.length;i++){
-                System.out.println("SE IMPRIME TIPODOC: "+ this.array1TipoDoc[i]);
-                System.out.println("SE IMPRIME SERIE: "+ this.array2Serie[i]);
-                System.out.println("SE IMPRIME ID: "+ this.array3Id[i]);
+//                System.out.println("SE IMPRIME TIPODOC: "+ this.array1TipoDoc[i]);
+//                System.out.println("SE IMPRIME SERIE: "+ this.array2Serie[i]);
+//                System.out.println("SE IMPRIME ID: "+ this.array3Id[i]);
                 
                 if(this.array1TipoDoc[i].equals("CP")){
                     String encCPSerie = this.array2Serie[i];
@@ -1648,7 +1838,9 @@ public class UINuevaFactura extends javax.swing.JFrame {
             d.setCodigoCT(encCT.getCodigoCT());
             d.setSerieCT(encCT.getSerieCT());
             //detalle = listar.hacerListadoDetalleCT(d);
-            tasas = listar.armarDetalleFactura(encCT.getSerieCT(), String.valueOf(encCT.getCodigoCT()), "CT");
+//            tasas = listar.armarDetalleFactura(encCT.getSerieCT(), String.valueOf(encCT.getCodigoCT()), "CT");
+            Consulta con = new Consulta();
+            tasas = con.armarDetalleCT2(encCT.getSerieCT(), String.valueOf(encCT.getCodigoCT()));
             filas = this.jTableDetalleFactura.getRowCount();
             if((18-filas) >= tasas.size()) // aqui controlo que el detalle entre en la grilla (Que no supere las 18 lineas)
             {
@@ -1664,10 +1856,12 @@ public class UINuevaFactura extends javax.swing.JFrame {
                 while(i.hasNext())
                 {
                     Tasa t = (Tasa)i.next();
+                    String deta;
                     Producto producto = new Producto();
                     producto = listar.listar(t);
                     DetalleFactura detalleFactura = new DetalleFactura();
-                    detalleFactura = this.llenarDetalleFactura(detalleFactura, det, this.getMontoTasa(t.getIdtasa()), producto);
+                    deta = det.toString()+" - "+t.getSuperficie()+"X"+t.getIndice();
+                    detalleFactura = this.llenarDetalleFactura(detalleFactura, deta, this.getMontoTasa(t.getIdtasa()), producto);
                 // solo queda pasarle el objeto detalleFactura para que sea cargado en la grilla
                     this.agregarLineaDetalle(detalleFactura);
                 }
@@ -1676,123 +1870,170 @@ public class UINuevaFactura extends javax.swing.JFrame {
             else
                 JOptionPane.showMessageDialog(null, "No se pueden agregar el documento a la factura", "El doc supera las lineas disponibles",JOptionPane.ERROR_MESSAGE);
     }
-    
-    private void facturarCP(Collection detalle, CListar listar, Collection tasas, int fila)
+    private void facturarCP(int fila)
     {
+        Collection detalleFacturacionCP = new ArrayList();
+        Consulta con = new Consulta();
+        CListar listar = new CListar();
         int filas = 0;
         EncabezadoCP encCP = new EncabezadoCP();
         encCP = this.getEncabezadoCP(Long.parseLong(String.valueOf(this.jTable2.getValueAt(fila, 2))));
-        DetalleCP de = new DetalleCP();
-            de.setCodigoCP(encCP.getCodigoCP());
-            de.setSerieCP(encCP.getSerieCP());
-            detalle = listar.hacerListadoDetalleCP(de);
-            tasas = listar.armarDetalleFactura(encCP.getSerieCP(), String.valueOf(encCP.getCodigoCP()), "CP");
-            filas = this.jTableDetalleFactura.getRowCount();
-            if((18-filas) >= tasas.size()) // aqui controlo que el detalle entre en la grilla (Que no supere las 18 lineas)
+        detalleFacturacionCP = con.getDetalleFacturacionCP(encCP.getSerieCP().trim(), encCP.getCodigoCP());
+        // hasta aqui tengo la coleccion con los detalles de facturacion
+        // ahora tengo que cargar los datos en la calse DetalleCP
+        
+        filas = this.jTableDetalleFactura.getRowCount();
+        if((18-filas) >= detalleFacturacionCP.size()) // aqui controlo que el detalle entre en la grilla (Que no supere las 18 lineas)
+        {
+            Iterator it = detalleFacturacionCP.iterator();
+            while(it.hasNext())
             {
+                DetalleCPParaFacturacion d = (DetalleCPParaFacturacion)it.next();
+                DetalleFactura detalleFactura = new DetalleFactura();
+                Producto producto = new Producto();
+                Tasa t = new Tasa();
+                t = con.getTasa(d.getNombreTasa().trim(), "algo");
+                producto = listar.listar(t);
+                t = null;
+                producto.setPrecio(d.getSubTotal());
+                detalleFactura.setCantidad(1);
+                detalleFactura.setDetalle(d.getDetalle().trim()+" - "+d.getValorSuperficie()+"X"+d.getValorIndiceDeTasa());
                 
-                de = null;
-                Iterator it = detalle.iterator();
-                double superficieRelevamiento = 0.0;
-                double superficieProyecto = 0.0;
-                double superficieCambioTecho = 0.0;
-                StringBuffer det = new StringBuffer(); // contienen el detalle de la factura
-                det.append("CP:");
-                det.append(encCP.getSerieCP());
-                det.append("-");
-                det.append(encCP.getCodigoCP());
-                det.append(" - MAT:");
-                det.append(encCP.getMatriculado().getMatricula());
-                // aqui solo se suman las superficies de los tipos de trabajo
-                while(it.hasNext())
-                {
-                    DetalleCP d = (DetalleCP)it.next();
-                    if(d.getTipoTrabajo().getNombre().trim().equals("RELEVAMIENTO"))
-                        superficieRelevamiento += d.getSuperficie();
-                    else
-                        if(d.getTipoTrabajo().getNombre().trim().equals("PROYECTO"))
-                            superficieProyecto += d.getSuperficie();
-                        else
-                            if(d.getTipoTrabajo().getNombre().trim().equals("CAMBIO DE TECHO"))
-                                superficieCambioTecho += d.getSuperficie();
-                    d=null;
-                }
-            // ya tengo los valores de superficie, ahora armo el detalle
-                it = null;
-                Iterator i = tasas.iterator();
-                double indiceRelevamiento = 0.0; // tiene el valor en pesos 
-                //double tasaMinimaCalculo = 0.0;
-                double indiceConduccion = 0.0; // tiene el valor en pesos
-                double indiceCalculo = 0.0; // tiene la suma de indices
-                double indiceCambioTecho = 0.0;
-            // ahora es cuando se realiza el calculo
-                while(i.hasNext())
-                {
-                    Tasa t = (Tasa)i.next();
-                    Producto producto = new Producto();
-                    producto = listar.listar(t);
-                    DetalleFactura detalleFactura = new DetalleFactura();
-                    if(t.getDenominacion().trim().equals("RELEVAMIENTO"))
-                    {
-                        indiceRelevamiento = superficieRelevamiento * t.getIndice();
-                        if(indiceRelevamiento < t.getTasaMinima())
-                            indiceRelevamiento = t.getTasaMinima();
-                        detalleFactura = this.llenarDetalleFactura(detalleFactura, det, indiceRelevamiento, producto);
-                    }
-                    else    
-                        if(t.getDenominacion().trim().equals("CONDUCCION TECNICA"))
-                        {
-                            indiceConduccion = superficieProyecto * t.getIndice();
-                            if(indiceConduccion < t.getTasaMinima())
-                                indiceConduccion = t.getTasaMinima();
-                            detalleFactura = this.llenarDetalleFactura(detalleFactura, det, indiceConduccion, producto);
-                        }
-                        else
-                            if(t.getDenominacion().trim().equals("CAMBIO DE TECHO"))
-                            {
-                                indiceCambioTecho = superficieCambioTecho * t.getIndice();
-                                if(indiceCambioTecho < t.getTasaMinima())
-                                    indiceCambioTecho = t.getTasaMinima();
-                                detalleFactura = this.llenarDetalleFactura(detalleFactura, det, indiceCambioTecho, producto);
-                            }
-                            else
-                            {
-                                indiceCalculo = superficieProyecto * t.getIndice();
-                                if(indiceCalculo < t.getTasaMinima())
-                                    indiceCalculo = t.getTasaMinima();
-                                detalleFactura = this.llenarDetalleFactura(detalleFactura, det, indiceCalculo, producto);
-                            }
-                    t = null;
-                // aqui tengo que pasarle el objeto detalleFactura al metodo que se encarga de agregarlo a la grilla
-                    this.agregarLineaDetalle(detalleFactura);
-                    producto = null;
-                    detalleFactura = null;
-                }
-                this.bloquedas.add(fila);
+                detalleFactura.setSubTotal(d.getSubTotal());
+                //producto.setPrecio(d.getSubTotal());
+                //prod.setDenominacion(d.getNombreTasa().trim());
+                detalleFactura.setProducto(producto);
+                this.agregarLineaDetalle(detalleFactura);
+                producto = null;
+                detalleFactura = null;
             }
-            else
+            this.bloquedas.add(fila);
+        }
+        else
                 JOptionPane.showMessageDialog(null, "No se pueden agregar el documento a la factura", "El doc supera las lineas disponibles",JOptionPane.ERROR_MESSAGE);
     }
+
+
+//    private void facturarCP(Collection detalle, CListar listar, Collection tasas, int fila)
+//    {
+//        int filas = 0;
+//        EncabezadoCP encCP = new EncabezadoCP();
+//        encCP = this.getEncabezadoCP(Long.parseLong(String.valueOf(this.jTable2.getValueAt(fila, 2))));
+//        DetalleCP de = new DetalleCP();
+//            de.setCodigoCP(encCP.getCodigoCP());
+//            de.setSerieCP(encCP.getSerieCP());
+//            detalle = listar.hacerListadoDetalleCP(de);
+//            tasas = listar.armarDetalleFactura(encCP.getSerieCP(), String.valueOf(encCP.getCodigoCP()), "CP");
+//            filas = this.jTableDetalleFactura.getRowCount();
+//            if((18-filas) >= tasas.size()) // aqui controlo que el detalle entre en la grilla (Que no supere las 18 lineas)
+//            {
+//                
+//                de = null;
+//                Iterator it = detalle.iterator();
+//                double superficieRelevamiento = 0.0;
+//                double superficieProyecto = 0.0;
+//                double superficieCambioTecho = 0.0;
+//                StringBuffer det = new StringBuffer(); // contienen el detalle de la factura
+//                det.append("CP:");
+//                det.append(encCP.getSerieCP());
+//                det.append("-");
+//                det.append(encCP.getCodigoCP());
+//                det.append(" - MAT:");
+//                det.append(encCP.getMatriculado().getMatricula());
+//                // aqui solo se suman las superficies de los tipos de trabajo
+//                while(it.hasNext())
+//                {
+//                    DetalleCP d = (DetalleCP)it.next();
+//                    if(d.getTipoTrabajo().getNombre().trim().equals("RELEVAMIENTO"))
+//                        superficieRelevamiento += d.getSuperficie();
+//                    else
+//                        if(d.getTipoTrabajo().getNombre().trim().equals("PROYECTO"))
+//                            superficieProyecto += d.getSuperficie();
+//                        else
+//                            if(d.getTipoTrabajo().getNombre().trim().equals("CAMBIO DE TECHO"))
+//                                superficieCambioTecho += d.getSuperficie();
+//                    d=null;
+//                }
+//            // ya tengo los valores de superficie, ahora armo el detalle
+//                it = null;
+//                Iterator i = tasas.iterator();
+//                double indiceRelevamiento = 0.0; // tiene el valor en pesos 
+//                //double tasaMinimaCalculo = 0.0;
+//                double indiceConduccion = 0.0; // tiene el valor en pesos
+//                double indiceCalculo = 0.0; // tiene la suma de indices
+//                double indiceCambioTecho = 0.0;
+//            // ahora es cuando se realiza el calculo
+//                while(i.hasNext())
+//                {
+//                    Tasa t = (Tasa)i.next();
+//                    Producto producto = new Producto();
+//                    producto = listar.listar(t);
+//                    DetalleFactura detalleFactura = new DetalleFactura();
+//                    if(t.getDenominacion().trim().equals("RELEVAMIENTO"))
+//                    {
+//                        indiceRelevamiento = superficieRelevamiento * t.getIndice();
+//                        if(indiceRelevamiento < t.getTasaMinima())
+//                            indiceRelevamiento = t.getTasaMinima();
+//                        detalleFactura = this.llenarDetalleFactura(detalleFactura, det, indiceRelevamiento, producto);
+//                    }
+//                    else    
+//                        if(t.getDenominacion().trim().equals("CONDUCCION TECNICA"))
+//                        {
+//                            indiceConduccion = superficieProyecto * t.getIndice();
+//                            if(indiceConduccion < t.getTasaMinima())
+//                                indiceConduccion = t.getTasaMinima();
+//                            detalleFactura = this.llenarDetalleFactura(detalleFactura, det, indiceConduccion, producto);
+//                        }
+//                        else
+//                            if(t.getDenominacion().trim().equals("CAMBIO DE TECHO"))
+//                            {
+//                                indiceCambioTecho = superficieCambioTecho * t.getIndice();
+//                                if(indiceCambioTecho < t.getTasaMinima())
+//                                    indiceCambioTecho = t.getTasaMinima();
+//                                detalleFactura = this.llenarDetalleFactura(detalleFactura, det, indiceCambioTecho, producto);
+//                            }
+//                            else
+//                            {
+//                                indiceCalculo = superficieProyecto * t.getIndice();
+//                                if(indiceCalculo < t.getTasaMinima())
+//                                    indiceCalculo = t.getTasaMinima();
+//                                detalleFactura = this.llenarDetalleFactura(detalleFactura, det, indiceCalculo, producto);
+//                            }
+//                    t = null;
+//                // aqui tengo que pasarle el objeto detalleFactura al metodo que se encarga de agregarlo a la grilla
+//                    this.agregarLineaDetalle(detalleFactura);
+//                    producto = null;
+//                    detalleFactura = null;
+//                }
+//                this.bloquedas.add(fila);
+//            }
+//            else
+//                JOptionPane.showMessageDialog(null, "No se pueden agregar el documento a la factura", "El doc supera las lineas disponibles",JOptionPane.ERROR_MESSAGE);
+//    }
     
     private void facturarCuota(CListar listar, int fila)
     {
         if((18-this.jTableDetalleFactura.getRowCount()) == 0)
-            JOptionPane.showMessageDialog(null, "No se pueden agregar el documento a la factura", "El doc supera las lineas disponibles",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se pueden agregar el documento a la factura", "El doc supera las lineas disponibles",JOptionPane.ERROR_MESSAGE);
         else
         {
             // obtener las cuotas a pagar de la linea seleccionada
             boolean bandera = true;
             int anioBase = 0;
             Collection vCuotas = new ArrayList();
-                DetalleFactura detalleFactura = new DetalleFactura();
+            DetalleFactura detalleFactura = new DetalleFactura();
+            DetalleFactura detalleFactura2 = new DetalleFactura();
+            
             DetallePago detallePago = new DetallePago();
             EncabezadoPago encPago = new EncabezadoPago();
             encPago = this.getEncabezadoPago(Long.parseLong(String.valueOf(this.jTable2.getValueAt(fila, 2))));
             // ya tengo el objeto encabezado Pago
             detallePago.setIdencabezadopago(encPago.getIdencabezado());
+            
             GregorianCalendar fec = new GregorianCalendar();
             fec.setGregorianChange(encPago.getFechapago());
             detallePago.setAnio(fec.get(Calendar.YEAR));
+            
             Consulta con=new Consulta();
             vCuotas = con.getDetallePago(detallePago.getIdencabezadopago());
             //-----
@@ -1801,38 +2042,57 @@ public class UINuevaFactura extends javax.swing.JFrame {
             double importe = 0.0;
             while(it.hasNext()){
                 DetallePago d = (DetallePago)it.next();
-                if(bandera){
-                    bandera = false;
-                    anioBase = d.getAnio();
-                    detalleFac.append("CU:"+d.getIdencabezadopago()+":"+encPago.getMatricula()+"-");
-                    detalleFac.append(anioBase);
-                    detalleFac.append(":");
-                    detallePago.setIdproducto(d.getIdproducto());
-                }             
-                else
-                {
-                    if(anioBase != d.getAnio())
-                    {
-                        detalleFac.append(";");
-                        detalleFac.append(d.getAnio());
-                        detalleFac.append(":");
-                        anioBase = d.getAnio();
-                    }
-                    else
-                        detalleFac.append(",");
+                
+                //---
+                if (d.getIdproducto()==Integer.parseInt(this.reinscripcion)||d.getIdproducto()==Integer.parseInt(this.inscripcion)||d.getIdproducto()==Integer.parseInt(this.reinscripcion2vez)){
+                    detalleFactura2.setCantidad(1);
+                    detalleFactura2.setDetalle("");
+                    detalleFactura2.setSubTotal(importe);
+                    Producto prod2 = new Producto();                                       
+                    prod2 = this.getProducto(Integer.parseInt(String.valueOf(d.getIdproducto()).trim()), listar);
+                    prod2.setPrecio(d.getImporte());
+                    detalleFactura2.setProducto(prod2);
+                    this.agregarLineaDetalle(detalleFactura2);
                 }
-                detalleFac.append(this.getMes(d.getMes()));
-                importe = importe + d.getImporte();
-                d = null;
+                //---
+                
+                
+                if (d.getIdproducto()==Integer.parseInt(this.pagoMatricula)){ //--------
+                    if(bandera){
+                        bandera = false;
+                        anioBase = d.getAnio();
+                        detalleFac.append("CU:"+d.getIdencabezadopago()+":"+encPago.getMatricula()+"-");
+                 
+                        detalleFac.append(anioBase);
+                        detalleFac.append(":");
+                        detallePago.setIdproducto(d.getIdproducto());
+                    }else {
+                        if(anioBase != d.getAnio()){
+                            detalleFac.append(";");
+                            detalleFac.append(d.getAnio());
+                            detalleFac.append(":");
+                            anioBase = d.getAnio();
+                        }else
+                            detalleFac.append(",");
+                    }
+                    detalleFac.append(this.getMes(d.getMes()));                
+                    importe = importe + d.getImporte();
+                    d = null;
+                    
+                } //--------
             }
+            
             detalleFactura.setCantidad(1);
             detalleFactura.setDetalle(detalleFac.toString());
             detalleFactura.setSubTotal(importe);
+            
             Producto prod = new Producto();
             prod = this.getProducto(Integer.parseInt(String.valueOf(detallePago.getIdproducto())), listar);
             prod.setPrecio(importe);
             detalleFactura.setProducto(prod);
             this.agregarLineaDetalle(detalleFactura);
+            
+            
             it = null;
             this.bloquedas.add(fila);
         }
@@ -1897,12 +2157,12 @@ public class UINuevaFactura extends javax.swing.JFrame {
         }
         return mes;
     }
-private void facturar(int fila){
+private void facturar(int fila)
+{
         Collection tasas = new ArrayList();
         CListar listar = new CListar();
-        Collection detalle = new ArrayList();
         if(String.valueOf(this.jTable2.getValueAt(fila, 0)).equals("CP"))
-            this.facturarCP(detalle, listar, tasas, fila);
+            this.facturarCP(fila);
         else
             if(String.valueOf(this.jTable2.getValueAt(fila, 0)).equals("CT"))
                 this.facturarCT(listar, tasas, fila);
@@ -1913,8 +2173,8 @@ private void facturar(int fila){
         //ESTA LINEA LA AGREGUE PARA IDENTIFICAR LA FILA
         //DE QUE DOCUMENTO SE DEBE IMPRIMIR        
         this.agregarACollectionDeImpresion(Integer.parseInt(String.valueOf(this.jTable2.getSelectedRow())));
-        
     }
+
 private EncabezadoPago getEncabezadoPago(long id)
     {
         EncabezadoPago en = new EncabezadoPago();
@@ -1956,19 +2216,16 @@ private boolean controlarCampos()
             bandera = false;            
         }
         
-        if(this.jTNumeroFactura.getText().trim().length()==0){
-            bandera = false;            
-            JOptionPane.showMessageDialog(this,"El numero de factura esta vacio","Nro de factura vacia",JOptionPane.WARNING_MESSAGE);
-        }        
-        if(!this.esAutomatico())
-        {
-            if(this.jTNumeroFactura.getText().trim().length()==0)
-            {
+//        if(this.jTNumeroFactura.getText().trim().length()==0){
+//            bandera = false;            
+//            JOptionPane.showMessageDialog(this,"El numero de factura esta vacio","Nro de factura vacia",JOptionPane.WARNING_MESSAGE);
+//        }        
+        if(!this.esAutomatico()){
+            if(this.jTNumeroFactura.getText().trim().length()==0){
                 bandera = false;            
                 JOptionPane.showMessageDialog(this,"Debe cargar un numero de factura","Nro de Factura nula",JOptionPane.ERROR_MESSAGE);
             }            
-            if(this.jCSeries.getSelectedItem().toString().trim().length()==0)
-            {
+            if(this.jCSeries.getSelectedItem().toString().trim().length()==0){
                 bandera = false;            
                 JOptionPane.showMessageDialog(this,"Debe cargar un numero de serie de factura","Nro de Serie de Factura nula",JOptionPane.WARNING_MESSAGE);
             }
@@ -1990,6 +2247,7 @@ private boolean controlarCampos()
         }        
         return bandera;
     }
+
 private boolean fechaCorrectaControl(){
         Boolean fechaCorrecta=false;
         
@@ -2001,10 +2259,10 @@ private boolean fechaCorrectaControl(){
         try{
             java.util.Date fecha=sdf.parse(this.jTFecha.getText().trim()); 
             fechaCorrecta=true;
-            System.out.println("FECHA CORRECTA.......");
+//            System.out.println("FECHA CORRECTA.......");
         }catch(ParseException pe){
             fechaCorrecta=false;
-            System.out.println(pe.getMessage());
+//            System.out.println(pe.getMessage());
         }        
         return fechaCorrecta;
     }
@@ -2026,9 +2284,7 @@ private void actualizarDocumentos()
         }
     }
     
-    private void actualizarCT(long codigo)
-    {
-        
+    private void actualizarCT(long codigo){
         EncabezadoCT encabezado = new EncabezadoCT();
         encabezado = this.getEncabezadoCT(codigo);
         encabezado.setSerieFactura(Integer.parseInt(String.valueOf(this.jCSeries.getSelectedItem())));
@@ -2050,9 +2306,7 @@ private void actualizarDocumentos()
             JOptionPane.showMessageDialog(null, "Falla en la modificacion de los datos, intente de nuevo mas tarde", "Falla de modificacion", JOptionPane.ERROR_MESSAGE);
     }
     
-    private void actualizarCuota(long codigo)
-    {
-        
+    private void actualizarCuota(long codigo) {        
         EncabezadoPago encabezado = new EncabezadoPago();
         encabezado = this.getEncabezadoPago(codigo);
         encabezado.setSeriefactura(Long.parseLong(String.valueOf(this.jCSeries.getSelectedItem())));
@@ -2070,8 +2324,7 @@ private void actualizarDocumentos()
         modelo = null;
     }
     
-    private void actualizar()
-    {
+    private void actualizar(){
         this.constanciasParciales.clear();
         this.constanciasTotales.clear();
         this.cuotas.clear();
@@ -2080,5 +2333,37 @@ private void actualizarDocumentos()
         this.limpiarDocumentos();
         this.mostrarConstancias();
     }
-
+    
+    private void ajustarColumnas()
+    {
+        TableColumn column = null;
+         for (int i = 0; i < 7; i++) 
+        {
+            column = jTableDetalleFactura.getColumnModel().getColumn(i);
+            switch(i)
+            {
+                case 0:
+                        column.setPreferredWidth(18);
+                        break;
+                case 1:
+                        column.setPreferredWidth(45);
+                        break;
+                case 2:
+                        column.setPreferredWidth(261); 
+                        break;
+                case 3:
+                        column.setPreferredWidth(171); 
+                        break;
+                case 4:
+                        column.setPreferredWidth(15);                     
+                        break;
+                case 5:
+                        column.setPreferredWidth(51); 
+                        break;
+                case 6:
+                        column.setPreferredWidth(51);
+                        break;
+            }
+        }
+    }
 }

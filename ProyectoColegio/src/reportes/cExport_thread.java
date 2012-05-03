@@ -91,6 +91,11 @@ public class cExport_thread extends Thread {
                 //case 23: reporte="\\reportes\\rep05.jasper";break;
                 case 24: reporte="\\reportes\\rep24EntidadesExternas.jasper";break;
 //                case 32: reporte="\\reportes\\rep32CHabilitacion.jasper";break;
+                case 50:reporte="\\reportes\\rep50AnuladosCP.jasper";break;
+                case 51:reporte="\\reportes\\rep51AnuladosCT.jasper";break;
+                case 52:reporte="\\reportes\\rep52AnuladosTodos.jasper";break;
+                case 53:reporte="\\reportes\\rep53ConstanciasGralCT.jasper";break;
+                case 54:reporte="\\reportes\\rep54ConstanciasGralCP.jasper";break;
                 
             }            
             String archivoNombre1=""; //Para que se obtenga la ruta del directorio de esta clase
@@ -136,9 +141,19 @@ public class cExport_thread extends Thread {
                     case 28: reporte="\\reportes\\rep28CajaDiariaEncabezado.jasper";
                              nombreParametro1="IDCAJA";
                              break;
+                    case 29: reporte="\\reportes\\rep28CajaDiariaEncabezado2.jasper";
+                             nombreParametro1="IDCAJA";
+                             break;
                     case 37: reporte="\\reportes\\rep35aHistorialSimple.jasper";
                              nombreParametro1="MATRICULA";
                              break;
+                    case 38: reporte="\\reportes\\rep38HistorialCP.jasper";
+                             nombreParametro1="MATRICULA";
+                             break;
+                    case 39: reporte="\\reportes\\rep39HistorialCT.jasper";
+                             nombreParametro1="MATRICULA";
+                             break;
+                             
                      
             }
 
@@ -210,6 +225,7 @@ public cExport_thread(int tipoReporte,String valorParametro1,String valorParamet
                              nombreParametro2="MATRICULA";
                              nombreParametro3="ENTIDADEXTERNA";
                              break;
+                   
                     case 33: reporte="\\reportes\\rep33EncCtotal.jasper";
                              nombreParametro1="SERIE";
                              nombreParametro2="CODIGO";
@@ -220,6 +236,16 @@ public cExport_thread(int tipoReporte,String valorParametro1,String valorParamet
                              nombreParametro2="CODIGO";
                              nombreParametro3="COPIA";
                              break;
+                   case 322: reporte="\\reportes\\rep32CHabilitacion.jasper";
+                             nombreParametro1="MATRICULA";
+                             nombreParametro2="ENTIDADEXTERNA";
+                             nombreParametro3="VALIDOHASTA";
+                             break;
+//                    case 40: reporte="\\reportes\\rep40HistorialCPxfechas.jasper";
+//                             nombreParametro1="MATRICULA";
+//                             nombreParametro2="FECHA1";
+//                             nombreParametro3="FECHA2";
+//                             break;
             }            
             String archivoNombre1=""; //Para que se obtenga la ruta del directorio de esta clase
             File sourceFile1= new File(this.getClass().getResource(archivoNombre1).getPath());            
@@ -228,6 +254,95 @@ public cExport_thread(int tipoReporte,String valorParametro1,String valorParamet
             String rutaReporteMaestro=rutaReporte+reporte;//con el nombre del archivo      
             
             this.lanzaJasper3Parametro(rutaReporteMaestro,rutaCarpetaReportes,nombreParametro1,valorParametro1,nombreParametro2,valorParametro2,nombreParametro3,valorParametro3);
+    }
+
+public cExport_thread(int tipoReporte,String valorParametro1,java.sql.Timestamp valorParametro2,java.sql.Timestamp valorParametro3) {            
+         
+            String reporte=""; //despues le asigno el nombre del archivo de reporte jasper que se inciara
+           
+            String nombreParametro1="";
+            String nombreParametro2="";
+            String nombreParametro3="";
+            switch (tipoReporte){
+                    
+                    case 40: reporte="\\reportes\\rep40HistorialCPxfechas.jasper";
+                             nombreParametro1="MATRICULA";
+                             nombreParametro2="FECHA1";
+                             nombreParametro3="FECHA2";
+                             break;
+                    case 41: reporte="\\reportes\\rep41HistorialCTxfechas.jasper";
+                             nombreParametro1="MATRICULA";
+                             nombreParametro2="FECHA1";
+                             nombreParametro3="FECHA2";
+                             break;
+            }            
+            String archivoNombre1=""; //Para que se obtenga la ruta del directorio de esta clase
+            File sourceFile1= new File(this.getClass().getResource(archivoNombre1).getPath());            
+            String rutaReporte=obtenerRutaArriba(3,sourceFile1);
+            String rutaCarpetaReportes=rutaReporte+"\\reportes\\";//a partir de la raiz del proyecto JAR compilado
+            String rutaReporteMaestro=rutaReporte+reporte;//con el nombre del archivo      
+            
+            this.lanzaJasper3Parametro(rutaReporteMaestro,rutaCarpetaReportes,nombreParametro1,valorParametro1,nombreParametro2,valorParametro2,nombreParametro3,valorParametro3);
+    }
+  public void lanzaJasper3Parametro(String rutaReporteMaestro,String rutaCarpetaReportes,String nombreParametro1,String valorParametro1,String nombreParametro2,java.sql.Timestamp valorParametro2,String nombreParametro3,java.sql.Timestamp valorParametro3){
+        try {        
+            //Obtener una conexión a la base de datos
+            conexion = new DataManager();
+            Connection con = conexion.getConection();
+            //Pasamos parametros al reporte Jasper.
+            Map parameters = new HashMap();
+            
+            parameters.put(nombreParametro1,valorParametro1);
+            parameters.put(nombreParametro2,valorParametro2);
+            parameters.put(nombreParametro3,valorParametro3);            
+            parameters.put("SUBREPORT_DIR",rutaCarpetaReportes);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(rutaReporteMaestro,parameters,con);
+            
+            //Se lanza el Viewer de Jasper, no termina aplicación al salir
+            JasperViewer jviewer = new JasperViewer(jasperPrint,false);
+            jviewer.setVisible(true);
+        } catch (Exception j){
+            System.out.println("Mensaje de Error:"+j.getMessage());
+        } 
+    }
+
+public cExport_thread(int tipoReporte,String valorParametro1,String valorParametro2,String valorParametro3,String valorParametro4) {            
+         
+            String reporte=""; //despues le asigno el nombre del archivo de reporte jasper que se inciara
+           
+            String nombreParametro1="";
+            String nombreParametro2="";
+            String nombreParametro3="";
+            String nombreParametro4="";
+            switch (tipoReporte){
+                    case 40:
+                            reporte="\\reportes\\rep40ResumenCajasCerradas.jasper";
+                            nombreParametro1="CAJA1";
+                            nombreParametro2="FECHA1";
+                            nombreParametro3="CAJA2";
+                            nombreParametro4="FECHA2";
+                            break;
+                     case 42:
+                            reporte="\\reportes\\rep42ResumenTotalesDeCajas.jasper";
+                            nombreParametro1="CAJA1";
+                            nombreParametro2="FECHA1";
+                            nombreParametro3="CAJA2";
+                            nombreParametro4="FECHA2";
+                            break;
+                     case 3211: reporte="\\reportes\\rep32aCHabilitacion.jasper";
+                             nombreParametro1="RUTAFOTO";
+                             nombreParametro2="MATRICULA";
+                             nombreParametro3="ENTIDADEXTERNA";
+                             nombreParametro4="VALIDOHASTA";
+                             break;
+            }            
+            String archivoNombre1=""; //Para que se obtenga la ruta del directorio de esta clase
+            File sourceFile1= new File(this.getClass().getResource(archivoNombre1).getPath());            
+            String rutaReporte=obtenerRutaArriba(3,sourceFile1);
+            String rutaCarpetaReportes=rutaReporte+"\\reportes\\";//a partir de la raiz del proyecto JAR compilado
+            String rutaReporteMaestro=rutaReporte+reporte;//con el nombre del archivo      
+            
+            this.lanzaJasper4Parametro(rutaReporteMaestro,rutaCarpetaReportes,nombreParametro1,valorParametro1,nombreParametro2,valorParametro2,nombreParametro3,valorParametro3,nombreParametro4,valorParametro4);
     }
 public cExport_thread(int tipoReporte,String valorParametro1,String valorParametro2,String valorParametro3,String valorParametro4,String valorParametro5) {            
          
@@ -358,6 +473,28 @@ public void lanzaJasperSimple(String rutaReporte){
             parameters.put(nombreParametro1,valorParametro1);
             parameters.put(nombreParametro2,valorParametro2);
             parameters.put(nombreParametro3,valorParametro3);            
+            parameters.put("SUBREPORT_DIR",rutaCarpetaReportes);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(rutaReporteMaestro,parameters,con);
+            
+            //Se lanza el Viewer de Jasper, no termina aplicación al salir
+            JasperViewer jviewer = new JasperViewer(jasperPrint,false);
+            jviewer.setVisible(true);
+        } catch (Exception j){
+            System.out.println("Mensaje de Error:"+j.getMessage());
+        } 
+    }
+  public void lanzaJasper4Parametro(String rutaReporteMaestro,String rutaCarpetaReportes,String nombreParametro1,String valorParametro1,String nombreParametro2,String valorParametro2,String nombreParametro3,String valorParametro3,String nombreParametro4,String valorParametro4){
+        try {        
+            //Obtener una conexión a la base de datos
+            conexion = new DataManager();
+            Connection con = conexion.getConection();
+            //Pasamos parametros al reporte Jasper.
+            Map parameters = new HashMap();
+            
+            parameters.put(nombreParametro1,valorParametro1);
+            parameters.put(nombreParametro2,valorParametro2);
+            parameters.put(nombreParametro3,valorParametro3);
+            parameters.put(nombreParametro4,valorParametro4);
             parameters.put("SUBREPORT_DIR",rutaCarpetaReportes);
             JasperPrint jasperPrint = JasperFillManager.fillReport(rutaReporteMaestro,parameters,con);
             

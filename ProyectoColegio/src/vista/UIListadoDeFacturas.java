@@ -76,6 +76,7 @@ public class UIListadoDeFacturas extends javax.swing.JDialog {
         jRadioButton1 = new javax.swing.JRadioButton();
         jLCaja = new javax.swing.JLabel();
         jCCajas = new javax.swing.JComboBox();
+        jBImprimir1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Listado de Facturas");
@@ -85,7 +86,7 @@ public class UIListadoDeFacturas extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Serie Factura", "Nª Factura", "Fecha", "Condicion Venta", "Total", "Nombre Cliente", "Anulado"
+                "Serie Factura", "Nª Factura", "Fecha", "Condicion Venta", "Total($)", "Nombre Cliente", "Anulado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -100,7 +101,7 @@ public class UIListadoDeFacturas extends javax.swing.JDialog {
         jScrollPane1.setViewportView(jTable1);
 
         jBImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/printer.gif"))); // NOI18N
-        jBImprimir.setText("Imprimir");
+        jBImprimir.setText("Copia");
         jBImprimir.setToolTipText("Imprime la caja seleccionada");
         jBImprimir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -168,7 +169,7 @@ public class UIListadoDeFacturas extends javax.swing.JDialog {
                 .addComponent(jRadioButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCCajas, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                 .addComponent(jRadioButton3)
                 .addGap(13, 13, 13))
         );
@@ -185,6 +186,15 @@ public class UIListadoDeFacturas extends javax.swing.JDialog {
                         .addComponent(jCCajas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
+        jBImprimir1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/printer.gif"))); // NOI18N
+        jBImprimir1.setText("Original");
+        jBImprimir1.setToolTipText("Imprime la caja seleccionada");
+        jBImprimir1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBImprimir1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -194,10 +204,12 @@ public class UIListadoDeFacturas extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jBAnular, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBImprimir1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jBImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
+                        .addComponent(jBAnular, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -212,13 +224,17 @@ public class UIListadoDeFacturas extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jBSalir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jBImprimir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jBAnular, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jBAnular, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jBImprimir1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jBImprimir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jBAnular, jBImprimir, jBSalir});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -286,6 +302,17 @@ public class UIListadoDeFacturas extends javax.swing.JDialog {
         this.jCCajas.setEnabled(false);
         
     }//GEN-LAST:event_jRadioButton1ActionPerformed
+
+private void jBImprimir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBImprimir1ActionPerformed
+// TODO add your handling code here:
+        if (this.jTable1.getSelectedRow()>-1){//es decir,si selecciono un elemento de la tabla 
+            cExport_thread imprime=new cExport_thread(27,String.valueOf(this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 0)).trim(),String.valueOf(this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 1)).trim());
+            imprime.start();
+        }else{ 
+            JOptionPane.showMessageDialog(this,"Debe seleccionar una factura de la tablaª","Atencion",JOptionPane.INFORMATION_MESSAGE); 
+        }
+    
+}//GEN-LAST:event_jBImprimir1ActionPerformed
     
     /**
      * @param args the command line arguments
@@ -308,6 +335,7 @@ public class UIListadoDeFacturas extends javax.swing.JDialog {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jBAnular;
     private javax.swing.JButton jBImprimir;
+    private javax.swing.JButton jBImprimir1;
     private javax.swing.JButton jBSalir;
     private javax.swing.JComboBox jCCajas;
     private javax.swing.JLabel jLCaja;
@@ -453,76 +481,87 @@ public class UIListadoDeFacturas extends javax.swing.JDialog {
             //CP: CT: CU:  si es alguno de estos significa que es 
             //un documento relacionado en la cadena
             
-            tipoDocumento.append(d.getDetalle().charAt(0));
-            tipoDocumento.append(d.getDetalle().charAt(1));
-            tipoDocumento.append(d.getDetalle().charAt(2));
             
-            System.out.println("LINEA DETALLE A LEER TIPODOC 3 LETRAS: "+tipoDocumento);
-            
-            if (tipoDocumento.toString().equals("CP:")){//si es CP: recien analiza que serie y codigo tiene
-                EncabezadoCP eCP=new EncabezadoCP();
-                eCP=sacarCodigo.getEncabezadoCP(d.getDetalle().trim());                
-            
-                if (!sePusoEnCeroElDocumento(tipoDocumento.toString(),String.valueOf(eCP.getSerieCP()).trim(),String.valueOf(eCP.getCodigoCP()).trim())){
-                        Modificacion ponerFacturaDeCPenCero=new Modificacion();
-                        int resp=ponerFacturaDeCPenCero.modificarPonerCPconFacturaEnCero(eCP.getSerieCP(), eCP.getCodigoCP());
-                        if (resp!=0){
-                            JOptionPane.showMessageDialog(this,"La Constancia Parcial: "+eCP.getSerieCP()+":"+eCP.getCodigoCP()+" podra ser facturada en otro documento de factura","Documento CP podra ser facturado",JOptionPane.INFORMATION_MESSAGE);
-                        }else{
-                            JOptionPane.showMessageDialog(this,"La Constancia Parcial: "+eCP.getSerieCP()+":"+eCP.getCodigoCP()+" no podra ser facturada en otro documento de factura, debera crear uno nuevo para facturarlo","Error!",JOptionPane.ERROR_MESSAGE);
-                        }
-                        this.array1TipoDoc[i]=(tipoDocumento.toString());
-                        this.array2Serie[i]=(eCP.getSerieCP());
-                        this.array3Id[i]=(String.valueOf(eCP.getCodigoCP()));
-                        ponerFacturaDeCPenCero=null;
-                        i++;
-                }           
-                System.out.println("SE ENCONTRO OK: "+tipoDocumento);
+            if (d.getDetalle().length()>0){
+                tipoDocumento.append(d.getDetalle().charAt(0));
+                tipoDocumento.append(d.getDetalle().charAt(1));
+                tipoDocumento.append(d.getDetalle().charAt(2));
+
+    //            System.out.println("LINEA DETALLE A LEER TIPODOC 3 LETRAS: "+tipoDocumento);
+
+                if (tipoDocumento.toString().equals("CP:")){//si es CP: recien analiza que serie y codigo tiene
+                    EncabezadoCP eCP=new EncabezadoCP();
+                    eCP=sacarCodigo.getEncabezadoCP(d.getDetalle().trim());                
+
+                    if (!sePusoEnCeroElDocumento(tipoDocumento.toString(),String.valueOf(eCP.getSerieCP()).trim(),String.valueOf(eCP.getCodigoCP()).trim())){
+                            Modificacion ponerFacturaDeCPenCero=new Modificacion();
+                            int resp=ponerFacturaDeCPenCero.modificarPonerCPconFacturaEnCero(eCP.getSerieCP(), eCP.getCodigoCP());
+                            if (resp!=0){
+                                JOptionPane.showMessageDialog(this,"La Constancia Parcial: "+eCP.getSerieCP()+":"+eCP.getCodigoCP()+" podra ser facturada en otro documento de factura","Documento CP podra ser facturado",JOptionPane.INFORMATION_MESSAGE);
+                            }else{
+                                JOptionPane.showMessageDialog(this,"La Constancia Parcial: "+eCP.getSerieCP()+":"+eCP.getCodigoCP()+" no podra ser facturada en otro documento de factura, debera crear uno nuevo para facturarlo","Error!",JOptionPane.ERROR_MESSAGE);
+                            }
+                            this.array1TipoDoc[i]=(tipoDocumento.toString());
+                            this.array2Serie[i]=(eCP.getSerieCP());
+                            this.array3Id[i]=(String.valueOf(eCP.getCodigoCP()));
+                            ponerFacturaDeCPenCero=null;
+                            i++;
+                    }           
+    //                System.out.println("SE ENCONTRO OK: "+tipoDocumento);
+                }
+                if (tipoDocumento.toString().equals("CT:")){//si es CP: recien analiza que serie y codigo tiene
+                    EncabezadoCT eCT=new EncabezadoCT();
+                    eCT=sacarCodigo.getEncabezadoCT(d.getDetalle().trim());                
+
+                    if (!sePusoEnCeroElDocumento(tipoDocumento.toString(),String.valueOf(eCT.getSerieCT()).trim(),String.valueOf(eCT.getCodigoCT()).trim())){
+                            Modificacion ponerFacturaDeCTenCero=new Modificacion();
+                            int resp=ponerFacturaDeCTenCero.modificarPonerCTconFacturaEnCero(eCT.getSerieCT(), eCT.getCodigoCT());
+                            if (resp!=0){
+                                JOptionPane.showMessageDialog(this,"La Constancia Total: "+eCT.getSerieCT()+":"+eCT.getCodigoCT()+" podra ser facturada en otro documento de factura","Documento CT podra ser facturado",JOptionPane.INFORMATION_MESSAGE);
+                            }else{
+                                JOptionPane.showMessageDialog(this,"La Constancia Total: "+eCT.getSerieCT()+":"+eCT.getCodigoCT()+" no podra ser facturada en otro documento de factura, debera crear uno nuevo para facturarlo","Error!",JOptionPane.ERROR_MESSAGE);
+                            }
+                            this.array1TipoDoc[i]=(tipoDocumento.toString());
+                            this.array2Serie[i]=(eCT.getSerieCT());
+                            this.array3Id[i]=(String.valueOf(eCT.getCodigoCT()));
+                            ponerFacturaDeCTenCero=null;
+                            i++;
+                    }           
+    //                System.out.println("SE ENCONTRO OK: "+tipoDocumento);
+                }
+                if (tipoDocumento.toString().equals("CU:")){//si es CP: recien analiza que serie y codigo tiene
+                    EncabezadoPago eP=new EncabezadoPago();
+                    eP=sacarCodigo.getEncabezadoPago(d.getDetalle().trim()); 
+
+
+    //                JOptionPane.showMessageDialog(this,"detalle pasado: "+d.getDetalle(),"==",JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this,"encabezado Pago obtenido IDENCABEZADO: "+eP.getIdencabezado(),"==",JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this,"encabezado Pago obtenido MATRICULA: "+eP.getMatricula(),"==",JOptionPane.INFORMATION_MESSAGE);
+                    if (!sePusoEnCeroElDocumento(tipoDocumento.toString(),"PAGO",String.valueOf(eP.getIdencabezado()).trim())){
+                            Modificacion ponerFacturaDePagoenCero=new Modificacion();
+                            int resp=ponerFacturaDePagoenCero.modificarPonerEncabezadoPagoconFacturaEnCero(eP.getIdencabezado());
+                            if (resp!=0){
+                                JOptionPane.showMessageDialog(this,"El documento de pago de matricula: "+eP.getIdencabezado()+" podra ser facturado en otro documento de factura","Documento de Pago podra ser facturado",JOptionPane.INFORMATION_MESSAGE);
+                            }else{
+                                JOptionPane.showMessageDialog(this,"El documento de pago de matricula: "+eP.getIdencabezado()+" no podra ser facturado en otro documento de factura\ngenere un nuevo documento de pago","Error!",JOptionPane.ERROR_MESSAGE);
+                            }
+                            this.array1TipoDoc[i]=(tipoDocumento.toString());
+                            this.array2Serie[i]=("PAGO");
+                            this.array3Id[i]=(String.valueOf(eP.getIdencabezado()));
+                            ponerFacturaDePagoenCero=null;
+                            i++;
+                    }           
+    //                System.out.println("SE ENCONTRO OK: "+tipoDocumento);
+                }
+                //pongo en cero al tipo de documento
+                tipoDocumento.delete(0, tipoDocumento.length());
             }
-            if (tipoDocumento.toString().equals("CT:")){//si es CP: recien analiza que serie y codigo tiene
-                EncabezadoCT eCT=new EncabezadoCT();
-                eCT=sacarCodigo.getEncabezadoCT(d.getDetalle().trim());                
             
-                if (!sePusoEnCeroElDocumento(tipoDocumento.toString(),String.valueOf(eCT.getSerieCT()).trim(),String.valueOf(eCT.getCodigoCT()).trim())){
-                        Modificacion ponerFacturaDeCTenCero=new Modificacion();
-                        int resp=ponerFacturaDeCTenCero.modificarPonerCTconFacturaEnCero(eCT.getSerieCT(), eCT.getCodigoCT());
-                        if (resp!=0){
-                            JOptionPane.showMessageDialog(this,"La Constancia Total: "+eCT.getSerieCT()+":"+eCT.getCodigoCT()+" podra ser facturada en otro documento de factura","Documento CT podra ser facturado",JOptionPane.INFORMATION_MESSAGE);
-                        }else{
-                            JOptionPane.showMessageDialog(this,"La Constancia Total: "+eCT.getSerieCT()+":"+eCT.getCodigoCT()+" no podra ser facturada en otro documento de factura, debera crear uno nuevo para facturarlo","Error!",JOptionPane.ERROR_MESSAGE);
-                        }
-                        this.array1TipoDoc[i]=(tipoDocumento.toString());
-                        this.array2Serie[i]=(eCT.getSerieCT());
-                        this.array3Id[i]=(String.valueOf(eCT.getCodigoCT()));
-                        ponerFacturaDeCTenCero=null;
-                        i++;
-                }           
-                System.out.println("SE ENCONTRO OK: "+tipoDocumento);
-            }
-            if (tipoDocumento.toString().equals("CU:")){//si es CP: recien analiza que serie y codigo tiene
-                EncabezadoPago eP=new EncabezadoPago();
-                eP=sacarCodigo.getEncabezadoPago(d.getDetalle().trim());  
-//                JOptionPane.showMessageDialog(this,"detalle pasado: "+d.getDetalle(),"==",JOptionPane.INFORMATION_MESSAGE);
-//                JOptionPane.showMessageDialog(this,"encabezado Pago obtenido IDENCABEZADO: "+eP.getIdencabezado(),"==",JOptionPane.INFORMATION_MESSAGE);
-//                JOptionPane.showMessageDialog(this,"encabezado Pago obtenido MATRICULA: "+eP.getMatricula(),"==",JOptionPane.INFORMATION_MESSAGE);
-                if (!sePusoEnCeroElDocumento(tipoDocumento.toString(),"PAGO",String.valueOf(eP.getIdencabezado()).trim())){
-                        Modificacion ponerFacturaDePagoenCero=new Modificacion();
-                        int resp=ponerFacturaDePagoenCero.modificarPonerEncabezadoPagoconFacturaEnCero(eP.getIdencabezado());
-                        if (resp!=0){
-                            JOptionPane.showMessageDialog(this,"El documento de pago de matricula: "+eP.getIdencabezado()+" podra ser facturado en otro documento de factura","Documento de Pago podra ser facturado",JOptionPane.INFORMATION_MESSAGE);
-                        }else{
-                            JOptionPane.showMessageDialog(this,"El documento de pago de matricula: "+eP.getIdencabezado()+" no podra ser facturado en otro documento de factura\ngenere un nuevo documento de pago","Error!",JOptionPane.ERROR_MESSAGE);
-                        }
-                        this.array1TipoDoc[i]=(tipoDocumento.toString());
-                        this.array2Serie[i]=("PAGO");
-                        this.array3Id[i]=(String.valueOf(eP.getIdencabezado()));
-                        ponerFacturaDePagoenCero=null;
-                        i++;
-                }           
-                System.out.println("SE ENCONTRO OK: "+tipoDocumento);
-            }
-            //pongo en cero al tipo de documento
-            tipoDocumento.delete(0, tipoDocumento.length());
+            
+            
+        
+        
+        
         }
     }
     
@@ -535,7 +574,7 @@ public class UIListadoDeFacturas extends javax.swing.JDialog {
                 if(tipoDoc.equals("CP:") && this.array1TipoDoc[i].equals("CP:")){
                     if(this.array2Serie[i].equals(serie) && this.array3Id[i].equals(codigo)){
                         sePusoEnCero=true;
-                        System.out.println("SE PUSO EN CERO LA CP, LAS SIGUIENTES LINEAS DE DETALLE NO ENTRARAN MAS AQUI ");
+//                        System.out.println("SE PUSO EN CERO LA CP, LAS SIGUIENTES LINEAS DE DETALLE NO ENTRARAN MAS AQUI ");
                     }
                 }
                 if(tipoDoc.equals("CT:") && this.array1TipoDoc[i].equals("CT:")){
@@ -552,7 +591,60 @@ public class UIListadoDeFacturas extends javax.swing.JDialog {
         }
         return sePusoEnCero;
     }
-    
-    
+    /**
+     * Este metodo no esta siendo usado,funciona,pero le falta
+     * determinar si en la factura que se pretende cambiar su numero
+     * hay o no constancias parciales o totales que ya tengan asignado
+     * una serie y numero de factura
+     * si es asi, deberan ser moficadas tambien, en dichos campos
+     */
+    private void cambiarNumeroDeFactura(){
+        if (this.jTable1.getSelectedRow()>-1){//es decir,si selecciono un elemento de la tabla 
+            if (String.valueOf(this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 6)).trim().equals("N")){                
+                if (caja.getEstado().equals("A")){
+                    int respu=JOptionPane.showConfirmDialog(this,"Esta seguro de hacer eta operacion, puede provocar errores graves sino tiene claro lo que esta haciendo,\nEsta por modificar el numero de factura que ya se ha facturado\nLuego de cerrar la caja,no podra volver a hacer esta operacion", "CUIDADO, Operacion Critica!",JOptionPane.YES_NO_OPTION);
+                    if (respu==JOptionPane.OK_OPTION){
+                        EncabezadoFactura encF1=new EncabezadoFactura();
+                        EncabezadoFactura encF2=new EncabezadoFactura();
+
+                        encF1.setSerieFactura(Integer.parseInt(String.valueOf(this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 0))));
+                        encF1.setNumeroFactura(Long.parseLong(String.valueOf(this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 1))));
+                        encF2.setSerieFactura(encF1.getSerieFactura());
+
+                        String respNuevoNroFac=JOptionPane.showInputDialog(this, "Ingrese el nuevo numero de factura sin ceros no significativos...", "");
+
+                        if (respNuevoNroFac!=null){
+                            try{
+                                Long.parseLong(respNuevoNroFac);
+                                encF2.setNumeroFactura(Long.parseLong(respNuevoNroFac.trim()));                              
+                                //Se hace la modificaion del numero de factura
+                                Modificacion modifNroFactura=new Modificacion();
+                                int modificados=modifNroFactura.modificarNumeroDeFactura(encF1, encF2);                                
+                                
+                                if (modificados>0){
+                                    JOptionPane.showMessageDialog(this,"Se modifico correctamente el numero de factura", "Modificacion de Numero de Factura",JOptionPane.INFORMATION_MESSAGE);
+                                    this.mostrarDatos();
+                                    encF1=null;
+                                    encF2=null;
+                                }else{
+                                    if (modificados==0){
+                                        JOptionPane.showMessageDialog(this,"El numero de factura que esta ingresando pertenece a otra factura\nNo se puede modificar", "Modificacion de Numero de Factura",JOptionPane.INFORMATION_MESSAGE);
+                                    }
+                                }                                
+                            }catch (NumberFormatException ne){
+                                JOptionPane.showMessageDialog(this,"Debe ingresar un NUMERO ENTERO, no incluir letras ni simbolos\nNo se pudo cambiar el numero de factura", "Valor Incorrecto!",JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(this,"La factura seleccionada no pertenece a una caja abierta\nno podra cambiarse su numero porque la caja a la que pertenece dicha factura ya ha sido cerrada","No se permite modificar", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }else{
+                JOptionPane.showMessageDialog(this,"La factura seleccionada esta anulada","No se puede modificar", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }else{ 
+            JOptionPane.showMessageDialog(this,"Debe seleccionar una factura de la tablaª","Atencion",JOptionPane.INFORMATION_MESSAGE); 
+        }
+    }
 }
 

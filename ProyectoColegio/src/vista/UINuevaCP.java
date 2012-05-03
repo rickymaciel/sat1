@@ -13,10 +13,8 @@ import controlador.CUltimo;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-//import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
@@ -26,17 +24,18 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-//import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import negocios.Barrio;
 import negocios.Departamento;
 import negocios.DetalleCP;
+import negocios.DetalleCPParaFacturacion;
+import negocios.DetalleSuperficie;
 import negocios.Documento;
 import negocios.EncabezadoCP;
 import negocios.Localidad;
 import negocios.Matriculado;
-import negocios.MostrarTotales;
 import negocios.Provincia;
+import negocios.Redondear;
 import negocios.SerieConstancia;
 import negocios.Tasa;
 import negocios.TasaAplicable;
@@ -66,20 +65,36 @@ public class UINuevaCP extends javax.swing.JFrame
     private Collection tiposTrabajos=new ArrayList();
     private Collection tiposSuperficies=new ArrayList();
     private Collection tiposSecciones=new ArrayList();
+    private Collection detalleSuperficie = new ArrayList();
+    private Collection detalleFacturacion = new ArrayList(); // esta coleccion contiene los valores a facturar de la CP
     //Pie
     private Double total=0.0;
     // tasas aplicables a esta constancia
     private Collection tasasAplicables = new ArrayList();
-    private Collection mostrarTotales = new ArrayList();
     
     private int vector[] = new int[10];
     private TasaAplicable vectorTrabajo[] = new TasaAplicable[10];
     private Documento documento = new Documento();
     private Collection tasas = new ArrayList();
     private int tamanioVector;
-    private boolean automatico = true;
+    private int vFila = 0;
     private long nroConst;
     
+     //Limites de campo de formulario:
+    private Long CAMPO_LONG_MAX=Long.MAX_VALUE;;
+    private Integer CAMPO_INTEGER_MAX=Integer.MAX_VALUE;;
+    private double CAMPO_DOBLE=Double.MAX_VALUE;
+    
+    private int CAMPO_PROPIETARIO=100;
+    private int CAMPO_COMITENTE=100;    
+    
+    private int CAMPO_CALLE=100;
+    private int CAMPO_NUMERO=10;
+    private int CAMPO_MANZANA=10;
+    private int CAMPO_LOTE=10;
+    
+    private int CAMPO_LEYENDA=250;    
+    private int CAMPO_ORDENTRABAJO=10;
     
     /** Creates new form UINuevaCP */
     public UINuevaCP()
@@ -163,18 +178,14 @@ public class UINuevaCP extends javax.swing.JFrame
         jPanel6 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTableDetalle = new javax.swing.JTable();
-        jLabel6 = new javax.swing.JLabel();
-        jTSuperficieRelevada = new javax.swing.JTextField();
-        jLabel15 = new javax.swing.JLabel();
-        jTSuperficieProyecto = new javax.swing.JTextField();
-        jLabel16 = new javax.swing.JLabel();
-        jTCambioTecho = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         jTOrdenTrabajo = new javax.swing.JTextField();
         jBQuitarDetalle = new javax.swing.JButton();
         jBMostrarTotales = new javax.swing.JButton();
-        jTTotal = new javax.swing.JTextField();
-        jLabel21 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTableSuperficies = new javax.swing.JTable();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTextAreaLeyenda = new javax.swing.JTextArea();
         jBGuardar = new javax.swing.JButton();
         jBSalir = new javax.swing.JButton();
         jBImprimir = new javax.swing.JButton();
@@ -235,15 +246,15 @@ public class UINuevaCP extends javax.swing.JFrame
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jTFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jCSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(74, 74, 74)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTNumeroConstancia, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -252,15 +263,15 @@ public class UINuevaCP extends javax.swing.JFrame
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jCSerie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jTFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jTNumeroConstancia, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jCSerie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Participantes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10)));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Participantes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
 
         jTableParticipantes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -348,43 +359,48 @@ public class UINuevaCP extends javax.swing.JFrame
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel18))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jTMatricula)
+                    .addComponent(jTNombrePropietario, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel18))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTMatricula)
-                            .addComponent(jTNombrePropietario, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(6, 6, 6)
+                        .addComponent(jBQuitarMatriculado, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(48, 48, 48)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTNombreComitente))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addComponent(jBQuitarMatriculado, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTSerieFactura)
-                                    .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTNumeroFactura, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)))))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(27, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, Short.MAX_VALUE)
+                                .addComponent(jTSerieFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(21, 21, 21))
+                            .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel19)
+                            .addComponent(jTNumeroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(65, 65, 65))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTNombreComitente, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 715, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTNombrePropietario, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTNombreComitente, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTNombrePropietario, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTNombreComitente, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(6, 6, 6)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -398,28 +414,29 @@ public class UINuevaCP extends javax.swing.JFrame
                             .addComponent(jBQuitarMatriculado, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel20)
-                                    .addComponent(jLabel19))
+                                    .addComponent(jLabel19)
+                                    .addComponent(jLabel20))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jTSerieFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTNumeroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addComponent(jTNumeroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTSerieFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tipos de trabajo", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10)));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tipos de trabajo", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
 
         jTableTrabajos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Proyecto", "Conduccion Tecnica", "Calculo H° A°", "Relevamiento", "Cambio Techo"
+                "Proyecto", "Conduccion Tecnica", "Calculo H° A°", "Relevamiento", "Cambio Techo", "Proyec. C/Calc Cambio Techo", "Proyec. S/Calc Cambio Techo", "Admin. Tecnica Cambio Techo", "Proyecto con Calculo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -440,14 +457,14 @@ public class UINuevaCP extends javax.swing.JFrame
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 715, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
         );
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Ubicacion de la obra", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10)));
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Ubicacion de la obra", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
 
         jLabel7.setText("Provincia");
 
@@ -507,78 +524,90 @@ public class UINuevaCP extends javax.swing.JFrame
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10)
+                .addGap(10, 10, 10)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(5, 5, 5)
-                        .addComponent(jTProvincia, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel10))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTLocalidad, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-                            .addComponent(jTCalle, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTCalle, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTProvincia, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jTLocalidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))))
+                .addGap(12, 12, 12)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(62, 62, 62)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel14)
-                            .addComponent(jLabel11))
+                            .addComponent(jLabel9)))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jTNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel12)
-                                .addGap(12, 12, 12)
-                                .addComponent(jTManzana, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel13)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTLote, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jTBarrio, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTDepartamento, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jBUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jLabel9))
-                .addGap(22, 22, 22))
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(jLabel12)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTManzana, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(46, 46, 46)
+                        .addComponent(jLabel13))
+                    .addComponent(jTBarrio, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                    .addComponent(jTDepartamento, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jBUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTLote, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+            .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(3, 3, 3)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(jBUbicacion))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jTProvincia)
+                                    .addComponent(jLabel7))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTLocalidad)
+                            .addComponent(jLabel8)))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
-                            .addComponent(jTDepartamento)
-                            .addComponent(jBUbicacion)
-                            .addComponent(jTProvincia)))
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jTDepartamento, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTBarrio, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+                            .addComponent(jLabel14))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel14)
-                    .addComponent(jTLocalidad)
-                    .addComponent(jTBarrio))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(jTCalle, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
-                    .addComponent(jLabel11)
-                    .addComponent(jTNumero, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel13)
                     .addComponent(jTLote, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
-                    .addComponent(jTManzana, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE))
-                .addGap(37, 37, 37))
+                    .addComponent(jLabel13)
+                    .addComponent(jTManzana, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
+                    .addComponent(jLabel12)
+                    .addComponent(jTNumero, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
+                    .addComponent(jLabel11)
+                    .addComponent(jTCalle, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
+                    .addComponent(jLabel10))
+                .addContainerGap())
         );
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Detalle", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10)));
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Detalle", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
 
         jTableDetalle.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -606,21 +635,6 @@ public class UINuevaCP extends javax.swing.JFrame
         });
         jScrollPane3.setViewportView(jTableDetalle);
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 10));
-        jLabel6.setText("Sup. Relevada");
-
-        jTSuperficieRelevada.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-
-        jLabel15.setFont(new java.awt.Font("Tahoma", 0, 10));
-        jLabel15.setText("Sup. Proyecto");
-
-        jTSuperficieProyecto.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-
-        jLabel16.setFont(new java.awt.Font("Tahoma", 0, 10));
-        jLabel16.setText("Total");
-
-        jTCambioTecho.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-
         jLabel17.setFont(new java.awt.Font("Tahoma", 0, 10));
         jLabel17.setText("Orden de Trabajo:");
 
@@ -638,95 +652,94 @@ public class UINuevaCP extends javax.swing.JFrame
             }
         });
 
-        jBMostrarTotales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/remove.gif"))); // NOI18N
+        jBMostrarTotales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/xcalc.gif"))); // NOI18N
         jBMostrarTotales.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBMostrarTotalesActionPerformed(evt);
             }
         });
 
-        jTTotal.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        jTableSuperficies.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-        jLabel21.setFont(new java.awt.Font("Tahoma", 0, 10));
-        jLabel21.setText("Sup. Camb. Techo");
+            },
+            new String [] {
+                "Superficie", "m2"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableSuperficies.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableSuperficiesMouseClicked(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jTableSuperficiesMouseReleased(evt);
+            }
+        });
+        jScrollPane4.setViewportView(jTableSuperficies);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jBMostrarTotales, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel21)))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jBQuitarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel15)
-                            .addComponent(jLabel6)))
-                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTOrdenTrabajo)
-                    .addComponent(jTSuperficieProyecto)
-                    .addComponent(jTSuperficieRelevada, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                    .addComponent(jTCambioTecho, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                    .addComponent(jTTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE))
-                .addContainerGap(1, Short.MAX_VALUE))
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jBQuitarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBMostrarTotales, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTOrdenTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane4, 0, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(jTSuperficieRelevada, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap()
+                        .addComponent(jBQuitarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel15)
-                            .addComponent(jTSuperficieProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jBQuitarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jBMostrarTotales, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel21)
-                            .addComponent(jTCambioTecho, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel16)
-                            .addComponent(jTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jBMostrarTotales, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4, 0, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel17)
-                    .addComponent(jTOrdenTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(16, 16, 16))
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                .addContainerGap())
+                    .addComponent(jTOrdenTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17)))
         );
+
+        jTextAreaLeyenda.setColumns(20);
+        jTextAreaLeyenda.setRows(5);
+        jTextAreaLeyenda.setText("Debiendo la Repartición interviniente antes de otorgar Inspección Final del:");
+        jTextAreaLeyenda.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jScrollPane5.setViewportView(jTextAreaLeyenda);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, 0, 623, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 707, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -736,11 +749,13 @@ public class UINuevaCP extends javax.swing.JFrame
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31))
         );
 
         jBGuardar.setText("Guardar");
@@ -777,24 +792,22 @@ public class UINuevaCP extends javax.swing.JFrame
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(104, 104, 104)
-                        .addComponent(jBNueva, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(150, 150, 150)
+                .addComponent(jBNueva, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jBImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jBGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(163, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -809,14 +822,15 @@ public class UINuevaCP extends javax.swing.JFrame
 
     private void jBGuardarActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBGuardarActionPerformed
     {//GEN-HEADEREND:event_jBGuardarActionPerformed
-// TODO add your handling code here:
-        System.out.println("El metodo controlar devuelve "+String.valueOf(this.controlar()));
         if(this.controlar())
-            if(this.fechaCorrectaControl()){
-                this.guardarCP();
-            }else{
+            if(this.fechaCorrectaControl())
+            {
+                if(this.detalleFacturacion.size()==0)
+                    JOptionPane.showMessageDialog(null, "No hay valores de facturacion para la constancia","Falta monto a cobrar", JOptionPane.ERROR_MESSAGE);
+                else
+                    this.guardarCP();
+            }else
                 JOptionPane.showMessageDialog(null, "La fecha debe ser correcta con el formato: DD/MM/AAAA", "Formato de fecha incorrecta",JOptionPane.ERROR_MESSAGE);
-            }         
         else
             JOptionPane.showMessageDialog(null, "Debe llenar todos los campos", "Faltan Datos o estan incorrectos",JOptionPane.ERROR_MESSAGE);
         
@@ -834,8 +848,6 @@ public class UINuevaCP extends javax.swing.JFrame
     }//GEN-LAST:event_jCSerieActionPerformed
 
     private void jBUbicacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBUbicacionActionPerformed
-        // TODO add your handling code here:
-//        this.ubicacion = false;
         UIEligeDireccionBarrio barrios=new UIEligeDireccionBarrio(this,"JUJUY");
         barrios.setVisible(true);
 }//GEN-LAST:event_jBUbicacionActionPerformed
@@ -845,10 +857,7 @@ public class UINuevaCP extends javax.swing.JFrame
         if (this.jTableDetalle.getSelectedRow()!=-1)
         {
             this.quitarLineaDetalle();
-            this.jTSuperficieProyecto.setText("");
-            this.jTSuperficieRelevada.setText("");
-            this.jTCambioTecho.setText("");
-            this.calcular();
+            this.actualizarSuperficie();
         }
         else
             JOptionPane.showMessageDialog(this, "Debe seleccionar una fila de la tabla...","Atencion", JOptionPane.INFORMATION_MESSAGE);
@@ -871,11 +880,8 @@ public class UINuevaCP extends javax.swing.JFrame
         }
         if(evt.getKeyCode()==27)
             this.dispose();
-        if(evt.getKeyChar()==10){
+        if(evt.getKeyChar()==10)
             this.agregarMatriculadoATabla();
-        }
-            //this.jBAgregarMatriculado.requestFocus();
-
     }//GEN-LAST:event_jTMatriculaKeyPressed
 
     private void jBQuitarMatriculadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBQuitarMatriculadoActionPerformed
@@ -886,8 +892,6 @@ public class UINuevaCP extends javax.swing.JFrame
         }else{
             JOptionPane.showMessageDialog(this, "Debe seleccionar una fila de la tabla...","Atencion", JOptionPane.INFORMATION_MESSAGE);
         }
-        
-        
     }//GEN-LAST:event_jBQuitarMatriculadoActionPerformed
 
     private void jTableTrabajosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableTrabajosMouseClicked
@@ -902,34 +906,43 @@ public class UINuevaCP extends javax.swing.JFrame
             for(int i=0;i<this.jTableTrabajos.getRowCount();i++)
                 if(i != x)
                     this.jTableTrabajos.setValueAt(false,i,y);
-        if(this.jTCambioTecho.getText().trim().length() != 0)
-            this.calcular();
     }//GEN-LAST:event_jTableTrabajosMouseReleased
 
     private void jTableDetalleKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableDetalleKeyReleased
         // TODO add your handling code here:
         if(evt.getKeyCode()==10)
         {
-            int x = this.jTableDetalle.getSelectedRow();
             int y = this.jTableDetalle.getSelectedColumn();
-            //if((x == (this.jTableDetalle.getRowCount()-1)) || (x == 0))
-            if(x == 0)
+            
+            if(this.vFila == 0)
             {
                 if(y == 0)
-                    if(this.controlarDetalle(x))
+                    if(this.controlarDetalle(this.vFila))
                     {
-                        this.calcular();
-                        //if(x == (this.jTableDetalle.getRowCount() - 1))
-                        if(this.jTableDetalle.getValueAt((this.jTableDetalle.getRowCount() - 1),3) != null)
-                            this.agregarLineaDetalle();
+                        if(this.jTableDetalle.getValueAt(this.vFila, 3) != null)
+                        {
+                            this.agregarSuperficie(Double.parseDouble(String.valueOf(this.jTableDetalle.getValueAt(this.vFila, 3))), String.valueOf(this.jTableDetalle.getValueAt(this.vFila, 0)));
+                            if(this.jTableDetalle.getRowCount() == (this.vFila + 1))
+                                this.agregarLineaDetalle();
+                        }
                     }
-                    
                     else
                         JOptionPane.showMessageDialog(null,"Debe llenar todas las celdas de la linea de detalle", "Faltan datos",JOptionPane.ERROR_MESSAGE);
             }
             else
-                if(y == 0)
-                    this.calcular();
+                if(this.controlarDetalle(this.vFila))
+                {
+//                    System.out.println("El valor de la fila es: "+this.vFila);
+                    if((y == 0) || (y == 3))
+                        if(this.jTableDetalle.getValueAt(this.vFila, 3) != null)
+                        {
+                            this.agregarSuperficie(Double.parseDouble(String.valueOf(this.jTableDetalle.getValueAt(this.vFila, 3))), String.valueOf(this.jTableDetalle.getValueAt(this.vFila, 0)));
+                            if(this.jTableDetalle.getRowCount() == (this.vFila + 1))
+                                this.agregarLineaDetalle();
+                        }
+                }
+                else
+                    JOptionPane.showMessageDialog(null,"Debe llenar todas las celdas de la linea de detalle", "Faltan datos",JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jTableDetalleKeyReleased
 
@@ -989,8 +1002,11 @@ public class UINuevaCP extends javax.swing.JFrame
 
     private void jTableDetalleKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableDetalleKeyPressed
         // TODO add your handling code here:
+        this.vFila = 999999;
         if(evt.getKeyCode()==27)
             this.dispose();
+        if(evt.getKeyCode() == 10)
+            this.vFila = this.jTableDetalle.getSelectedRow();
         
         
     }//GEN-LAST:event_jTableDetalleKeyPressed
@@ -1046,11 +1062,16 @@ public class UINuevaCP extends javax.swing.JFrame
 }//GEN-LAST:event_jTSerieFacturaKeyPressed
 
     private void jBMostrarTotalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBMostrarTotalesActionPerformed
-        // TODO add your handling code here:
-        UIMostrarTotales ui = new UIMostrarTotales(this,true);
-        ui.mostrar(this.mostrarTotales);
+        UICalcularDetalleCP ui = new UICalcularDetalleCP(this.detalleSuperficie, this);
         ui.setVisible(true);
 }//GEN-LAST:event_jBMostrarTotalesActionPerformed
+
+private void jTableSuperficiesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableSuperficiesMouseClicked
+// TODO add your handling code here:
+}//GEN-LAST:event_jTableSuperficiesMouseClicked
+
+private void jTableSuperficiesMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableSuperficiesMouseReleased
+}//GEN-LAST:event_jTableSuperficiesMouseReleased
     
     /**
      * @param args the command line arguments
@@ -1082,18 +1103,14 @@ public class UINuevaCP extends javax.swing.JFrame
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -1106,9 +1123,10 @@ public class UINuevaCP extends javax.swing.JFrame
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextField jTBarrio;
     private javax.swing.JTextField jTCalle;
-    private javax.swing.JTextField jTCambioTecho;
     private javax.swing.JTextField jTDepartamento;
     private javax.swing.JTextField jTFecha;
     private javax.swing.JTextField jTLocalidad;
@@ -1123,12 +1141,11 @@ public class UINuevaCP extends javax.swing.JFrame
     private javax.swing.JTextField jTOrdenTrabajo;
     private javax.swing.JTextField jTProvincia;
     private javax.swing.JTextField jTSerieFactura;
-    private javax.swing.JTextField jTSuperficieProyecto;
-    private javax.swing.JTextField jTSuperficieRelevada;
-    private javax.swing.JTextField jTTotal;
     private javax.swing.JTable jTableDetalle;
     private javax.swing.JTable jTableParticipantes;
+    private javax.swing.JTable jTableSuperficies;
     private javax.swing.JTable jTableTrabajos;
+    private javax.swing.JTextArea jTextAreaLeyenda;
     // End of variables declaration//GEN-END:variables
     
     
@@ -1144,6 +1161,7 @@ public class UINuevaCP extends javax.swing.JFrame
     this.jBNueva.setEnabled(false);
     this.jBSalir.setEnabled(true);
     this.jBGuardar.setEnabled(true);
+    this.ajustarColumnas();
  }
 
  private void cargarFecha(){
@@ -1194,7 +1212,6 @@ public class UINuevaCP extends javax.swing.JFrame
         CUltimo nroCP=new CUltimo();        
         nroConst=nroCP.getUltimo(encCP);
         
-        //this.jTNumeroConstancia.setText(String.valueOf(nroConst)); 
         this.jTNumeroConstancia.setText("Nro Automatico"); 
         this.jTNumeroFactura.setEnabled(false);
         this.jTSerieFactura.setEnabled(false);
@@ -1326,25 +1343,6 @@ public class UINuevaCP extends javax.swing.JFrame
         }   
     }
     
- /*   
-    private void llenarTablaMatriculados(Collection mats)
-    {   
-        Matriculado m=new Matriculado();
-        Iterator it = mats.iterator();
-        // ahora obtengo el modelo de la tabla
-        DefaultTableModel modelo = (DefaultTableModel)this.jTableParticipantes.getModel();
-        String datos[] = new String[4];
-        while(it.hasNext())
-        {
-            m = (Matriculado)it.next();
-            datos[0] = String.valueOf(m.getIdmatriculado());
-            datos[1] = String.valueOf(m.getMatricula());
-            datos[2] = m.getApellido();
-            datos[3] = m.getNombres();            
-            modelo.addRow(datos);
-        }
-    }
-  */
     private void agregarLineaMatriculado(Matriculado m){
         DefaultTableModel  modelo=new DefaultTableModel();
         modelo=(DefaultTableModel) this.jTableParticipantes.getModel();
@@ -1380,14 +1378,9 @@ public class UINuevaCP extends javax.swing.JFrame
         DefaultTableModel  modelo=new DefaultTableModel();
         modelo=(DefaultTableModel) this.jTableDetalle.getModel();
         Vector datos = new Vector();
-        //String datos[]=new String[4];
         datos.add(new String());
         datos.add(new String());
         datos.add(new String());
-        /*datos[0]="";
-        datos[1]="";
-        datos[2]="";
-        datos[3]="";*/
         modelo.addRow(datos);    
     }
     private void quitarLineaDetalle()
@@ -1434,22 +1427,6 @@ public class UINuevaCP extends javax.swing.JFrame
         CListar listar = new CListar();
         this.tasas = listar.hacerListado(new Tasa());
         listar = null;
-    }
-    
-    private Tasa getTasa(int id)
-    {
-        Iterator it = this.tasas.iterator();
-        Tasa t = new Tasa();
-        Tasa tasa = new Tasa();
-        while(it.hasNext())
-        {
-            t = (Tasa)it.next();
-            if(t.getIdtasa() == id)
-                tasa = t;
-        }
-        t = null;
-        it = null;
-        return tasa;
     }
     
     private void getDoc()
@@ -1515,9 +1492,9 @@ public class UINuevaCP extends javax.swing.JFrame
     
     private void limpiarSuperficieYTotal()
     {
-        this.jTSuperficieProyecto.setText("");
-        this.jTSuperficieRelevada.setText("");
-        this.jTCambioTecho.setText("");
+//        this.jTableSuperficies.setValueAt("0", 0, 2);
+//        this.jTableSuperficies.setValueAt("0", 1, 2);
+//        this.jTableSuperficies.setValueAt("0", 2, 2);
         this.jTOrdenTrabajo.setText("---");
     }
     
@@ -1599,7 +1576,7 @@ public class UINuevaCP extends javax.swing.JFrame
         while(it.hasNext())
         {
             t = (TasaAplicable)it.next();
-            modelo.addColumn(this.getTasa(t.getIdtasa()).getDenominacion().trim());
+            modelo.addColumn(t.getLeyenda().trim());
         }
         t = null;
         it = null;
@@ -1614,33 +1591,6 @@ public class UINuevaCP extends javax.swing.JFrame
         return bandera;
     }
     
-    private Tasa obtenerTasa(int orden)
-    {
-        Tasa tasa = new Tasa();
-        int contador = 0;
-        Iterator it = this.tasasAplicables.iterator();
-        while(it.hasNext())
-        {
-            TasaAplicable t = (TasaAplicable)it.next();
-            if(contador == orden)
-                tasa = this.getTasa(t.getIdtasa());
-            contador++;
-            t = null;
-        }
-        it = null;
-        return tasa;
-    }
-    
-    private Collection getValores()
-    {
-        Collection valores = new ArrayList();
-        // primero recorro el jtable para saber cuales campos estan en true
-        for(int i=0;i<this.jTableTrabajos.getRowCount();i++)
-            for(int j=0;j<this.tamanioVector;j++)
-                if(Boolean.parseBoolean(String.valueOf(this.jTableTrabajos.getValueAt(i, j))))
-                    valores.add(this.obtenerTasa(j));
-        return valores;
-    }
     
     private TipoTrabajo getTrabajo(String nombre)
     {
@@ -1687,108 +1637,33 @@ public class UINuevaCP extends javax.swing.JFrame
         return t;
     }
  
-    private double calcularSuperficie(int fila)
-    {
-        double superficie = 0.0;
-        TipoSuperficie sup = new TipoSuperficie();
-        sup = this.getSuperficie(String.valueOf(this.jTableDetalle.getValueAt(fila, 1)));
-        superficie = Double.parseDouble(String.valueOf(this.jTableDetalle.getValueAt(fila, 3))) * sup.getModificador();
-        return superficie;
-    }
     
-    private void calcular()
+    private double calcularSuperficieRelevamiento()
     {
-        double superficieRelevamiento = 0.0;
-        double superficieProyecto = 0.0;
-        double superficieCambioTecho = 0.0;
-        this.mostrarTotales.clear();
-        
-            for(int i=0;i<this.jTableDetalle.getRowCount();i++)
-            {
-                if(this.jTableDetalle.getValueAt(i, 3) != null)
-                {
-                    if(String.valueOf(this.jTableDetalle.getValueAt(i, 0)).trim().equals("RELEVAMIENTO"))
-                        superficieRelevamiento = superficieRelevamiento + this.calcularSuperficie(i);
-                    else
-                        if(String.valueOf(this.jTableDetalle.getValueAt(i, 0)).trim().equals("PROYECTO"))
-                            superficieProyecto = superficieProyecto + this.calcularSuperficie(i);
-                        else
-                            if(String.valueOf(this.jTableDetalle.getValueAt(i, 0)).trim().equals("CAMBIO DE TECHO"))
-                                superficieCambioTecho = superficieCambioTecho + this.calcularSuperficie(i);
-                }
-                    
-            }
-        this.jTSuperficieProyecto.setText(String.valueOf(superficieProyecto));
-        this.jTSuperficieRelevada.setText(String.valueOf(superficieRelevamiento));
-        this.jTCambioTecho.setText(String.valueOf(superficieCambioTecho));
-        Collection valores = this.getValores();
-        Iterator it = valores.iterator();
-        double indiceRelevamiento = 0.0; // tiene el valor en pesos 
-        double tasaMinimaCalculo = 0.0;
-        double indiceConduccion = 0.0; // tiene el valor en pesos
-        double indiceCalculo = 0.0; // tiene la suma de indices
-        double indiceCambioTecho = 0.0;
-        MostrarTotales mRelevamiento = new MostrarTotales();
-        MostrarTotales mConduccion = new MostrarTotales();
-        MostrarTotales mCalculo = new MostrarTotales();
-        MostrarTotales mCambioTecho = new MostrarTotales();
-        while(it.hasNext())
+        double re = 0.0;
+        for(int i=0;i<this.jTableSuperficies.getRowCount();i++)
         {
-            Tasa t = (Tasa)it.next();
-            if(t.getDenominacion().trim().equals("RELEVAMIENTO"))
-            {
-                indiceRelevamiento = superficieRelevamiento * t.getIndice();
-                if(indiceRelevamiento < t.getTasaMinima())
-                    indiceRelevamiento = t.getTasaMinima();
-                mRelevamiento.setDetalle(t.getDenominacion());
-            }
-                
-            else
-                if(t.getDenominacion().trim().equals("CONDUCCION TECNICA"))
-                {
-                    indiceConduccion = superficieProyecto * t.getIndice();
-                    if(indiceConduccion < t.getTasaMinima())
-                        indiceConduccion = t.getTasaMinima();
-                    mConduccion.setDetalle(t.getDenominacion());
-                }
-                else
-                    if(t.getDenominacion().trim().equals("CAMBIO DE TECHO"))
-                    {
-                        indiceCambioTecho = superficieCambioTecho * t.getIndice();
-                        if(indiceCambioTecho < t.getTasaMinima())
-                            indiceCambioTecho = t.getTasaMinima();
-                        mCambioTecho.setDetalle(t.getDenominacion());
-                    } 
-                    else
-                    {
-                        indiceCalculo = indiceCalculo + t.getIndice();
-                        tasaMinimaCalculo = t.getTasaMinima();
-                        mCalculo.setDetalle(t.getDenominacion());
-                    }
-            t = null;
+            if(String.valueOf(this.jTableSuperficies.getValueAt(i, 0)).trim().equals("RELEVAMIENTO"))
+                re += Double.parseDouble(String.valueOf(this.jTableSuperficies.getValueAt(i, 1)));
         }
-        it = null;
-        double totalCalculo = superficieProyecto * indiceCalculo;
-        if(totalCalculo < tasaMinimaCalculo)
-            totalCalculo = tasaMinimaCalculo;
-        //if(indiceRelevamiento )
-        double total1 = 0.0;
-        total1 = indiceRelevamiento + indiceConduccion + totalCalculo + indiceCambioTecho;
-        mCalculo.setTatal(totalCalculo);
-        mRelevamiento.setTatal(indiceRelevamiento);
-        mConduccion.setTatal(indiceConduccion);
-        mCambioTecho.setTatal(indiceCambioTecho);
-        this.mostrarTotales.add(mCalculo);
-        this.mostrarTotales.add(mRelevamiento);
-        this.mostrarTotales.add(mConduccion);
-        this.mostrarTotales.add(mCambioTecho);
-        total=total1;
-        NumberFormat nf = NumberFormat.getCurrencyInstance();
-        this.jTTotal.setText(nf.format(total));
+        return re;
     }
     
+    private double calcularSuperficieProyecto()
+    {
+        double re = 0.0;
+        for(int i=0;i<this.jTableSuperficies.getRowCount();i++)
+        {
+            if(!String.valueOf(this.jTableSuperficies.getValueAt(i, 0)).trim().equals("RELEVAMIENTO"))
+                re += Double.parseDouble(String.valueOf(this.jTableSuperficies.getValueAt(i, 1)));
+        }
+        return re;
+    }
+    
+
     private boolean controlarDetalle(int x)
     {
+//        System.out.println("La fila es: "+x);
         boolean bandera = true;
         if(this.jTableDetalle.getValueAt(x,0) == null)
             bandera = false;
@@ -1798,17 +1673,12 @@ public class UINuevaCP extends javax.swing.JFrame
             bandera = false;
         if(this.jTableDetalle.getValueAt(x,3) == null)
             bandera = false;
-//        if(this.jTableDetalle.getValueAt(x,3).toString().trim().length() == 0)
-  //          bandera = false;
         if(this.jTableDetalle.getValueAt(x,0).toString().trim().length() == 0)
             bandera = false;
         if(this.jTableDetalle.getValueAt(x,1).toString().trim().length() == 0)
             bandera = false;
         if(this.jTableDetalle.getValueAt(x,2).toString().trim().length() == 0)
             bandera = false;
-        //if(this.jTableDetalle.getValueAt(x,3).toString().trim().length() == 0)
-          //  bandera = false;
-        
         return bandera;
     }
     
@@ -1820,7 +1690,6 @@ public class UINuevaCP extends javax.swing.JFrame
         {
             contador = 0;
             for(int j=0;j<this.tamanioVector;j++)
-                //if(Boolean.parseBoolean(this.jTableTrabajos.getValueAt(i,j).toString()))
                 if(Boolean.parseBoolean(String.valueOf(this.jTableTrabajos.getValueAt(i,j))))
                     contador++;
         }
@@ -1836,7 +1705,6 @@ public class UINuevaCP extends javax.swing.JFrame
             fecha=df.parse(this.jTFecha.getText().trim()); 
             fechaCorrecta=true;
         }catch(ParseException pe){
-            //JOptionPane.showMessageDialog(null,"La fecha es incorrecta, escriba una valida\n del tipo: DD/MM/AAAA","Fecha Errónea",JOptionPane.ERROR_MESSAGE);
             fechaCorrecta=false;
         }        
         return fechaCorrecta;
@@ -1858,7 +1726,10 @@ public class UINuevaCP extends javax.swing.JFrame
                 bandera = false;            
                 JOptionPane.showMessageDialog(null,"Debe cargar un numero de factura","Nro de Factura nula",JOptionPane.ERROR_MESSAGE);
             }
-        
+            if(this.jTNumeroFactura.getText().trim().length() > this.CAMPO_LONG_MAX){
+                JOptionPane.showMessageDialog(this,"El numero de la factura, debe tener como maximo "+this.CAMPO_LONG_MAX+" digitos","El campo supera la cantidad permitida",JOptionPane.WARNING_MESSAGE);
+                bandera = false;
+            }
             if(this.jTSerieFactura.getText().trim().length()==0)
             {
                 bandera = false;            
@@ -1867,33 +1738,83 @@ public class UINuevaCP extends javax.swing.JFrame
         }
         
         
-        if(this.jTNombrePropietario.getText().trim().length() == 0)
+        if(this.jTNombrePropietario.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar un nombre de propietario, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-           
-        if(this.jTNombreComitente.getText().trim().length() == 0)
+        }
+        if(this.jTNombrePropietario.getText().trim().length() > this.CAMPO_PROPIETARIO){
+            JOptionPane.showMessageDialog(this,"Nombre de propietario, debe tener como maximo "+this.CAMPO_PROPIETARIO+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-
+        }
+        
+        if(this.jTNombreComitente.getText().trim().length() == 0){
+            bandera = false;
+        }
+        if(this.jTNombreComitente.getText().trim().length() > this.CAMPO_COMITENTE){
+            JOptionPane.showMessageDialog(this,"Nombre de comitente, debe tener como maximo "+this.CAMPO_COMITENTE+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        
         if(this.jTableParticipantes.getRowCount() == 0)
             bandera = false;
             
         // controlar ubicacion de la obra
         if(this.jTBarrio.getText().trim().length() == 0)
             bandera = false;
-        if(this.jTCalle.getText().trim().length() == 0)
+        if(this.jTCalle.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar un nombre de calle, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTNumero.getText().trim().length() == 0)
+        }
+        if(this.jTCalle.getText().trim().length() > this.CAMPO_CALLE){
+            JOptionPane.showMessageDialog(this,"Nombre de calle, debe tener como maximo "+this.CAMPO_CALLE+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTManzana.getText().trim().length() == 0)
+        }
+        if(this.jTNumero.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar un numero de la ubicacion, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTLote.getText().trim().length() == 0)
+        }
+        if(this.jTNumero.getText().trim().length() > this.CAMPO_NUMERO){
+            JOptionPane.showMessageDialog(this,"El numero de la ubicacion, debe tener como maximo "+this.CAMPO_CALLE+" digitos","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        // controlar las tasas aplicadas
-        if(this.jTSuperficieProyecto.getText().trim().length() == 0)
+        }
+        
+        if(this.jTManzana.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar la manzana de la ubicacion, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTSuperficieRelevada.getText().trim().length() == 0)
+        }
+        if(this.jTManzana.getText().trim().length() > this.CAMPO_MANZANA){
+            JOptionPane.showMessageDialog(this,"La manzana de la ubicacion, debe tener como maximo "+this.CAMPO_MANZANA+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTCambioTecho.getText().trim().length() == 0)
+        }
+        
+        if(this.jTLote.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar el lote de la ubicacion, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
             bandera = false;
+        }
+        if(this.jTLote.getText().trim().length() > this.CAMPO_LOTE){
+            JOptionPane.showMessageDialog(this,"El lote de la ubicacion, debe tener como maximo "+this.CAMPO_LOTE+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        
+        //Controlar leyenda
+        if(this.jTextAreaLeyenda.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar la leyenda a imprimir, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        if(this.jTextAreaLeyenda.getText().trim().length() > this.CAMPO_LEYENDA){
+            JOptionPane.showMessageDialog(this,"La leyenda de impresion, debe tener como maximo "+this.CAMPO_LEYENDA+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        //Controlar orden de trabajo
+        if(this.jTOrdenTrabajo.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar la orden de trabajo, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        if(this.jTOrdenTrabajo.getText().trim().length() > this.CAMPO_ORDENTRABAJO){
+            JOptionPane.showMessageDialog(this,"La orden de trabajo, debe tener como maximo "+this.CAMPO_ORDENTRABAJO+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        
         return bandera;
     }
     
@@ -1907,11 +1828,8 @@ public class UINuevaCP extends javax.swing.JFrame
         }catch(ParseException pe){
             JOptionPane.showMessageDialog(null,"La fecha es incorrecta, escriba una valida\n del tipo: dd-mm-aa, se almacenara con la fecha de hoy","Fecha Errónea",JOptionPane.ERROR_MESSAGE);
         }        
-//        System.out.println("Se guardo con fecha: "+fecha);
-        
-        
         encabezadoCP.setFecha(fecha);        
-        
+        encabezadoCP.setLeyenda(this.jTextAreaLeyenda.getText().trim());
         encabezadoCP.setMatriculado(matriculado);        
         encabezadoCP.setSerieCP(this.jCSerie.getSelectedItem().toString().trim().toUpperCase());
         if(this.esAutomatico()){
@@ -1927,13 +1845,10 @@ public class UINuevaCP extends javax.swing.JFrame
                 encabezadoCP.setNumeroFactura(Long.parseLong(this.jTNumeroFactura.getText()));
                 encabezadoCP.setSerieFactura(Integer.parseInt(this.jTSerieFactura.getText()));
             }
-                
         encabezadoCP.setProvincia(this.provincia);
         encabezadoCP.setDepartamento(this.departamento);
         encabezadoCP.setLocalidad(this.localidad);
         encabezadoCP.setBarrrio(this.barrio);
-        
-        
         encabezadoCP.setPropietario(this.jTNombrePropietario.getText().trim().toUpperCase());
         encabezadoCP.setComitente(this.jTNombreComitente.getText().trim().toUpperCase());                      
         encabezadoCP.setCalle(this.jTCalle.getText().trim());
@@ -1941,8 +1856,8 @@ public class UINuevaCP extends javax.swing.JFrame
         encabezadoCP.setManzana(this.jTManzana.getText().trim());
         encabezadoCP.setLote(this.jTLote.getText().trim());
         encabezadoCP.setAnulado("N");
-        encabezadoCP.setSuperficieRelevada(Double.parseDouble(this.jTSuperficieRelevada.getText().trim()));
-        encabezadoCP.setSuperficieProyecto(Double.parseDouble(this.jTSuperficieProyecto.getText().trim()));
+        encabezadoCP.setSuperficieProyecto(this.calcularSuperficieProyecto());
+        encabezadoCP.setSuperficieRelevada(this.calcularSuperficieRelevamiento());
         encabezadoCP.setTotal(total);
         encabezadoCP.setOrdenTrabajo(this.jTOrdenTrabajo.getText().trim().toUpperCase());      
         encabezadoCP.setUsuario(this.usuario);         
@@ -1956,7 +1871,7 @@ public class UINuevaCP extends javax.swing.JFrame
             {
                 if(this.controlarDetalle(fila))
                 {
-                    int resp=this.guardarDetalleCP(fila);
+                    int resp=this.guardarDetalleCP(fila, encabezadoCP);
                     if ((resp==0) && (guardoBien)){
                         guardoBien=true;
                     }else{
@@ -1971,11 +1886,14 @@ public class UINuevaCP extends javax.swing.JFrame
         {
             if(this.guardarMatriculadoTrabajo())
             {
-                JOptionPane.showMessageDialog(null,"Registro almacenado correctamente", "Almacenamiento",JOptionPane.INFORMATION_MESSAGE);        
-                
-                this.bloquearPantalla();
+                if(this.guardarDetalleFacturacionCP(encabezadoCP))
+                {
+                    JOptionPane.showMessageDialog(null,"Registro almacenado correctamente", "Almacenamiento",JOptionPane.INFORMATION_MESSAGE);        
+                    this.bloquearPantalla();
+                }
+                else
+                    JOptionPane.showMessageDialog(null,"No se pudo almacenar correctament el registro", "Error en el detalle de facturacion",JOptionPane.ERROR_MESSAGE);
             }
-                
             else
                 JOptionPane.showMessageDialog(null,"No se pudo almacenar correctament el registro", "Error en matriculado trabajo",JOptionPane.ERROR_MESSAGE);
         }else{
@@ -2003,27 +1921,55 @@ public class UINuevaCP extends javax.swing.JFrame
         return bandera;
     }
     
-    private int guardarDetalleCP(int fil){
+    private int guardarDetalleCP(int fil, EncabezadoCP encCP)
+    {
          //Asigna a la collection de Detalles los valores
         DetalleCP detalle=new DetalleCP();            
-        //
-        detalle.setSerieCP(this.jCSerie.getSelectedItem().toString().trim());
+//        detalle.setSerieCP(this.jCSerie.getSelectedItem().toString().trim());detalle.setSerieCP(this.jCSerie.getSelectedItem().toString().trim());
+        detalle.setSerieCP(encCP.getSerieCP().trim());
         CUltimo cod=new CUltimo();        
         detalle.setIddetalleCP(cod.getUltimo(detalle));//obtengo elultimo iddetalle
-        detalle.setCodigoCP(this.nroConst);
-        //
+//        detalle.setCodigoCP(this.nroConst);
+        detalle.setCodigoCP(encCP.getCodigoCP());
         detalle.setTipoTrabajo(this.getTrabajo(String.valueOf(this.jTableDetalle.getValueAt(fil, 0)).trim()));
         detalle.setTipoSuperficie(this.getSuperficie(String.valueOf(this.jTableDetalle.getValueAt(fil, 1)).trim()));
         detalle.setTipoSeccion(this.getSeccion(String.valueOf(this.jTableDetalle.getValueAt(fil, 2)).trim()));
-        //detalle.setSuperficie(Double.parseDouble(String.valueOf(this.jTableDetalle.getValueAt(fil, 3))));
-        detalle.setSuperficie(this.calcularSuperficie(fil));
-        
+        detalle.setSuperficie(Double.parseDouble(String.valueOf(this.jTableDetalle.getValueAt(fil, 3))));
         CAlta alta=new CAlta();        
         int respuesta = alta.hacerAltaDetalleCP(detalle);
-        
         return respuesta;
-        
    }
+    
+    private boolean guardarDetalleFacturacionCP(EncabezadoCP encCP)
+    {
+        CAlta alta = new CAlta();
+        boolean band = true;
+        Iterator it = this.detalleFacturacion.iterator();
+        while(it.hasNext())
+        {
+            DetalleCPParaFacturacion d = (DetalleCPParaFacturacion)it.next();
+            d.setSerieCP(this.jCSerie.getSelectedItem().toString().trim());
+            d.setCodigoCP(this.nroConst);
+            ///// Detalle de la factura //////
+            StringBuffer det = new StringBuffer(); // contienen el detalle de la factura
+            det.append("CP:");
+            det.append(encCP.getSerieCP());
+            det.append("-");
+            det.append(encCP.getCodigoCP());
+            det.append(" - MAT:");
+            det.append(encCP.getMatriculado().getMatricula());
+            d.setDetalle(det.toString());
+            /////////////////////
+            d.setCantidad(1);
+            
+            
+            if(alta.hacerAltaDetalleFacturacionCP(d) !=0)
+                band = false;
+            d = null;
+            det = null;
+        }
+        return band;
+    }
     
     private void nuevaConstancia()
     {
@@ -2048,12 +1994,15 @@ public class UINuevaCP extends javax.swing.JFrame
         this.jBUbicacion.setEnabled(true);        
         this.jTNumeroFactura.setText("");
         this.jTSerieFactura.setText("");
-//        this.jBAgregarMatriculado.setEnabled(true);
         this.jBQuitarMatriculado.setEnabled(true);
         this.jBQuitarDetalle.setEnabled(true);
+        
+        this.detalleFacturacion.clear();
         //anulo el matriculado solicitante,sera otro nuevo
         this.matriculado=null;
         this.solicitanteCargado=false;
+        this.jTNombrePropietario.setText("");
+        this.jTNombreComitente.setText("");
         
         this.cargarNroConstancia();
         this.cargarFecha();
@@ -2063,6 +2012,7 @@ public class UINuevaCP extends javax.swing.JFrame
         this.limpiarSuperficieYTotal();
         this.quitarDetalles();
         this.limpiarComitente();
+        this.limpiarSuperficies();
     }
     
     private boolean esAutomatico()
@@ -2112,7 +2062,6 @@ public class UINuevaCP extends javax.swing.JFrame
         this.jBNueva.setEnabled(true);
         this.jBImprimir.setEnabled(true);
         this.jBSalir.setEnabled(true);
-//        this.jBAgregarMatriculado.setEnabled(false);
         this.jBUbicacion.setEnabled(false);
         this.jBQuitarMatriculado.setEnabled(false);
         this.jBQuitarDetalle.setEnabled(false);
@@ -2126,5 +2075,130 @@ public class UINuevaCP extends javax.swing.JFrame
         cExport_thread imprimeCP=new cExport_thread(34,this.jCSerie.getSelectedItem().toString().trim(),this.jTNumeroConstancia.getText().trim());
         imprimeCP.start();
     }
+    
+private void agregarSuperficie(double superficie, String tipo)
+    {
+        double sup = 0.0;
+        boolean bandera = false; // esta bandera indica si es que el tipo de superficie que se esta evaluando
+        // figura ya en la grilla de detalle de trabajos
+        Collection temp = new ArrayList();
+        
+        DetalleSuperficie d = new DetalleSuperficie();
+        d.setTipoSuperficie(tipo.trim());
+        d.setSuerficie(superficie);
+        if(this.detalleSuperficie.size() == 0)
+            this.detalleSuperficie.add(d);
+        else
+        {
+            bandera = false;
+            Iterator it = this.detalleSuperficie.iterator();
+            while(it.hasNext())
+            {
+                DetalleSuperficie de = (DetalleSuperficie)it.next();
+                sup = 0.0;
+                for(int i=0;i<this.jTableDetalle.getRowCount();i++)
+                {
+                    if(String.valueOf(this.jTableDetalle.getValueAt(i, 0)).trim().equals(de.getTipoSuperficie().trim()))
+                        sup = sup + Double.parseDouble(String.valueOf(this.jTableDetalle.getValueAt(i, 3)));
+                    // aqui pregunto si es que el tipo de superficie ya esta cargado en la coleccion
+                    if(tipo.trim().equals(de.getTipoSuperficie().trim()))
+                        bandera = true;
+                }
+                de.setSuerficie(sup);
+                temp.add(de);
+                de = null;
+            }
+            if(!bandera)
+                temp.add(d);
+            it = null;
+            this.detalleSuperficie.clear();
+            Iterator te = temp.iterator();
+            while(te.hasNext())
+            {
+                DetalleSuperficie det = (DetalleSuperficie)te.next();
+                this.detalleSuperficie.add(det);
+            }
+            te = null;
+            temp = null;
+        }
+        d = null;
+        DefaultTableModel modelo = (DefaultTableModel)this.jTableSuperficies.getModel();
+        String datos[] = new String[2];
+        this.limpiarSuperficies();
+        Iterator itt = this.detalleSuperficie.iterator();
+        Redondear r = new Redondear();
+        while(itt.hasNext())
+        {
+            DetalleSuperficie det = (DetalleSuperficie)itt.next();
+            datos[0] = det.getTipoSuperficie().trim();
+            det.setSuerficie(r.redondear(det.getSuerficie(), 2));
+            datos[1] = String.valueOf(det.getSuerficie()).trim();
+            modelo.addRow(datos);
+            det = null;
+        }
+        r = null;
+        itt = null;
+        datos = null;
+    }
+    
+    private void limpiarSuperficies()
+    {
+        DefaultTableModel modelo = (DefaultTableModel)this.jTableSuperficies.getModel();
+        while(this.jTableSuperficies.getRowCount() != 0)
+            modelo.removeRow(0);
+        modelo = null;
+    }
+    
+    /**
+     * Este metodo se usa para almacenar el detalle de las tasas facturadas.
+     * @param detalle
+     */
+    public void cargarDetalle(Collection vDetalle)
+    {
+        this.detalleFacturacion = vDetalle;
+    }
+    
+    public Collection getDetalle()
+    {
+        return this.detalleFacturacion;
+    }
+    
+    private void actualizarSuperficie()
+    {
+        this.detalleSuperficie.clear();
+        this.limpiarSuperficies();
+        for(int i=0;i<this.jTableDetalle.getRowCount();i++)
+        {
+                        if(this.jTableDetalle.getValueAt(i, 3) != null)
+                        {
+                            this.agregarSuperficie(Double.parseDouble(String.valueOf(this.jTableDetalle.getValueAt(i, 3))), String.valueOf(this.jTableDetalle.getValueAt(i, 0)));
+                            this.detalleFacturacion.clear();
+                        }
+        }
+    }
+    
+    private void ajustarColumnas()
+     {
+         TableColumn column = null;
+         for (int i = 0; i < 4; i++) 
+        {
+            column = jTableDetalle.getColumnModel().getColumn(i);
+            switch(i)
+            {
+                case 0:
+                        column.setPreferredWidth(75);
+                        break;
+                case 1:
+                        column.setPreferredWidth(135);
+                        break;
+                case 2:
+                        column.setPreferredWidth(66); 
+                        break;
+                case 3:
+                        column.setPreferredWidth(24); 
+                        break;
+            }
+        }
+     }
     
 }

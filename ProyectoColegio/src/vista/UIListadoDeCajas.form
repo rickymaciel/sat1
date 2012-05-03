@@ -69,9 +69,9 @@
                 <Column editable="false" title="ID Caja" type="java.lang.Object"/>
                 <Column editable="false" title="F.Apertura" type="java.lang.Object"/>
                 <Column editable="false" title="F.Cierre" type="java.lang.Object"/>
-                <Column editable="false" title="Total" type="java.lang.Object"/>
+                <Column editable="false" title="Total($)" type="java.lang.Object"/>
                 <Column editable="false" title="Usuario que Cerro" type="java.lang.Object"/>
-                <Column editable="false" title="Saldo Inicial" type="java.lang.Object"/>
+                <Column editable="false" title="Saldo Inicial($)" type="java.lang.Object"/>
                 <Column editable="false" title="Estado" type="java.lang.Object"/>
               </Table>
             </Property>

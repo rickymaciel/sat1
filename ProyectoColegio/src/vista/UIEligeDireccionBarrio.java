@@ -25,18 +25,35 @@ import negocios.Provincia;
  */
 public class UIEligeDireccionBarrio extends javax.swing.JFrame {
     private Collection provincias = new ArrayList();
+    private Collection allProvincias = new ArrayList();
     private Collection departamentos = new ArrayList();
+    private Collection allDepartamentos = new ArrayList();
     private Collection localidades = new ArrayList();
+    private Collection allLocalidades = new ArrayList();
     private Collection barrios = new ArrayList();
+    private Collection allBarrios = new ArrayList();
     
     private String origen = "";
     private String provinciaOrigen="";// definira nua interfase restringida a la
                                 //seleccion de departamentos,loc,barrios de una unica provincia
-    private UIEscuelas escuelas = new UIEscuelas();
-    private UIDatosEmpresa empresa = new UIDatosEmpresa();
-    private UIMatriculados matriculados = new UIMatriculados();
-    private UINuevaCT ct=new UINuevaCT();
-    private UINuevaCP cp=new UINuevaCP();
+//    private UIEscuelas escuelas = new UIEscuelas();
+//    private UIDatosEmpresa empresa = new UIDatosEmpresa();
+//    private UIMatriculados matriculados = new UIMatriculados();
+//    private UINuevaCT ct=new UINuevaCT();
+//    private UINuevaCP cp=new UINuevaCP();
+    
+    private UIEscuelas escuelas;//
+    private UIDatosEmpresa empresa;
+    private UIMatriculados matriculados;
+    private UINuevaCT ct;
+    private UINuevaCP cp;
+    
+    
+    private Provincia vProvincia = new Provincia();
+    private Departamento vDepartamento = new Departamento();
+    private Localidad vLocalidad = new Localidad();
+    private Barrio vBarrio = new Barrio();
+    
     
     /** Creates new form UIEligeDireccion */
     public UIEligeDireccionBarrio() {
@@ -45,9 +62,12 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
 	pantalla = Toolkit.getDefaultToolkit().getScreenSize();
 	cuadro = this.getSize();
 	this.setLocation(((pantalla.width - cuadro.width)/2), (pantalla.height - cuadro.height)/2);
-        this.llenarProvincias();
+//        this.llenarProvincias();
+        this.inicio();
     }
-    public UIEligeDireccionBarrio(UIEscuelas escuelas) {
+    public UIEligeDireccionBarrio(UIEscuelas escuelas) 
+    {
+        
         this.escuelas = escuelas;
         this.origen = "ESCUELAS";
         
@@ -56,7 +76,8 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
 	pantalla = Toolkit.getDefaultToolkit().getScreenSize();
 	cuadro = this.getSize();
 	this.setLocation(((pantalla.width - cuadro.width)/2), (pantalla.height - cuadro.height)/2);
-        this.llenarProvincias();
+//        this.llenarProvincias();
+        this.inicio();
     }
     public UIEligeDireccionBarrio(UIMatriculados matriculados) {
         this.matriculados = matriculados;
@@ -67,7 +88,8 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
 	pantalla = Toolkit.getDefaultToolkit().getScreenSize();
 	cuadro = this.getSize();
 	this.setLocation(((pantalla.width - cuadro.width)/2), (pantalla.height - cuadro.height)/2);
-        this.llenarProvincias();
+//        this.llenarProvincias();
+        this.inicio();
     }
      public UIEligeDireccionBarrio(UIMatriculados matriculados,String prov) {
         this.matriculados = matriculados;
@@ -79,7 +101,8 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
 	pantalla = Toolkit.getDefaultToolkit().getScreenSize();
 	cuadro = this.getSize();
 	this.setLocation(((pantalla.width - cuadro.width)/2), (pantalla.height - cuadro.height)/2);
-        this.llenarProvincias();
+//        this.llenarProvincias();
+        this.inicio();
     }
      public UIEligeDireccionBarrio(UIDatosEmpresa emp) {
         this.empresa = emp;
@@ -90,7 +113,8 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
 	pantalla = Toolkit.getDefaultToolkit().getScreenSize();
 	cuadro = this.getSize();
 	this.setLocation(((pantalla.width - cuadro.width)/2), (pantalla.height - cuadro.height)/2);
-        this.llenarProvincias();
+//        this.llenarProvincias();
+        this.inicio();
     }
     public UIEligeDireccionBarrio(UINuevaCT encabezadoct,String prov) {
         this.ct = encabezadoct;
@@ -102,7 +126,8 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
 	pantalla = Toolkit.getDefaultToolkit().getScreenSize();
 	cuadro = this.getSize();
 	this.setLocation(((pantalla.width - cuadro.width)/2), (pantalla.height - cuadro.height)/2);
-        this.llenarProvincias();
+//        this.llenarProvincias();
+        this.inicio();
     }
     public UIEligeDireccionBarrio(UINuevaCP encabezadocp,String prov) {
         this.cp = encabezadocp;
@@ -114,7 +139,8 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
 	pantalla = Toolkit.getDefaultToolkit().getScreenSize();
 	cuadro = this.getSize();
 	this.setLocation(((pantalla.width - cuadro.width)/2), (pantalla.height - cuadro.height)/2);
-        this.llenarProvincias();
+//        this.llenarProvincias();
+        this.inicio();
     } 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -364,7 +390,9 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
 }//GEN-LAST:event_jCProvinciaItemStateChanged
 
     private void jCProvinciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCProvinciaActionPerformed
-        this.llenarDepartamentos(this.jCProvincia.getSelectedItem().toString().trim());
+//        this.llenarDepartamentos(this.jCProvincia.getSelectedItem().toString().trim());
+        this.vProvincia = this.getProvincia(String.valueOf(this.jCProvincia.getSelectedItem()));
+        this.llenarDepartamentos(this.vProvincia);
 }//GEN-LAST:event_jCProvinciaActionPerformed
 
     private void jCLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCLocalidadActionPerformed
@@ -372,12 +400,17 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
 //        if (this.jCLocalidad.getItemCount()>0){
 //            this.llenarBarrios(this.jCLocalidad.getSelectedItem().toString().trim());
 //        }
+        this.vLocalidad = this.getLocalidad(String.valueOf(this.jCLocalidad.getSelectedItem()));
+        this.llenarBarrios();
     }//GEN-LAST:event_jCLocalidadActionPerformed
 
     private void jCDepartamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCDepartamentoActionPerformed
         // TODO add your handling code here:    
+        
         if (this.jCDepartamento.getItemCount()>0){
-            this.llenarLocalidades(this.jCDepartamento.getSelectedItem().toString().trim());
+//            this.llenarLocalidades(this.jCDepartamento.getSelectedItem().toString().trim());
+            this.vDepartamento = this.getDepartamento(String.valueOf(this.jCDepartamento.getSelectedItem()));
+            this.llenarLocalidades();
         }
     }//GEN-LAST:event_jCDepartamentoActionPerformed
 
@@ -416,18 +449,14 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         if(this.control())
         {
-            Consulta con=new Consulta();
-            Barrio bar=con.getBarrioxNom(this.jCBarrio.getSelectedItem().toString().trim(),this.jCLocalidad.getSelectedItem().toString().trim(),this.jCDepartamento.getSelectedItem().toString().trim());
-            
             if(this.origen.equals("MATRICULADOS"))
             {
                 int res= JOptionPane.showConfirmDialog(this,"¿Esta seguro se insertar esta direccion?", "Advertencia...",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
                 if (res==JOptionPane.YES_OPTION)
                 {
-                    this.matriculados.cargarDatosDireccion(bar);                    
+                    this.matriculados.cargarDatosDireccion(this.vBarrio);                    
                     this.dispose();
                 }
             }
@@ -436,7 +465,7 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
                 int res= JOptionPane.showConfirmDialog(this,"¿Esta seguro de insertar esta direccion?", "Advertencia...",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
                 if (res==JOptionPane.YES_OPTION)
                 {
-                    this.empresa.cargarDatosDireccion(bar);
+                    this.empresa.cargarDatosDireccion(this.vBarrio);
                     this.dispose();
                 }
             }
@@ -445,7 +474,7 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
                 int res= JOptionPane.showConfirmDialog(this,"¿Esta seguro de insertar esta direccion?", "Advertencia...",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
                 if (res==JOptionPane.YES_OPTION)
                 {
-                    this.cp.cargarDatosDireccion(bar);
+                    this.cp.cargarDatosDireccion(this.vBarrio);
                     this.dispose();
                 }
             }
@@ -455,7 +484,7 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
                 int res= JOptionPane.showConfirmDialog(this,"¿Esta seguro de insertar esta direccion?", "Advertencia...",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
                 if (res==JOptionPane.YES_OPTION)
                 {
-                    this.ct.cargarDatosDireccion(bar);
+                    this.ct.cargarDatosDireccion(this.vBarrio);
                     this.dispose();
                 }
             }
@@ -492,12 +521,14 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
     private void jCLocalidadItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCLocalidadItemStateChanged
         // TODO add your handling code here:
         if (this.jCLocalidad.getItemCount()>0){
-            this.llenarBarrios(this.jCLocalidad.getSelectedItem().toString().trim());
+//            this.llenarBarrios(this.jCLocalidad.getSelectedItem().toString().trim());
+            this.llenarBarrios();
         }
     }//GEN-LAST:event_jCLocalidadItemStateChanged
 
     private void jCBarrioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBarrioActionPerformed
         // TODO add your handling code here:
+        this.getBarrio(String.valueOf(this.jCBarrio.getSelectedItem()));
     }//GEN-LAST:event_jCBarrioActionPerformed
     
     /**
@@ -531,64 +562,128 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     // End of variables declaration//GEN-END:variables
     
-    private void llenarProvincias(){       
-        
+    
+    private void inicio()
+    {
         CListar listar = new CListar();
-        provincias = listar.hacerListado(new Provincia());
+        this.allDepartamentos = listar.hacerListado(new Departamento());
+        this.allLocalidades = listar.hacerListado(new Localidad());
+        this.allBarrios = listar.hacerListado(new Barrio());
+        this.allProvincias = listar.hacerListado(new Provincia());
+        this.llenarProvincias();
         listar = null;
-        Iterator it = provincias.iterator();
+    }
+    private void llenarProvincias()
+    {       
+        int bandera = 0;
+        Iterator it = this.allProvincias.iterator();
         Provincia p = new Provincia();
-        if (this.provinciaOrigen.equals("JUJUY")){
+        if (this.provinciaOrigen.equals("JUJUY"))
+        {
             while(it.hasNext()){
                 p = (Provincia)it.next();
                 if (p.getNombre().trim().equals(this.provinciaOrigen)){
                     this.jCProvincia.addItem(p.getNombre().trim());                
+                    this.vProvincia = p;
                 }
             }            
         } else {
-            while(it.hasNext()){
+            while(it.hasNext())
+            {
                 p = (Provincia)it.next();
-                this.jCProvincia.addItem(p.getNombre().trim());                
+                this.jCProvincia.addItem(p.getNombre().trim());
+                if (bandera == 0)
+                    this.vProvincia = p;
+                bandera++;
             }   
         }
         p = null;
         it = null;        
-        this.llenarDepartamentos(this.jCProvincia.getSelectedItem().toString().trim());        
+        this.llenarDepartamentos(this.vProvincia);        
     }
-    private void llenarDepartamentos(String nombreProvincia){
+    
+    private Provincia getProvincia(String nombre)
+    {
+        Provincia p = new Provincia();
+        Iterator it = this.allProvincias.iterator();
+        while(it.hasNext())
+        {
+            Provincia pro = (Provincia)it.next();
+            if(pro.getNombre().trim().equals(nombre.equals(nombre)))
+            {
+                p = pro;
+                break;
+            }
+            pro = null;
+        }
+        it = null;
+        return p;
+    }
+    
+    private void llenarDepartamentos(Provincia prov)
+    {
         //Obtengo el id de provincia en elobjeto completo
         this.vaciarDepartamentos();
-        Consulta con=new Consulta();
-        Provincia prov=con.getIdProvincia(nombreProvincia);
-        
+        int bandera = 0;
         //Hago ellistado de departamentos por provincia
-        Consulta con2=new Consulta();
-        departamentos = con2.getDepartamentoxProv(prov.getIdprovincia());
+        departamentos = this.getDepartamentos(prov);
         Iterator it = departamentos.iterator();
         Departamento d = new Departamento();
         while(it.hasNext())
         {
             d = (Departamento)it.next();
             this.jCDepartamento.addItem(d.getNombre().trim());
+            if(bandera == 0)
+                this.vDepartamento = d;
+            bandera++;
         }
         d = null;
         it = null;
         
         this.vaciarLocalidades();
-        //this.llenarLocalidades(this.jCDepartamento.getSelectedItem().toString().trim());
-        
     }
-    private void llenarLocalidades(String nombreDepartamento){
+    
+    private Collection getDepartamentos(Provincia prov)
+    {
+        Collection deptos = new ArrayList();
+        Iterator it = this.allDepartamentos.iterator();
+        while(it.hasNext())
+        {
+            Departamento d = (Departamento)it.next();
+            if(d.getProvincia().getIdprovincia() == prov.getIdprovincia())
+                deptos.add(d);
+            d = null;
+        }
+        it = null;
+        return deptos;
+    }
+    
+    private Departamento getDepartamento(String nombre)
+    {
+        Departamento depto = new Departamento();
+        Iterator it = this.departamentos.iterator();
+        while(it.hasNext())
+        {
+            Departamento d = (Departamento)it.next();
+            if(d.getNombre().trim().equals(nombre.trim()))
+            {
+                depto = d;
+                break;
+            }
+            d = null;
+        }
+        it = null;
+        return depto;
+    }
+    
+    
+    private void llenarLocalidades()
+    {
         //Obtengo el id de provincia en elobjeto completo
         this.vaciarLocalidades();
-        Consulta con=new Consulta();
-        Departamento dep=con.getIdDepartamento(nombreDepartamento);
-        
 //        Hago ellistado de departamentos por provincia
-        Consulta con2=new Consulta();
-        localidades = con2.getLocalidadxDep(dep.getIddepartamento());
-        
-        Iterator it = localidades.iterator();
+        this.getLocalidades();
+        Iterator it = this.localidades.iterator();
         Localidad l = new Localidad();
         while(it.hasNext())
         {
@@ -598,20 +693,52 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
         l = null;
         it = null;
         this.vaciarBarrios();
-//        this.llenarBarrios(this.jCLocalidad.getSelectedItem().toString().trim());
     }
     
-    private void llenarBarrios(String nombreLocalidad){
+    private void getLocalidades()
+    {
+        int bandera = 0;
+        Iterator it = this.allLocalidades.iterator();
+        while(it.hasNext())
+        {
+            Localidad l = (Localidad)it.next();
+            if(l.getDepartamento().getIddepartamento() == this.vDepartamento.getIddepartamento())
+            {
+                this.localidades.add(l);
+                if(bandera == 0)
+                    this.vLocalidad = l;
+                bandera ++;
+            }
+            l = null;
+        }
+        it = null;
+    }
+    
+    private Localidad getLocalidad(String nombre)
+    {
+        Localidad loc = new Localidad();
+        Iterator it = this.localidades.iterator();
+        while(it.hasNext())
+        {
+            Localidad l = (Localidad)it.next();
+            if(l.getNombre().trim().equals(nombre.trim()))
+            {
+                loc = l;
+                break;
+            }
+            l = null;
+        }
+        it = null;
+        return loc;
+    }
+    
+    private void llenarBarrios()
+    {
         //Obtengo el id de provincia en elobjeto completo
         this.vaciarBarrios();
-        Consulta con=new Consulta();
-        Localidad loc=con.geIdLocalidad(nombreLocalidad);
-        
 //        Hago ellistado de departamentos por provincia
-        Consulta con2=new Consulta();
-        barrios = con2.getBarrioxLoc(loc.getIdlocalidad());
-        
-        Iterator it = barrios.iterator();
+        this.getBarrios();
+        Iterator it = this.barrios.iterator();
         Barrio b = new Barrio();
         while(it.hasNext())
         {
@@ -621,14 +748,51 @@ public class UIEligeDireccionBarrio extends javax.swing.JFrame {
         b = null;
         it = null;
     }
+    
+    private void getBarrios()
+    {
+        int bandera = 0;
+        Iterator it = this.allBarrios.iterator();
+        while(it.hasNext())
+        {
+            Barrio b = (Barrio)it.next();
+            if(b.getLocalidad().getIdlocalidad() == this.vLocalidad.getIdlocalidad())
+            {
+                this.barrios.add(b);
+                if(bandera == 0)
+                    this.vBarrio = b;
+                bandera++;
+            }
+        }
+        it = null;
+    }
+    
+    private void getBarrio(String nombre)
+    {
+        Iterator it = this.barrios.iterator();
+        while(it.hasNext())
+        {
+            Barrio b = (Barrio)it.next();
+            if(b.getNombre().trim().equals(nombre.trim()))
+            {
+                this.vBarrio = b;
+                break;
+            }
+            b = null;
+        }
+        it = null;
+    }
     private void vaciarDepartamentos(){
         this.jCDepartamento.removeAllItems();
+        this.departamentos.clear();
     }
     private void vaciarLocalidades(){
         this.jCLocalidad.removeAllItems();
+        this.localidades.clear();
     }
     private void vaciarBarrios(){
         this.jCBarrio.removeAllItems();
+        this.barrios.clear();
     }
     
     private boolean control()

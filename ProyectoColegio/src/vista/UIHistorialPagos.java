@@ -84,7 +84,7 @@ public class UIHistorialPagos extends javax.swing.JDialog {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, true, true, true, true, true
+                false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -398,7 +398,7 @@ public class UIHistorialPagos extends javax.swing.JDialog {
             ultimoDiaDelMes=28;
         }
         
-        System.out.println ("nuevo total del idpago es : "+ nuevoTotal);
+//        System.out.println ("nuevo total del idpago es : "+ nuevoTotal);
         
         EncabezadoPago encPago=new EncabezadoPago();
         encPago.setIdencabezado(Long.parseLong(String.valueOf(this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 0))));
@@ -412,7 +412,7 @@ public class UIHistorialPagos extends javax.swing.JDialog {
             java.util.Date d=sdf.parse(fecha); 
             encPago.setHabilitacionhasta(d);
         }catch(ParseException pe){
-            System.out.println("LA FECHA ESTA INCORRECTA ENTRO AL CATCH...");
+//            System.out.println("LA FECHA ESTA INCORRECTA ENTRO AL CATCH...");
         }
         
         Modificacion modifica=new Modificacion();
@@ -428,11 +428,11 @@ public class UIHistorialPagos extends javax.swing.JDialog {
                 cantDeDosCuotasEnEncabezado=cantDeDosCuotasEnEncabezado+1;
                 if (cantDeDosCuotasEnEncabezado>1){
                     masCuotas=true;
-                    System.out.println("HAY MAS DE DOS CUOTAS PARA EL PAGO: "+ idpago);
+//                    System.out.println("HAY MAS DE DOS CUOTAS PARA EL PAGO: "+ idpago);
                     break;
                     
                 }else{
-                    System.out.println("HAY menos DE DOS CUOTAS PARA EL PAGO: "+ idpago);
+//                    System.out.println("HAY menos DE DOS CUOTAS PARA EL PAGO: "+ idpago);
                 }
             } 
         }

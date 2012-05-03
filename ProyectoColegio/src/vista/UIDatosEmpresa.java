@@ -17,7 +17,6 @@ import javax.swing.JOptionPane;
 import negocios.Barrio;
 import negocios.Empresa;
 import negocios.Iva;
-//import negocios.Localidad;
 
 /**
  *

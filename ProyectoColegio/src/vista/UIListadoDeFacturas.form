@@ -31,10 +31,12 @@
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="jScrollPane1" alignment="0" pref="614" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="jBAnular" min="-2" pref="106" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jBImprimir1" min="-2" pref="106" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jBImprimir" min="-2" pref="106" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace pref="170" max="32767" attributes="0"/>
+                      <Component id="jBAnular" min="-2" pref="106" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jBSalir" min="-2" pref="106" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jSeparator1" alignment="0" pref="614" max="32767" attributes="0"/>
@@ -53,12 +55,15 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" alignment="1" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="jBSalir" alignment="0" max="32767" attributes="1"/>
-                      <Component id="jBImprimir" alignment="0" max="32767" attributes="1"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                      <Component id="jBSalir" linkSize="1" alignment="3" min="-2" pref="26" max="-2" attributes="1"/>
+                      <Component id="jBAnular" linkSize="1" alignment="3" min="-2" pref="28" max="-2" attributes="1"/>
                   </Group>
-                  <Component id="jBAnular" alignment="1" min="-2" pref="32" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jBImprimir1" alignment="3" max="32767" attributes="1"/>
+                      <Component id="jBImprimir" linkSize="1" alignment="3" max="32767" attributes="1"/>
+                  </Group>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -81,7 +86,7 @@
                 <Column editable="false" title="N&#xaa; Factura" type="java.lang.Object"/>
                 <Column editable="false" title="Fecha" type="java.lang.Object"/>
                 <Column editable="false" title="Condicion Venta" type="java.lang.Object"/>
-                <Column editable="false" title="Total" type="java.lang.Object"/>
+                <Column editable="false" title="Total($)" type="java.lang.Object"/>
                 <Column editable="false" title="Nombre Cliente" type="java.lang.Object"/>
                 <Column editable="false" title="Anulado" type="java.lang.Object"/>
               </Table>
@@ -96,7 +101,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/iconos/printer.gif"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Imprimir"/>
+        <Property name="text" type="java.lang.String" value="Copia"/>
         <Property name="toolTipText" type="java.lang.String" value="Imprime la caja seleccionada"/>
       </Properties>
       <Events>
@@ -141,7 +146,7 @@
                   <Component id="jRadioButton2" min="-2" pref="85" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jCCajas" min="-2" pref="93" max="-2" attributes="0"/>
-                  <EmptySpace pref="51" max="32767" attributes="0"/>
+                  <EmptySpace pref="53" max="32767" attributes="0"/>
                   <Component id="jRadioButton3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
               </Group>
@@ -214,5 +219,17 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="jBImprimir1">
+      <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/iconos/printer.gif"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Original"/>
+        <Property name="toolTipText" type="java.lang.String" value="Imprime la caja seleccionada"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBImprimir1ActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

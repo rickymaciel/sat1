@@ -8,9 +8,11 @@ package vista;
 import controlador.CListar;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import javax.swing.JOptionPane;
 import negocios.DetalleFactura;
 import negocios.Producto;
 /**
@@ -75,6 +77,7 @@ public class UINuevaFacturaDetalle1 extends javax.swing.JDialog {
             }
         });
 
+        jTDetalle.setEditable(false);
         jTDetalle.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTDetalleKeyPressed(evt);
@@ -93,6 +96,12 @@ public class UINuevaFacturaDetalle1 extends javax.swing.JDialog {
             }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTCantidadKeyReleased(evt);
+            }
+        });
+
+        jTPrecioUnitario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTPrecioUnitarioKeyPressed(evt);
             }
         });
 
@@ -219,12 +228,22 @@ public class UINuevaFacturaDetalle1 extends javax.swing.JDialog {
 
     private void jTCantidadKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTCantidadKeyPressed
         // TODO add your handling code here:
+        if(evt.getKeyCode()==27)
+            this.dispose();
+        char c = evt.getKeyChar();
+        if (!((Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) ||(c == KeyEvent.VK_ENTER) ||(c == KeyEvent.VK_DELETE)  ||(c == KeyEvent.VK_ESCAPE))))
+        {    
+            getToolkit().beep();
+            JOptionPane.showMessageDialog(this,"Debe introducir un valor valido ej: 12","Atencion",JOptionPane.ERROR_MESSAGE);
+            this.jTCantidad.setText("");
+            this.jTCantidad.requestFocus();
+            evt.consume();
+        }
+
     }//GEN-LAST:event_jTCantidadKeyPressed
 
     private void jTCantidadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTCantidadKeyReleased
-        // TODO add your handling code here:
-        if(evt.getKeyCode()==27)
-            this.dispose();
+        // TODO add your handling code here:        
         if(evt.getKeyChar()==10){
             if (this.jTCantidad.getText().trim()!=null && this.jTCantidad.getText().trim().length()>0){
                 Double subtotal=Integer.valueOf(this.jTCantidad.getText().trim())*Double.valueOf(this.jTPrecioUnitario.getText().trim());
@@ -245,7 +264,15 @@ public class UINuevaFacturaDetalle1 extends javax.swing.JDialog {
         if (this.jTSubTotal.getText().trim().equals("")){
             this.jTSubTotal.setText("0");
         }
-        this.enviarDetalleAVentanaFacturacion();
+        if (this.jTDescripcion.getText().trim().length()>230){
+            JOptionPane.showMessageDialog(this, "El campo DESCRIPCION tiene mas letras que las permitidas\nSolo se permiten 230 caracteres", "Demasiadas Letras", JOptionPane.WARNING_MESSAGE);
+        }else{
+            this.enviarDetalleAVentanaFacturacion();
+            int resp=JOptionPane.showConfirmDialog(this, "Facturar otro producto?", "Agregar", JOptionPane.OK_CANCEL_OPTION);
+            if (resp==JOptionPane.CANCEL_OPTION){
+                this.dispose();
+            }
+        }
     }//GEN-LAST:event_jBAgregarActionPerformed
 
     private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
@@ -276,6 +303,20 @@ public class UINuevaFacturaDetalle1 extends javax.swing.JDialog {
         if(evt.getKeyChar()==10)
             this.jTCantidad.requestFocus();
     }//GEN-LAST:event_jTDescripcionKeyPressed
+
+    private void jTPrecioUnitarioKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTPrecioUnitarioKeyPressed
+        // TODO add your handling code here:
+        char c = evt.getKeyChar();
+        if (!((Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) ||(c == KeyEvent.VK_ENTER) ||(c == KeyEvent.VK_DELETE)  ||(c == KeyEvent.VK_ESCAPE) || (c == '.') || (c == '-'))))
+        {    
+            getToolkit().beep();
+            JOptionPane.showMessageDialog(this,"Debe introducir un valor valido ej: 12.00","Atencion",JOptionPane.ERROR_MESSAGE);
+            this.jTPrecioUnitario.setText("");
+            this.jTPrecioUnitario.requestFocus();
+            evt.consume();
+        }
+
+    }//GEN-LAST:event_jTPrecioUnitarioKeyPressed
     
     /**
      * @param args the command line arguments
@@ -366,6 +407,7 @@ public class UINuevaFacturaDetalle1 extends javax.swing.JDialog {
          de facturacion*/
         
         detalle.setProducto(productoElegido);
+        detalle.getProducto().setPrecio(Double.valueOf(this.jTPrecioUnitario.getText().trim()));
         detalle.setDetalle(this.jTDescripcion.getText().trim());
         detalle.setCantidad(Integer.valueOf(this.jTCantidad.getText().trim()));        
         detalle.setSubTotal(Double.valueOf(this.jTSubTotal.getText().trim()));        

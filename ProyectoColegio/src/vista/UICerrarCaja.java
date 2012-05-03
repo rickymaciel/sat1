@@ -7,11 +7,15 @@
 package vista;
 
 import Datos.Modificacion;
+import controlador.Algoritmos;
 import controlador.CListar;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import negocios.Caja;
@@ -26,6 +30,9 @@ public class UICerrarCaja extends javax.swing.JFrame
 {
     private UIMenu menu = new UIMenu();
     private Caja ultimaCaja = new Caja();
+    private Collection cp = new ArrayList();
+    private Collection ct = new ArrayList();
+    private Collection cuotas = new ArrayList();
     
     public UICerrarCaja(){
         
@@ -46,6 +53,7 @@ public class UICerrarCaja extends javax.swing.JFrame
         this.llenarDatos();
         this.jBImprimir.setEnabled(false);
         this.jBCerrar.setEnabled(true);
+        this.verificarDocumentos();
     }
     
     /** This method is called from within the constructor to
@@ -70,6 +78,8 @@ public class UICerrarCaja extends javax.swing.JFrame
         jBCerrar = new javax.swing.JButton();
         jBImprimir = new javax.swing.JButton();
         jBCancelar = new javax.swing.JButton();
+        jLabelAviso = new javax.swing.JLabel();
+        jButtonVer = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cerrar Caja");
@@ -78,14 +88,14 @@ public class UICerrarCaja extends javax.swing.JFrame
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos de Caja"));
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 153));
-        jLabel3.setText("Fecha:");
+        jLabel3.setText("Fecha de Apertura:");
         jLabel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabel3.setOpaque(true);
 
         jLabel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel5.setBackground(new java.awt.Color(255, 255, 153));
-        jLabel5.setText("Hora:");
+        jLabel5.setText("Hora de Apertura:");
         jLabel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabel5.setOpaque(true);
 
@@ -119,23 +129,24 @@ public class UICerrarCaja extends javax.swing.JFrame
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -143,17 +154,14 @@ public class UICerrarCaja extends javax.swing.JFrame
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -186,27 +194,54 @@ public class UICerrarCaja extends javax.swing.JFrame
             }
         });
 
+        jLabelAviso.setFont(new java.awt.Font("Arial", 0, 18));
+        jLabelAviso.setForeground(new java.awt.Color(255, 0, 0));
+        jLabelAviso.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+
+        jButtonVer.setText("Ver...");
+        jButtonVer.setEnabled(false);
+        jButtonVer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVerActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabelAviso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(60, 60, 60)
                         .addComponent(jBCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jBImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jBCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(jButtonVer)))
+                .addContainerGap(77, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(14, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelAviso, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                    .addComponent(jButtonVer, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jBCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -219,7 +254,7 @@ public class UICerrarCaja extends javax.swing.JFrame
 
     private void jBImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBImprimirActionPerformed
 // TODO add your handling code here:
-        cExport_thread imprime=new cExport_thread(28,String.valueOf(this.ultimaCaja.getIdcaja()));
+        cExport_thread imprime=new cExport_thread(29,String.valueOf(this.ultimaCaja.getIdcaja()));
         imprime.start();
 }//GEN-LAST:event_jBImprimirActionPerformed
 
@@ -235,6 +270,11 @@ public class UICerrarCaja extends javax.swing.JFrame
        this.jBImprimir.setEnabled(true);
        this.jBCerrar.setEnabled(false);
     }//GEN-LAST:event_jBCerrarActionPerformed
+
+private void jButtonVerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVerActionPerformed
+// TODO add your handling code here:
+    this.verImpagas();
+}//GEN-LAST:event_jButtonVerActionPerformed
     
     /**
      * @param args the command line arguments
@@ -254,6 +294,7 @@ public class UICerrarCaja extends javax.swing.JFrame
     private javax.swing.JButton jBCancelar;
     private javax.swing.JButton jBCerrar;
     private javax.swing.JButton jBImprimir;
+    private javax.swing.JButton jButtonVer;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -264,6 +305,7 @@ public class UICerrarCaja extends javax.swing.JFrame
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabelAviso;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
     
@@ -276,13 +318,52 @@ public class UICerrarCaja extends javax.swing.JFrame
         //defino la los objetos de tipo date para mostrar la fecha
         DateFormat dias = DateFormat.getDateInstance(); 
         DateFormat horas = DateFormat.getTimeInstance();
+        NumberFormat nf = NumberFormat.getCurrencyInstance();
+        
         //muestro los campos fecha y hora 
         this.jLabel4.setText(String.valueOf(dias.format(ultimaCaja.getFechaapertura())));     
         this.jLabel7.setText(String.valueOf(ultimaCaja.getIdcaja()));
         this.cargarTotal();
-        this.jLabel10.setText(String.valueOf(ultimaCaja.getTotal()));
+        this.jLabel10.setText(nf.format(ultimaCaja.getTotal()));
         this.jLabel6.setText(String.valueOf(horas.format(ultimaCaja.getFechaapertura())));
         this.jLabel11.setText(menu.usuario.getNombre().trim());
+    }
+    
+    /**
+     * Este metodo se encarga de verificar si existen documentos sin facturar
+     * si existen, aparece el texto "Hay Documentos sin Facturar" y elboton Ver... se habilita
+     */
+    private void verificarDocumentos()
+    {
+        Algoritmos algoritmos = new Algoritmos();
+        // limpio las colecciones
+        this.cp.clear();
+        this.ct.clear();
+        this.cuotas.clear();
+        // verifico si hay documentos impagos
+        this.cp = algoritmos.devolverCPImpaga();
+        this.ct = algoritmos.devolverCTImpaga();
+        this.cuotas = algoritmos.devolverCuotaImpaga();
+        if((this.cp.size() != 0) || (this.ct.size() != 0) || (this.cuotas.size() != 0))
+        {
+            this.jLabelAviso.setText("Hay Documentos sin Facturar");
+            this.jButtonVer.setEnabled(true);
+            this.jBCerrar.setEnabled(false);
+        }
+    }
+    
+    public void habilitarCerrarCaja()
+    {
+        this.jBCerrar.setEnabled(true);
+        this.jLabelAviso.setText("");
+        this.jButtonVer.setEnabled(false);
+    }
+    
+    private void verImpagas()
+    {
+        UIMostrarNoFacturadas mostrar = new UIMostrarNoFacturadas(this,true);
+        mostrar.mostrar(cp, ct, cuotas, this);
+        mostrar.setVisible(true);
     }
     
     public void cargarTotal()
@@ -298,10 +379,15 @@ public class UICerrarCaja extends javax.swing.JFrame
     
     public void cargarCaja()
     {
+        //obtengo fecha corecta:
+        
+        Algoritmos obtieneFechaSistema=new Algoritmos();
+        Timestamp fechaCorrectaDeSistema=obtieneFechaSistema.obtenerFechayHoraDeSistema();
+            
+        
         //defino la forma en que quiero que guarde la fecha aaaa-mm-dd 00:00:00.00
-        System.out.println("fecha extraida del la base de datos : "+ultimaCaja.getFechaapertura());
-        Timestamp timestamp = new Timestamp(new Date().getTime());
-        ultimaCaja.setFechacierre(timestamp);//cargo la fecha en el objeto caja
+        //Timestamp timestamp = new Timestamp(new Date().getTime());
+        ultimaCaja.setFechacierre(fechaCorrectaDeSistema);//cargo la fecha en el objeto caja
         Usuario user = new Usuario();
         user.setIdusuario(menu.usuario.getIdusuario());
         ultimaCaja.setUsuariocierre(user);

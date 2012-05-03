@@ -60,7 +60,7 @@ public class UIListadoDeCajas extends javax.swing.JDialog {
 
             },
             new String [] {
-                "ID Caja", "F.Apertura", "F.Cierre", "Total", "Usuario que Cerro", "Saldo Inicial", "Estado"
+                "ID Caja", "F.Apertura", "F.Cierre", "Total($)", "Usuario que Cerro", "Saldo Inicial($)", "Estado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -125,7 +125,7 @@ public class UIListadoDeCajas extends javax.swing.JDialog {
     private void jBImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBImprimirActionPerformed
         // TODO add your handling code here:
         if (this.jTable1.getSelectedRow()>-1){//es decir,si selecciono un elemento de la tabla
-            cExport_thread imprime=new cExport_thread(28,String.valueOf(this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 0)).trim());
+            cExport_thread imprime=new cExport_thread(29,String.valueOf(this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 0)).trim());
             imprime.start();
         }else{
             JOptionPane.showMessageDialog(this,"Debe seleccionar una caja de la tablaª","Atencion",JOptionPane.WARNING_MESSAGE);

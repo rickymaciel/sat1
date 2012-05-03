@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
 public class DataManager 
 {
     private String driver;
-    private Connection co, conn, conection;
+    private Connection conn;
     public Statement st;
     private String dsn = "";
     
@@ -38,15 +38,16 @@ public void defDriver()
  {
     defDriver();
 //    dsn = "jdbc:postgresql://192.168.1.3:5432/sat1?";
+    
 //    dsn = "jdbc:postgresql://192.168.81.100:5432/sat2?";
-    //dsn = "jdbc:postgresql://127.0.0.1:5432/sat2?";
+//    dsn = "jdbc:postgresql://127.0.0.1:5432/satCTJ15sept?";
     dsn = "jdbc:postgresql://127.0.0.1:5432/colegio?";
     try
     {
       /** creo la conexion para el caso de usar una base de datos Postgres */
         Class.forName(driver);
+//      conn = DriverManager.getConnection(dsn+"user=postgres&password=jorge1515");
       conn = DriverManager.getConnection(dsn+"user=postgres&password=postgres");
-//      conn = DriverManager.getConnection(dsn+"user=usuario&password=usuario");
     }
     catch(Exception ex)
     {

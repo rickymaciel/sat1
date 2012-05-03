@@ -20,6 +20,7 @@ import java.util.Iterator;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import negocios.Configuracion;
 import negocios.Producto;
 import reportes.cExport_thread;
@@ -45,6 +46,7 @@ public class UINuevoProducto extends javax.swing.JFrame
 	cuadro = this.getSize();
 	this.setLocation(((pantalla.width - cuadro.width)/2), (pantalla.height - cuadro.height)/2);
         this.llenarTabla(new Producto());
+        this.ajustarColumnas();
     }
     
     /** This method is called from within the constructor to
@@ -201,13 +203,13 @@ public class UINuevoProducto extends javax.swing.JFrame
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTNombreProducto1, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE))
+                        .addComponent(jTNombreProducto1, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jCheckCuota, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)))
+                        .addComponent(jCheckCuota, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -655,10 +657,10 @@ public class UINuevoProducto extends javax.swing.JFrame
         while(it.hasNext())
         {
             p = (Producto)it.next();
-            datos[0] = String.valueOf(p.getIdproducto());
-            datos[1] = p.getDenominacion();
+            datos[0] = String.valueOf(p.getIdproducto()).trim();
+            datos[1] = p.getDenominacion().trim();
             NumberFormat nf = NumberFormat.getCurrencyInstance();
-            datos[2] = nf.format(p.getPrecio()); // convertir a formato de moneda para mostrar
+            datos[2] = nf.format(p.getPrecio()).trim(); // convertir a formato de moneda para mostrar
             modelo.addRow(datos);
         }
     }
@@ -783,9 +785,28 @@ public class UINuevoProducto extends javax.swing.JFrame
         this.llenarTabla(p);
     }
     
-     private void limpiarCampos(){
+     private void limpiarCampos()
+     {
         this.jTCodigo.setText("");
         this.jTNombreProducto1.setText("");
         this.jTPrecio.setText("");
+     }
+     
+     private void ajustarColumnas()
+     {
+         TableColumn column = null;
+         for (int i = 0; i < 2; i++) 
+        {
+            column = jTable1.getColumnModel().getColumn(i);
+            switch(i)
+            {
+                case 0:
+                        column.setPreferredWidth(15);
+                        break;
+                case 1:
+                        column.setPreferredWidth(223);
+                        break;
+            }
+        }
      }
 }

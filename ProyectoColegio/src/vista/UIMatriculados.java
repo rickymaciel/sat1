@@ -21,6 +21,7 @@ import java.io.IOException;
 //import java.net.URL;
 //import java.awt.image.ImageFilter;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -28,6 +29,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 //import javax.swing.Icon;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -2127,16 +2130,77 @@ public class UIMatriculados extends javax.swing.JFrame
         
         return control;
     }
+//    private Date pasarADateConFormato(String ddia, String mmes, String aanio)
+//    {
+//        
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy" );
+//        SimpleDateFormat outDateFormat = new SimpleDateFormat("MM-dd-yyyy*HH:mm:ss:z");
+//        outDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+//        java.util.Date fe=null;
+//        java.util.Date date = new Date();
+//        
+////        try
+////        {
+////            Date dt = dateFormat.parse(date);
+////            System.out.println(dt.toString());
+////            this.date = outDateFormat.format(dt);
+////            System.out.println("ORIGINAL IS: " + date + "     NEW IS:  "  + this.date.toString());
+////        }
+////        catch(ParseException e)
+////        {
+////            System.out.println(e);
+////        }
+//        
+//        
+//        try{            
+//            fe = outDateFormat.parse(ddia + "/" + mmes + "/" + aanio);
+//        } catch (ParseException ex) {
+//            Logger.getLogger(UIMatriculados.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        
+//        
+////        java.util.Date fe=null;
+////        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy"); //Las M en mayúsculas o interpretará minutos!!
+////        try{            
+////            fe = sdf.parse(ddia + "/" + mmes + "/" + aanio);
+////        } catch (ParseException ex) {
+////            Logger.getLogger(UIMatriculados.class.getName()).log(Level.SEVERE, null, ex);
+////        }
+////        System.out.println("La fecha a devolver es: "+fe);
+//        return fe;
+//    }
+    
     private Date pasarADateConFormato(String ddia, String mmes, String aanio){
+        Locale l = new Locale("es","AR");
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/Jujuy"),l);
+       
+        //String fecha=(cal.get(Integer.parseInt(aanio)) + "/" + (cal.get(Integer.parseInt(mmes))) + "/" + cal.get(Integer.parseInt(ddia)));
+        
+        //seteo la fecha
+        cal.set(Integer.parseInt(aanio), Integer.parseInt(mmes)-1, Integer.parseInt(ddia) + 1);
+        
+        String fecha=(cal.get(Calendar.DAY_OF_MONTH)+ "/" + (cal.get(Calendar.MONTH)+1) + "/" + cal.get(Calendar.YEAR));
+        
+                
+//        JOptionPane.showMessageDialog(null,fecha , "fecha en string es...",JOptionPane.WARNING_MESSAGE);
+                
         java.util.Date fe=null;
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy"); //Las M en mayúsculas o interpretará minutos!!
+//        java.sql.Date fe=null;
+        java.sql.Date fo = null;
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         try{            
-            fe = sdf.parse(ddia + "/" + mmes + "/" + aanio);
-        } catch (ParseException ex) {
-            Logger.getLogger(UIMatriculados.class.getName()).log(Level.SEVERE, null, ex);
+            //fe = sdf.parse(ddia + "/" + mmes + "/" + aanio);
+            fe = sdf.parse(fecha);
+            fo = new java.sql.Date(fe.getTime());
+        }catch(ParseException pe){
+            JOptionPane.showMessageDialog(null, "Admin: hubo problemas con la fecha", "No se pudo parsear la fecha",JOptionPane.WARNING_MESSAGE);
         }
-        return fe;
+//        System.out.println("La fecha a devolver es: "+fe);
+        return fo;
     }
+    
+    
     private void guardar() throws ParseException{
         this.matriculado.setApellido(this.jTApellidoMatriculado.getText().trim().toUpperCase());
         this.matriculado.setBarrio(this.barrio);

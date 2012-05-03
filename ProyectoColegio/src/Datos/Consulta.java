@@ -11,6 +11,9 @@ package Datos;
  */
 import java.sql.*;
 //import java.text.ParseException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.*;
 import javax.swing.JOptionPane;
 import negocios.Barrio;
@@ -52,7 +55,9 @@ import negocios.TipoTrabajo;
 import negocios.Titulo;
 import negocios.Usuario;
 import java.util.Date;
+import negocios.DetalleCPParaFacturacion;
 import negocios.DetalleFactura;
+import negocios.ProductoTasa;
 
 public class Consulta extends DataManager{
     
@@ -177,7 +182,7 @@ public class Consulta extends DataManager{
         { 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-            resu = stmte.executeQuery("SELECT idtasaaplicable, idtasa, idtipoconstancia, existe FROM tasasaplicables"); 
+            resu = stmte.executeQuery("SELECT idtasaaplicable, idtasa, idtipoconstancia, existe, leyenda FROM tasasaplicables"); 
         }
         catch (SQLException ex)
         {
@@ -197,6 +202,7 @@ public class Consulta extends DataManager{
                 tasaA.setIdtasa(resu.getInt(2));
                 tasaA.setIdTipoConstancia(resu.getInt(3));
                 tasaA.setExiste(resu.getString(4));
+                tasaA.setLeyenda(resu.getString(5));
                 co.add(tasaA);
             }
         }
@@ -220,8 +226,10 @@ public class Consulta extends DataManager{
         }      
         return co;        
     }
+
+
     
-    public Collection getTasaAplicablexConstancia(int tipocons)
+        public Collection getTasaAplicablexConstancia(int tipocons)
     {
         ResultSet resu = null;
         Statement stmte = null;
@@ -230,7 +238,7 @@ public class Consulta extends DataManager{
         { 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-            resu = stmte.executeQuery("SELECT idtasaaplicable, idtasa, idtipoconstancia, existe FROM tasasaplicables WHERE idtipoconstancia = "+tipocons); 
+            resu = stmte.executeQuery("SELECT idtasaaplicable, idtasa, idtipoconstancia, existe, leyenda FROM tasasaplicables WHERE existe = 'S' AND idtipoconstancia = "+tipocons); 
         }
         catch (SQLException ex)
         {
@@ -250,6 +258,7 @@ public class Consulta extends DataManager{
                 tasaA.setIdtasa(resu.getInt(2));
                 tasaA.setIdTipoConstancia(resu.getInt(3));
                 tasaA.setExiste(resu.getString(4));
+                tasaA.setLeyenda(resu.getString(5));
                 co.add(tasaA);
             }
         }
@@ -273,6 +282,8 @@ public class Consulta extends DataManager{
         }      
         return co;        
     }
+
+
     public Long getEncabezadoFactxSerie(int serieFactura)
     {
         ResultSet resu = null;
@@ -356,6 +367,8 @@ public class Consulta extends DataManager{
                 encp.setSeriefactura(resu.getLong(6));
                 encp.setNrofactura(resu.getLong(7));
                 encp.setMatricula(resu.getLong(8));
+                encp.setApellidoMatriculado(resu.getString(9));
+                encp.setNombresMatriculado(resu.getString(10));
                 co.add(encp);
            }
         }
@@ -379,6 +392,7 @@ public class Consulta extends DataManager{
         }      
         return co;        
     }
+
     
     public Collection getEncabezadoPago()
     {
@@ -413,6 +427,8 @@ public class Consulta extends DataManager{
                 encp.setSeriefactura(resu.getLong(6));
                 encp.setNrofactura(resu.getLong(7));
                 encp.setMatricula(resu.getLong(8));
+                encp.setApellidoMatriculado(resu.getString(9));
+                encp.setNombresMatriculado(resu.getString(10));
                 co.add(encp);
            }
         }
@@ -436,8 +452,9 @@ public class Consulta extends DataManager{
         }      
         return co;        
     }
+
     
-            public EncabezadoPago getEncabezadoPago(int matricula)
+    public EncabezadoPago getEncabezadoPago(int matricula)
     {
         ResultSet resu = null;
         Statement stmte = null;
@@ -468,6 +485,8 @@ public class Consulta extends DataManager{
                 encp.setSeriefactura(resu.getLong(6));
                 encp.setNrofactura(resu.getLong(7));
                 encp.setMatricula(resu.getLong(8));
+                encp.setApellidoMatriculado(resu.getString(9));
+                encp.setNombresMatriculado(resu.getString(10));
         }
         catch(SQLException ex)
         {
@@ -489,6 +508,7 @@ public class Consulta extends DataManager{
         }      
         return encp;        
     }
+
     
     public Collection getPlanoCTotal()
     {
@@ -841,7 +861,7 @@ public class Consulta extends DataManager{
         { 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-            resu = stmte.executeQuery("SELECT * FROM encabezado_cp2 WHERE matricula = '"+matricula+"' AND fecha BETWEEN '"+fechaI+"' AND '"+fechaF+"'"); 
+            resu = stmte.executeQuery("SELECT * FROM encabezado_cp2 WHERE matricula = '"+matricula+"' AND fecha BETWEEN '"+fechaI+"' AND '"+fechaF+"' order by fecha asc"); 
         }
         catch (SQLException ex)
         {
@@ -1399,7 +1419,7 @@ public class Consulta extends DataManager{
         { 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-            resu = stmte.executeQuery("SELECT * FROM encabezado_cp2"); 
+            resu = stmte.executeQuery("SELECT * FROM encabezado_cp2 WHERE anulado = 'N'"); 
         }
         catch (SQLException ex)
         {
@@ -1491,6 +1511,7 @@ public class Consulta extends DataManager{
         }      
         return co;        
     }
+
     public Collection getEncabezadoCPxMatricula(int matricula)
     {
         ResultSet resu = null;
@@ -1500,7 +1521,7 @@ public class Consulta extends DataManager{
         { 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-            resu = stmte.executeQuery("SELECT * FROM encabezado_cp2 WHERE matricula = "+matricula); 
+            resu = stmte.executeQuery("SELECT * FROM encabezado_cp2 WHERE matricula = "+matricula+" AND anulado = 'N'"); 
         }
         catch (SQLException ex)
         {
@@ -1592,6 +1613,7 @@ public class Consulta extends DataManager{
         }      
         return co;        
     }
+
     
     public Collection getEncabezadoCPxFecha(String fechaI, String fechaF)
     {
@@ -1602,7 +1624,7 @@ public class Consulta extends DataManager{
         { 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-            resu = stmte.executeQuery("SELECT * FROM encabezado_cp2 WHERE fecha BETWEEN '"+fechaI+"' AND '"+fechaF+"'"); 
+            resu = stmte.executeQuery("SELECT * FROM encabezado_cp2 WHERE fecha BETWEEN '"+fechaI+"' AND '"+fechaF+"' AND anulado = 'N'"); 
         }
         catch (SQLException ex)
         {
@@ -1694,6 +1716,7 @@ public class Consulta extends DataManager{
         }      
         return co;        
     }
+
     
     public long getEncabezadoCPxSerie(String seriecp)
     {
@@ -1973,7 +1996,7 @@ public class Consulta extends DataManager{
         { 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-            resu = stmte.executeQuery("SELECT * FROM encabezado_ct WHERE matricula = "+matricula); 
+            resu = stmte.executeQuery("SELECT * FROM encabezado_ct WHERE matricula = "+matricula+" AND anulado = 'N'"); 
         }
         catch (SQLException ex)
         {
@@ -2075,8 +2098,9 @@ public class Consulta extends DataManager{
         }      
         return co;        
     }
+
     
-public Collection getEncabezadoCT(String fechaI, String fechaF, int matricula)
+    public Collection getEncabezadoCT(String fechaI, String fechaF, int matricula)
     {
         ResultSet resu = null;
         Statement stmte = null;
@@ -2085,7 +2109,7 @@ public Collection getEncabezadoCT(String fechaI, String fechaF, int matricula)
         { 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-            resu = stmte.executeQuery("SELECT * FROM encabezado_ct WHERE matricula = '"+matricula+"' AND fecha BETWEEN '"+fechaI+"' AND '"+fechaF+"'"); 
+            resu = stmte.executeQuery("SELECT * FROM encabezado_ct WHERE matricula = '"+matricula+"' AND fecha BETWEEN '"+fechaI+"' AND '"+fechaF+"' AND anulado = 'N'"); 
         }
         catch (SQLException ex)
         {
@@ -2187,6 +2211,7 @@ public Collection getEncabezadoCT(String fechaI, String fechaF, int matricula)
         }      
         return co;        
     }
+
     public Collection getEncabezadoCTxFecha(String fechaI, String fechaF)
     {
         ResultSet resu = null;
@@ -2196,7 +2221,7 @@ public Collection getEncabezadoCT(String fechaI, String fechaF, int matricula)
         { 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-            resu = stmte.executeQuery("SELECT * FROM encabezado_ct WHERE fecha BETWEEN '"+fechaI+"' AND '"+fechaF+"'"); 
+            resu = stmte.executeQuery("SELECT * FROM encabezado_ct WHERE fecha BETWEEN '"+fechaI+"' AND '"+fechaF+"' AND anulado = 'N'"); 
         }
         catch (SQLException ex)
         {
@@ -2298,6 +2323,7 @@ public Collection getEncabezadoCT(String fechaI, String fechaF, int matricula)
         }      
         return co;        
     }
+
     
     public long getEncabezadoCTxSerie(String seriect)
     {
@@ -2689,6 +2715,128 @@ public Collection getEncabezadoCT(String fechaI, String fechaF, int matricula)
         }      
         return resultado;        
     }
+    
+    /**
+     * Este metodo obtiene un detalle de acuerdo a una serie.
+     * @param seriecp
+     * @return
+     */
+        public long getIdDetalleFacturacionCPxSerie(String seriecp)
+    {   //Devuelve elultimo valor del idetalle de const totales
+        //sirve para hacer el alta de un nuevo detalle de const total
+        ResultSet resu = null;
+        Statement stmte = null;
+        Connection conne = null;
+        try 
+        { 
+            conne = super.getConection();      
+            stmte = conne.createStatement();  
+            resu = stmte.executeQuery("select (max(d.iddetalle)+1) as nuevocodigo from detalleCPParaFacturacion d"); 
+        }
+        catch (SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } 
+        long resultado = 0;   
+        try
+        {
+            resu.next();
+            if (resu.getLong(1)==0){ //si es una nueva serie y nohay constancias entonces
+                resultado=1;
+            }else{
+                resultado = resu.getLong(1);
+            }  
+        }
+        catch(SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        }
+        try{
+          resu.close();
+          stmte.close();
+          conne.close();
+        } catch(SQLException e){
+          while (e != null){
+             e.printStackTrace();
+             e = e.getNextException();
+          }         
+        }      
+        return resultado;        
+    }
+
+public Collection getDetalleFacturacionCP(String serie, long codigoCP)
+    {
+        try 
+        { 
+            conn = super.getConection();  
+            stmt = conn.createStatement(); 
+            res = stmt.executeQuery("SELECT seriecp,codigocp,iddetalle,idproducto,detalle,cantidad,tiposuperficie,valorsuperficie,nombretasa,valorindicedetasa,tasaminimaaplicada,subtotal FROM detallecpparafacturacion WHERE seriecp = '"+serie+"' AND codigocp = "+codigoCP);
+
+            
+//            res = stmt.executeQuery(" select * from det_cp_fact('"+serie.trim()+"',"+codigoCP+")");
+        }
+        catch (SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } 
+        Collection co = new ArrayList();   
+        try
+        {
+            while (res.next())
+            {
+                DetalleCPParaFacturacion d = new DetalleCPParaFacturacion();
+                d.setSerieCP(res.getString(1));
+                d.setCodigoCP(res.getLong(2));
+                d.setIddetalle(res.getInt(3));
+                
+                Producto prod = new Producto();
+                prod.setIdproducto(res.getInt(4));
+                d.setProducto(prod);
+                
+                d.setDetalle(res.getString(5));
+                d.setCantidad(res.getInt(6));
+                d.setTipoSuperficie(res.getString(7));
+                d.setValorSuperficie(res.getDouble(8));
+                d.setNombreTasa(res.getString(9));
+                d.setValorIndiceDeTasa(res.getDouble(10));
+                d.setTasaMinimaAplicada(res.getDouble(11));
+                d.setSubTotal(res.getDouble(12));
+                co.add(d);
+                d = null;
+            }
+        }
+        catch(SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        }
+        try{
+          res.close();
+          stmt.close();
+          conn.close();
+        } catch(SQLException e){
+          while (e != null){
+             e.printStackTrace();
+             e = e.getNextException();
+          }         
+        }      
+        return co; 
+    }
 
     
     public long getIdDetalleCTxSerie(String seriect)
@@ -2993,7 +3141,7 @@ public Collection getEncabezadoCT(String fechaI, String fechaF, int matricula)
         Connection conne = null;
         boolean respuesta = false;
         respuesta = this.existeFoto(matricula);        
-//        System.out.println("EXISTE LA FOTO EN TABLA IMAGENES?: "+ respuesta);
+        System.out.println("EXISTE LA FOTO EN TABLA IMAGENES?: "+ respuesta);
         if (respuesta){//jorge        
             try{ 
                 conne = super.getConection();      
@@ -3718,7 +3866,7 @@ public Collection getEncabezadoCT(String fechaI, String fechaF, int matricula)
         { 
             conn = super.getConection();  
             stmt = conn.createStatement();  
-            res = stmt.executeQuery(" select * from mat_matricula('S','"+matricula+"')");
+            res = stmt.executeQuery(" select * from mat_matricula('S','"+String.valueOf(matricula)+"')");
         }
         catch (SQLException ex)
         {
@@ -6453,7 +6601,7 @@ public Collection getTodoEntidadExterna()
         { 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-            resu = stmte.executeQuery("SELECT idproducto, denominacion, precio, existe FROM Productos WHERE existe = 'S'"); 
+            resu = stmte.executeQuery("SELECT idproducto, denominacion, precio, existe FROM Productos WHERE existe = 'S' order by idproducto"); 
         }
         catch (SQLException ex)
         {
@@ -6709,7 +6857,7 @@ public Collection getTodoEntidadExterna()
         { 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-            resu = stmte.executeQuery("SELECT idtasa, denominacion, indice, tasaminima, observacion, existe FROM Tasas WHERE existe = 'S'"); 
+            resu = stmte.executeQuery("SELECT idtasa, denominacion, indice, tasaminima, observacion, existe FROM Tasas WHERE existe = 'S' order by idtasa"); 
         }
         catch (SQLException ex)
         {
@@ -6808,6 +6956,57 @@ public Collection getTodoEntidadExterna()
           }         
         }      
         return co;        
+    } 
+    
+    public Tasa getTasa(String nombre, String algo)
+    {
+        ResultSet resu = null;
+        Statement stmte = null;
+        Connection conne = null;
+        Tasa tasa = new Tasa();
+        try 
+        { 
+            conne = super.getConection();      
+            stmte = conne.createStatement();  
+            resu = stmte.executeQuery("SELECT idtasa, denominacion, indice, tasaminima, observacion, existe FROM Tasas WHERE existe = 'S' AND denominacion = '"+nombre+"'"); 
+        }
+        catch (SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } 
+        try
+        {
+            resu.next();
+                tasa.setIdtasa(resu.getInt(1));
+                tasa.setDenominacion(resu.getString(2));
+                tasa.setIndice(resu.getDouble(3));
+                tasa.setTasaMinima(resu.getDouble(4));
+                tasa.setObservacion(resu.getString(5));
+                tasa.setExiste(resu.getString(6));
+        }
+        catch(SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        }
+        try{
+          resu.close();
+          stmte.close();
+          conne.close();
+        } catch(SQLException e){
+          while (e != null){
+             e.printStackTrace();
+             e = e.getNextException();
+          }         
+        }      
+        return tasa;        
     } 
     
  public Collection getTodoTasa()
@@ -7910,8 +8109,8 @@ public Collection getTodoCondicionVenta()
         try 
         { 
             conne = super.getConection();      
-            stmte = conne.createStatement();  
-                resu = stmte.executeQuery("SELECT codigocp FROM encabezadocp WHERE codigocp = "+numero+ " AND seriecp = '"+serie.trim()+"'"); 
+            stmte = conne.createStatement();              
+            resu = stmte.executeQuery("SELECT codigocp FROM encabezadocp WHERE codigocp = "+numero+ " AND seriecp = '"+serie.trim()+"'"); 
         }
         catch (SQLException ex)
         {
@@ -7947,7 +8146,7 @@ public Collection getTodoCondicionVenta()
           }         
         }    
         if(contador != 0)
-            bandera = false;
+            bandera = false;//si es false significa que si existe la constancia
         return bandera;        
     }
     
@@ -7958,31 +8157,22 @@ public Collection getTodoCondicionVenta()
         Connection conne = null;
         boolean bandera = true; // true significa que no hay numeros repetidos
         int contador = 0;
-        try 
-        { 
+        try{ 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-                resu = stmte.executeQuery("SELECT codigoct FROM encabezadoct WHERE codigoct = "+numero+ " AND seriect = '"+serie.trim()+"'"); 
-        }
-        catch (SQLException ex)
-        {
-            while (ex !=null)
-            {
+            resu = stmte.executeQuery("SELECT codigoct FROM encabezadoct WHERE codigoct = "+numero+ " AND seriect = '"+serie.trim()+"'"); 
+        }catch (SQLException ex) {
+            while (ex !=null) {
                 ex.printStackTrace();
                 ex = ex.getNextException();
             }
         } 
-        try
-        {
-            while(resu.next())
-            {
+        try {
+            while(resu.next()) {
                 contador++;
             }
-        }
-        catch(SQLException ex)
-        {
-            while (ex !=null)
-            {
+        }catch(SQLException ex){
+            while (ex !=null){
                 ex.printStackTrace();
                 ex = ex.getNextException();
             }
@@ -7998,7 +8188,7 @@ public Collection getTodoCondicionVenta()
           }         
         }    
         if(contador != 0)
-            bandera = false;
+            bandera = false;//si es false significa que si existe la constancia
         return bandera;        
     }
     public boolean verificarNroFactura(String numero, String serie)
@@ -8012,7 +8202,7 @@ public Collection getTodoCondicionVenta()
         { 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-                resu = stmte.executeQuery("SELECT numerofactura FROM encabezadofacturas WHERE numerofactura = "+numero+ " AND seriefactura = '"+serie.trim()+"'"); 
+                resu = stmte.executeQuery("SELECT numerofactura FROM encabezadofacturas WHERE numerofactura = "+numero+ " AND seriefactura = "+serie.trim()); 
         }
         catch (SQLException ex)
         {
@@ -8061,7 +8251,7 @@ public double getTotalFactura(long idcaja)
         { 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-            resu = stmte.executeQuery("select (sum(e.total)) as total from encabezadofacturas e where e.idcaja='"+idcaja+"'"); 
+            resu = stmte.executeQuery("select (sum(e.total)) as total from encabezadofacturas e where e.anulado='N' AND e.idcaja='"+idcaja+"'"); 
         }
         catch (SQLException ex)
         {
@@ -8630,17 +8820,20 @@ public double getTotalFactura(long idcaja)
         return mat;
     }
   
-  public Date getFechaEncabezadoPago(long idmatriculado)
-    {
-        ResultSet resu = null;
+  private String getAnioPagoCuota(long idMatriculado)
+  {
+      ResultSet resu = null;
         Statement stmte = null;
         Connection conne = null;
-        Date fecha = new Date();
+        String anio = "";
         try 
         { 
             conne = super.getConection();      
             stmte = conne.createStatement();  
-            resu = stmte.executeQuery("select (max(e.habilitacionhasta)) as ultimafecha from encabezadopago e where e.idmatriculado="+idmatriculado); 
+            //resu = stmte.executeQuery("select (max(e.habilitacionhasta)) as ultimafecha from encabezadopago e where e.idmatriculado = "+idmatriculado+ " and seriefactura > 0 and nrofactura > 0"); 
+            resu = stmte.executeQuery("select max(dpa.anio) from detallepago dpa,encabezadopago epa where epa.idmatriculado="+idMatriculado+
+                    " and epa.idencabezadopago=dpa.idencabezadopago"+
+                    " and epa.seriefactura>0 and epa.nrofactura>0");
         }
         catch (SQLException ex)
         {
@@ -8653,7 +8846,7 @@ public double getTotalFactura(long idcaja)
         try
         {
             resu.next();
-            fecha = resu.getDate(1);
+            anio = String.valueOf(resu.getInt(1));
         }
         catch(SQLException ex)
         {
@@ -8673,7 +8866,455 @@ public double getTotalFactura(long idcaja)
              e = e.getNextException();
           }         
         }      
+        return anio;   
+  }
+  
+  public Date getFechaEncabezadoPago(long idmatriculado)
+    {
+        ResultSet resu = null;
+        Statement stmte = null;
+        Connection conne = null;
+        Date fecha = null;
+       
+        try 
+        { 
+            conne = super.getConection();      
+            stmte = conne.createStatement();  
+            //resu = stmte.executeQuery("select (max(e.habilitacionhasta)) as ultimafecha from encabezadopago e where e.idmatriculado = "+idmatriculado+ " and seriefactura > 0 and nrofactura > 0"); 
+            resu = stmte.executeQuery("select max(dp.mes) from detallepago dp,encabezadopago ep where dp.anio=("+
+                    "select max(dpa.anio) from detallepago dpa,encabezadopago epa where epa.idmatriculado="+idmatriculado+
+                    " and epa.idencabezadopago=dpa.idencabezadopago"+
+                    " and epa.seriefactura>0 and epa.nrofactura>0)"+
+                " and ep.idmatriculado="+ idmatriculado+
+                " and ep.idencabezadopago=dp.idencabezadopago"+
+                " and ep.seriefactura>0 and ep.nrofactura>0");
+        }
+        catch (SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } 
+        try
+        {
+            resu.next();
+            
+            if (resu.getInt(1)==0){//es decir si la query es nula
+//                System.out.println("NULO LA RESPUESTA DE CONSULTA");                                
+            }else{
+                String dia ="30";
+                String mes = String.valueOf(resu.getInt(1));
+                String anio = this.getAnioPagoCuota(idmatriculado);
+                if(mes.trim().equals("2")||mes.trim().equals("02"))
+                    dia = "28";
+                Date fe=null;
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy"); //Las M en mayúsculas o interpretará minutos!!
+                try{            
+                    fe = sdf.parse(dia + "/" + mes + "/" + anio);
+                }catch(ParseException pe){
+    //                JOptionPane.showMessageDialog(null, "Admin: hubo problemas con la fecha", "No se pudo parsear la fecha",JOptionPane.WARNING_MESSAGE);
+                }
+                fecha = fe;   
+            }        
+        }
+        catch(SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        }
+        try{
+          resu.close();
+          stmte.close();
+          conne.close();
+        } catch(SQLException e){
+          while (e != null){
+             e.printStackTrace();
+             e = e.getNextException();
+          }         
+        }      
+//        System.out.println("La fecha a devolver es "+fecha);
         return fecha;        
+    }
+
+  public Caja getUnaCaja(long idcaja)
+    {
+       Caja caja = new Caja();
+        try 
+        { 
+            conn = super.getConection();  
+            stmt = conn.createStatement();  
+            res = stmt.executeQuery(" select * from una_caja('"+idcaja+"')");
+        }
+        catch (SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } 
+        try
+        {
+                if(res.next())
+                {
+                    if (res.getInt(1)>0){
+                        caja.setIdcaja(res.getLong(1));
+                        caja.setFechaapertura(res.getTimestamp(2));
+                        caja.setFechacierre(res.getTimestamp(3));
+                        caja.setTotal(res.getDouble(4));
+                        Usuario user = new Usuario();
+                        user.setIdusuario(res.getInt(5));
+                        caja.setUsuariocierre(user);
+                        caja.setSaldoinicial(res.getDouble(6));
+                        caja.setEstado(res.getString(7));
+                        caja.setTotal(Math.round(caja.getTotal()*Math.pow(10,2))/Math.pow(10,2));
+                    }
+                }
+        }
+        catch(SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        }
+        this.cerrar();
+        return caja;
+    }
+
+
+   public int cantidadCajas()
+    {
+        ResultSet resu = null;
+        Statement stmte = null;
+        Connection conne = null;
+        try 
+        { 
+            conne = super.getConection();      
+            stmte = conne.createStatement();  
+            resu = stmte.executeQuery("select Count(idcaja) as cantidad from cajas where estado='C'"); 
+        }
+        catch (SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } 
+        int resultado = 0;   
+        try
+        {
+            resu.next();
+            if (resu.getInt(1)==0){ //si es una nueva serie y nohay constancias entonces
+                resultado=0;
+            }else{
+                resultado = resu.getInt(1);
+            }  
+        }
+        catch(SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        }
+        try{
+          resu.close();
+          stmte.close();
+          conne.close();
+        } catch(SQLException e){
+          while (e != null){
+             e.printStackTrace();
+             e = e.getNextException();
+          }         
+        }      
+        return resultado;        
+    }
+  public int cantidadMatriculados(String tipo)
+    {
+        ResultSet resu = null;
+        Statement stmte = null;
+        Connection conne = null;
+        try 
+        { 
+            conne = super.getConection();      
+            stmte = conne.createStatement();  
+            resu = stmte.executeQuery("SELECT count(matriculados.idmatriculado) AS totalhabilidado FROM matriculados where matriculados.habilitado = '"+tipo+"'"); 
+        }
+        catch (SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } 
+        int resultado = 0;   
+        try
+        {
+            resu.next();
+            if (resu.getInt(1)==0){ //si es una nueva serie y nohay constancias entonces
+                resultado=0;
+            }else{
+                resultado = resu.getInt(1);
+            }  
+        }
+        catch(SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        }
+        try{
+          resu.close();
+          stmte.close();
+          conne.close();
+        } catch(SQLException e){
+          while (e != null){
+             e.printStackTrace();
+             e = e.getNextException();
+          }         
+        }      
+        return resultado;        
+    }
+  public Collection armarDetalleCT2(String serie, String codigo)
+    {
+        ResultSet resu = null;
+        Statement stmte = null;
+        Connection conne = null;
+        try 
+        { 
+            conne = super.getConection();      
+            stmte = conne.createStatement();  
+            resu = stmte.executeQuery("SELECT tasas.indice, tasas.tasaMinima, tasas.idTasa, tasas.denominacion, tasas.observacion, tasas.existe, enc_mat_ct.superficie"+
+            " FROM tasas, enc_mat_ct WHERE enc_mat_ct.idTasa = tasas.idTasa AND enc_mat_ct.codigoCT = "+codigo.trim()+"	AND enc_mat_ct.serieCT = '"+serie.trim()+"'");
+        }
+        catch (SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } 
+        Collection co = new ArrayList();   
+        try
+        {
+            while (resu.next())
+            {
+                Tasa t = new Tasa();
+                t.setIndice(resu.getDouble(1));
+                t.setTasaMinima(resu.getDouble(2));
+                t.setIdtasa(resu.getInt(3));
+                t.setDenominacion(resu.getString(4));
+                t.setObservacion(resu.getString(5));
+                t.setExiste(resu.getString(6));
+                t.setSuperficie(resu.getDouble(7));
+                co.add(t);
+            }
+        }
+        catch(SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        }
+        try{
+          resu.close();
+          stmte.close();
+          conne.close();
+        } catch(SQLException e){
+          while (e != null){
+             e.printStackTrace();
+             e = e.getNextException();
+          }         
+        }     
+        return co;        
+    }
+
+public Collection getAnuladoCP()
+    {
+        ResultSet resu = null;
+        Statement stmte = null;
+        Connection conne = null;
+        try 
+        { 
+            conne = super.getConection();      
+            stmte = conne.createStatement();  
+            resu = stmte.executeQuery("SELECT * FROM anulados_cp"); 
+        }
+        catch (SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } 
+        Collection co = new ArrayList();   
+        try
+        {
+            while (resu.next())
+            {
+                EncabezadoCP encCP = new EncabezadoCP();
+                encCP.setSerieCP(resu.getString(1));
+                encCP.setCodigoCP(resu.getLong(2));
+                encCP.setSerieFactura(resu.getInt(3));
+                encCP.setNumeroFactura(resu.getLong(4));
+                encCP.setFecha(resu.getTimestamp(5));
+                Usuario user = new  Usuario();
+                user.setNombre(resu.getString(6));
+                encCP.setUsuario(user);
+                Matriculado mat = new Matriculado();
+                mat.setMatricula(resu.getInt(7));
+                encCP.setMatriculado(mat);
+                encCP.setTotal(resu.getDouble(8));
+                co.add(encCP);
+            }
+        }
+        catch(SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        }
+        try{
+          resu.close();
+          stmte.close();
+          conne.close();
+        } catch(SQLException e){
+          while (e != null){
+             e.printStackTrace();
+             e = e.getNextException();
+          }         
+        }      
+        return co;        
+    }
+    
+    public Collection getAnuladoCT()
+    {
+        ResultSet resu = null;
+        Statement stmte = null;
+        Connection conne = null;
+        try 
+        { 
+            conne = super.getConection();      
+            stmte = conne.createStatement();  
+            resu = stmte.executeQuery("SELECT * FROM anulados_ct"); 
+        }
+        catch (SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } 
+        Collection co = new ArrayList();   
+        try
+        {
+            while (resu.next())
+            {
+                EncabezadoCT encCT = new EncabezadoCT();
+                encCT.setSerieCT(resu.getString(1));
+                encCT.setCodigoCT(resu.getLong(2));
+                encCT.setSerieFactura(resu.getInt(3));
+                encCT.setNumeroFactura(resu.getLong(4));
+                encCT.setFecha(resu.getTimestamp(5));
+                Usuario user = new  Usuario();
+                user.setNombre(resu.getString(6));
+                encCT.setUsuario(user);
+                Matriculado mat = new Matriculado();
+                mat.setMatricula(resu.getInt(7));
+                encCT.setMatriculado(mat);
+                encCT.setTotal(resu.getDouble(8));
+                co.add(encCT);
+            }
+        }
+        catch(SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        }
+        try{
+          resu.close();
+          stmte.close();
+          conne.close();
+        } catch(SQLException e){
+          while (e != null){
+             e.printStackTrace();
+             e = e.getNextException();
+          }         
+        }      
+        return co;        
+    }
+    
+    public Collection getProductoTasa()
+    {
+        ResultSet resu = null;
+        Statement stmte = null;
+        Connection conne = null;
+        try 
+        { 
+            conne = super.getConection();      
+            stmte = conne.createStatement();  
+            resu = stmte.executeQuery("SELECT codigoproducto, codigotasa FROM productos_tasas order by codigoproducto"); 
+        }
+        catch (SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        } 
+        Collection co = new ArrayList();   
+        try
+        {
+            while (resu.next())
+            {
+                ProductoTasa pt = new ProductoTasa();
+                pt.setCodigoproducto(resu.getInt(1));
+                pt.setCodigotasa(resu.getInt(2));
+                co.add(pt);
+            }
+        }
+        catch(SQLException ex)
+        {
+            while (ex !=null)
+            {
+                ex.printStackTrace();
+                ex = ex.getNextException();
+            }
+        }
+        try{
+          resu.close();
+          stmte.close();
+          conne.close();
+        } catch(SQLException e){
+          while (e != null){
+             e.printStackTrace();
+             e = e.getNextException();
+          }         
+        }      
+        return co;        
     }
 
 }
