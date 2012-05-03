@@ -72,6 +72,7 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
     private void initComponents() {
 
         jComboBox1 = new javax.swing.JComboBox();
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -97,6 +98,10 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel14 = new javax.swing.JLabel();
+        jRadioButton4 = new javax.swing.JRadioButton();
+        jRadioButton3 = new javax.swing.JRadioButton();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
         jBPagar = new javax.swing.JButton();
         jBNuevo = new javax.swing.JButton();
         jBSalir = new javax.swing.JButton();
@@ -113,13 +118,11 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
         jTDni = new javax.swing.JTextField();
         jTHabilitado = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
-        jBImprimir = new javax.swing.JButton();
-        jBHistorial = new javax.swing.JButton();
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Estado de cuenta");
+        setTitle("Pago Manual de Cuotas de Matriculado");
         setResizable(false);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Cuotas"));
@@ -128,17 +131,17 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Año", "Mes", "Monto"
+                "Año", "Mes", "Monto", "Codigo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -159,20 +162,18 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jBQuitar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jBQuitar, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(124, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jBQuitar, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(99, 99, 99))
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
         );
 
         jCAnio.setEditable(true);
@@ -182,10 +183,15 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
             }
         });
 
-        jBPasar.setText("ASIGNAR");
+        jBPasar.setText("Asignar");
         jBPasar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jBPasarMouseClicked(evt);
+            }
+        });
+        jBPasar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBPasarActionPerformed(evt);
             }
         });
         jBPasar.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -311,18 +317,50 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
         jLabel14.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jLabel14.setOpaque(true);
 
+        buttonGroup1.add(jRadioButton4);
+        jRadioButton4.setText("Reinscripción 2da vez");
+        jRadioButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton4ActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(jRadioButton3);
+        jRadioButton3.setText("Reinscripción");
+        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton3ActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(jRadioButton1);
+        jRadioButton1.setSelected(true);
+        jRadioButton1.setText("Pago de Matricula");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(jRadioButton2);
+        jRadioButton2.setText("Inscripción");
+        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE))
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -334,13 +372,12 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
                                         .addComponent(jTDia, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jTMes, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(6, 6, 6)
                                         .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(33, 33, 33))
+                                        .addComponent(jTAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                                         .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -350,22 +387,31 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTNroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(33, 33, 33)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE))
+                                        .addComponent(jTNroFactura)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(9, 9, 9)
-                                .addComponent(jCAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCMes, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTMonto, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jBPasar, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jRadioButton1)
+                                            .addComponent(jRadioButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(98, 98, 98)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jRadioButton4)
+                                            .addComponent(jRadioButton3)))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jCAnio, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jCMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jTMonto, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jBPasar, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(81, 81, 81)))
                 .addContainerGap())
         );
@@ -376,33 +422,42 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
                     .addComponent(jLabel7)
                     .addComponent(jLabel13)
                     .addComponent(jLabel12)
-                    .addComponent(jTNroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTSerieFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTSerieFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTNroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(4, 4, 4)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel8)
-                        .addComponent(jLabel9)
-                        .addComponent(jTMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel10)
-                        .addComponent(jTAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10)
+                    .addComponent(jTAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(jTDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCAnio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jCMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTMonto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jBPasar))
-                .addGap(7, 7, 7)
+                    .addComponent(jBPasar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jRadioButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jRadioButton2))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jRadioButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jRadioButton4)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(58, 58, 58))
         );
 
         jBPagar.setLabel("Guardar");
@@ -507,13 +562,6 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
         jTHabilitado.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jTHabilitado.setEnabled(false);
 
-        jButton2.setText("Listado");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -527,23 +575,22 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(JTMatricula, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+                        .addComponent(JTMatricula, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(116, 116, 116))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTDni)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTDni, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
                             .addComponent(jTApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(4, 4, 4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTNombres)
-                            .addComponent(jTHabilitado, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTHabilitado, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTNombres, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -551,46 +598,30 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(JTMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(5, 5, 5)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(JTMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTDni, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
                             .addComponent(jLabel5)
-                            .addComponent(jTHabilitado, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jTDni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTHabilitado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTApellido, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
-                    .addComponent(jTNombres, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTNombres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        jBImprimir.setText("Imprimir");
-        jBImprimir.setEnabled(false);
-        jBImprimir.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jBImprimirMouseClicked(evt);
-            }
-        });
-        jBImprimir.addActionListener(new java.awt.event.ActionListener() {
+        jButton2.setText("Listado");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBImprimirActionPerformed(evt);
-            }
-        });
-
-        jBHistorial.setText("Historial");
-        jBHistorial.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBHistorialActionPerformed(evt);
+                jButton2ActionPerformed(evt);
             }
         });
 
@@ -598,24 +629,20 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addComponent(jBImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)
-                        .addComponent(jBHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, 0, 528, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(102, 102, 102)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jBPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jBNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jBSalir, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -623,18 +650,15 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jBImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jBHistorial)
-                    .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jBPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jBHistorial, jBImprimir});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -670,35 +694,10 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jBPasarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBPasarMouseClicked
-      //cuando presiono debe pasar el objeto detallepago a la grilla de abajo
-        boolean resp = true;
-        if(this.jTSerieFactura.getText().equals("") || this.jTDia.getText().equals("") || this.jTMes.getText().equals("") || this.jTAnio.getText().equals("") || this.jTMonto.getText().equals(""))
-        {
-            JOptionPane.showMessageDialog(null,"Debe completar todos los datos correctamente","Atencion",JOptionPane.ERROR_MESSAGE);
-        }else{
-            resp = this.controlFecha();
-            if(resp){
-                this.ponerElemento();            
-            }
-        }
        
     }//GEN-LAST:event_jBPasarMouseClicked
 
     private void jBPagarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBPagarMouseClicked
-        //this.montoTotal();
-        //this.cargarEncabezado();
-        //int res = alta.hacerAlta(encp);
-        int maxmeses = 0;
-        maxmeses = this.insertarMesesAPagar(maxmeses);
-        this.montoTotal();
-        this.cargarEncabezado(maxmeses);
-        int res = alta.hacerAlta(encp);
-        this.borrarGrilla2();
-        this.bloquearInterfaz();
-        this.jBNuevo.setEnabled(true);
-        this.jBImprimir.setEnabled(true);
-        cantidad = 0;
-             
       
     }//GEN-LAST:event_jBPagarMouseClicked
 
@@ -720,6 +719,7 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
         {
             this.buscarMatriculado();
             this.mostrarDatos();
+            this.obtenerTipo();
         }
         if(c == KeyEvent.VK_ENTER) this.jTSerieFactura.requestFocus();
         
@@ -727,17 +727,29 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
 
     private void jBPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBPagarActionPerformed
         // TODO add your handling code here:
+        //this.montoTotal();
+        //this.cargarEncabezado();
+        //int res = alta.hacerAlta(encp);
+        if (this.jTable3.getRowCount()>24){
+            JOptionPane.showMessageDialog(this,"Solo se pueden almacenar 24 meses en un documento de pago\nguarde y vuelva a hacer otro documento con los mismos datos de factura de demas si es necesario...","Atencion",JOptionPane.ERROR_MESSAGE);
+        }else{
+            int maxmeses = 0;        
+            this.montoTotal();
+            this.cargarEncabezado(maxmeses);
+            int res = alta.hacerAlta(encp);
+            if (res==0){
+                maxmeses = this.insertarMesesAPagar(maxmeses);
+            }else{
+                JOptionPane.showMessageDialog(this,"No se pudo almacenar el encabezado de pago, revise los datos","Atencion",JOptionPane.ERROR_MESSAGE);
+            }
+            this.borrarGrilla2();
+            this.bloquearInterfaz();
+    //        this.jCheckBox1.setSelected(false);
+            this.jBNuevo.setEnabled(true);
+    //        this.jBImprimir.setEnabled(true);
+            cantidad = 0;
+        }        
     }//GEN-LAST:event_jBPagarActionPerformed
-
-    private void jBImprimirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBImprimirMouseClicked
-        // TODO add your handling code here:
-}//GEN-LAST:event_jBImprimirMouseClicked
-
-    private void jBImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBImprimirActionPerformed
-        // TODO add your handling code here:
-        cExport_thread imprime=new cExport_thread(36,String.valueOf(this.encp.getIdencabezado()).trim());
-        imprime.start();
-}//GEN-LAST:event_jBImprimirActionPerformed
 
     private void jCAnioKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jCAnioKeyPressed
         char c = evt.getKeyChar();
@@ -880,34 +892,47 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
     }//GEN-LAST:event_jCMesKeyPressed
 
     private void jBPasarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jBPasarKeyPressed
-        //cuando presiono debe pasar el objeto detallepago a la grilla de abajo
-        boolean resp = true;
-        if(this.jTSerieFactura.getText().equals("") || this.jTDia.getText().equals("") || this.jTMes.getText().equals("") || this.jTAnio.getText().equals("") || this.jTMonto.getText().equals(""))
-        {
-            JOptionPane.showMessageDialog(null,"Debe completar todos los datos correctamente","Atencion",JOptionPane.ERROR_MESSAGE);
-        }else{
-            resp = this.controlFecha();
-            if(resp){
-                this.ponerElemento();            
-            }
-        }
+        
     }//GEN-LAST:event_jBPasarKeyPressed
-
-    private void jBHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBHistorialActionPerformed
-        // TODO add your handling code here:
-        if (this.JTMatricula.getText().trim().length()>0){
-            cExport_thread imprime=new cExport_thread(35,this.JTMatricula.getText().trim());
-            imprime.start();
-        }else{
-            JOptionPane.showMessageDialog(null,"Debe ingresar un numero de matricula valido\n para mostrar su historial de pago","Atencion",JOptionPane.INFORMATION_MESSAGE);
-        }
-    }//GEN-LAST:event_jBHistorialActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         UIHistorialPagos ventanaHistorial=new UIHistorialPagos(this,false,this.mat);
         ventanaHistorial.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
+        // TODO add your handling code here:
+        this.obtenerTipo();
+    }//GEN-LAST:event_jRadioButton4ActionPerformed
+
+    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
+        // TODO add your handling code here:
+        this.obtenerTipo();
+    }//GEN-LAST:event_jRadioButton3ActionPerformed
+
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        this.obtenerTipo();
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
+
+    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+        // TODO add your handling code here:
+        this.obtenerTipo();
+    }//GEN-LAST:event_jRadioButton2ActionPerformed
+
+private void jBPasarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBPasarActionPerformed
+//cuando presiono debe pasar el objeto detallepago a la grilla de abajo
+        boolean resp = true;
+        if(this.jTSerieFactura.getText().equals("") || this.jTDia.getText().equals("") || this.jTMes.getText().equals("") || this.jTAnio.getText().equals("") || this.jTMonto.getText().equals(""))
+        {
+            JOptionPane.showMessageDialog(this,"Debe completar todos los datos correctamente","Atencion",JOptionPane.ERROR_MESSAGE);
+        }else{
+            resp = this.controlFecha();
+            if(resp){
+                this.ponerElemento();            
+            }
+        }    
+}//GEN-LAST:event_jBPasarActionPerformed
     
     /**
      * @param args the command line arguments
@@ -925,8 +950,7 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField JTMatricula;
-    private javax.swing.JButton jBHistorial;
-    private javax.swing.JButton jBImprimir;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jBNuevo;
     private javax.swing.JButton jBPagar;
     private javax.swing.JButton jBPasar;
@@ -954,6 +978,10 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
@@ -995,6 +1023,11 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
     GregorianCalendar fecha = new GregorianCalendar();
     Date hoy = new Date();
    
+    String pagoMatricula="104";
+    String inscripcion="101";
+    String reinscripcion="102";
+    String reinscripcion2vez="103";
+    
     public boolean controlFecha()
     {
          int dia = Integer.parseInt(this.jTDia.getText().trim());
@@ -1038,7 +1071,7 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
                 }
             }
         }
-        if(year < 1930  || year > anio)
+        if(year < 1925  || year > anio)
         {
             getToolkit().beep();
             JOptionPane.showMessageDialog(null,"Debe introducir un valor valido de Año ej: desde 1930 hasta "+anio+" ","Atencion",JOptionPane.ERROR_MESSAGE);
@@ -1068,7 +1101,7 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
     
     public void montoTotal()
     {
-       System.out.println("cuota cuando llega al calculo :"+cuota);
+//       System.out.println("cuota cuando llega al calculo :"+cuota);
        cuota = 0;
        DefaultTableModel modelo = (DefaultTableModel)this.jTable3.getModel(); 
         for(int fila=0;fila<this.jTable3.getRowCount();fila++){
@@ -1076,10 +1109,10 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
             if(fila == (this.jTable3.getRowCount()-1))
             {
                 ultimoMes = Integer.parseInt(String.valueOf(this.jTable3.getValueAt(fila,1)).trim());
-                System.out.println("obtengo el ultimo mes:"+ultimoMes);
+//                System.out.println("obtengo el ultimo mes:"+ultimoMes);
             }
         }
-       System.out.println("total de las cuotas :"+cuota);
+//       System.out.println("total de las cuotas :"+cuota);
     }
     
     public void mostrarDatos()
@@ -1107,25 +1140,24 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
        Date fecha2 = (new GregorianCalendar(Integer.parseInt(this.jTAnio.getText()),Integer.parseInt(this.jTMes.getText())-1,Integer.parseInt(this.jTDia.getText()))).getTime();
        encp.setFechapago(fecha2);
        int dia = 0;
-       System.out.println("ultimo mes :"+ultimoMes);
-       System.out.println("año de pago :"+String.valueOf(this.jTAnio.getText()));
+//       System.out.println("ultimo mes :"+ultimoMes);
+//       System.out.println("año de pago :"+String.valueOf(this.jTAnio.getText()));
        if(ultimoMes == 1)
        {
            dia = 28;
        }else{
            dia = 30;
        }
-       System.out.println("max meses en cargarenc :"+maxmeses);
+//       System.out.println("max meses en cargarenc :"+maxmeses);
        Date fecha3 = (new GregorianCalendar(Integer.parseInt(this.jTAnio.getText()),maxmeses-1,dia)).getTime();
        encp.setHabilitacionhasta(fecha3);
        encp.setSeriefactura(Long.parseLong(this.jTSerieFactura.getText()));
        encp.setNrofactura(Long.parseLong(this.jTNroFactura.getText()));
-       System.out.println("matricuala :"+mat.getMatricula());
+//       System.out.println("matricuala :"+mat.getMatricula());
        encp.setMatricula(Long.parseLong(String.valueOf(mat.getMatricula())));
     }
       
-    public void obtenerConf()
-    {
+    public void obtenerConf(){
         conf = listar.hacerListado(conf);
     }
           
@@ -1135,13 +1167,20 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
         for(int fila=0;fila<this.jTable3.getRowCount();fila++){
             maxmeses = this.guardarDetalle(fila,maxmeses);
             if (maxmeses == 0){
-                guardoBien=false;
+                guardoBien=false;                
                 //MENSAJE
             }else{
                 guardoBien=true;
         	//MENSAJE
             }
         }
+        if (guardoBien){
+            JOptionPane.showMessageDialog(this,"Se almaceno Correctamente...", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(this,"Hubo problemas en el almacenamiento, intente de nuevo...", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+        
         return maxmeses;
     }
         
@@ -1152,10 +1191,24 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
         detalle.setAnio(Integer.parseInt(String.valueOf(this.jTable3.getValueAt(fil,0)).trim()));
         detalle.setMes(Integer.parseInt(String.valueOf(this.jTable3.getValueAt(fil,1)).trim()));
         if(detalle.getMes()>= maxmeses) maxmeses = detalle.getMes();
-        System.out.println("mes maximo :"+maxmeses);
+//        System.out.println("mes maximo :"+maxmeses);
         cuota = Double.parseDouble(String.valueOf(this.jTable3.getValueAt(fil,2)).trim());
         detalle.setImporte(Double.parseDouble(String.valueOf(this.jTable3.getValueAt(fil,2)).trim()));
-        detalle.setIdproducto(conf.getIdproducto());
+        
+        
+        detalle.setIdproducto(Long.parseLong(String.valueOf(this.jTable3.getValueAt(fil,3)).trim()));//codigo correspondiente a pago de matricula
+        
+        //---------------------------------------------
+        //PROVISORIO!!!!, La forma correcta seria:
+        //leer la tabla configuraciones el codigo correspondiente
+        //a REINSCRIPCION, ahora estoy haciendo la asignacion manualmente
+//        if (this.jCheckBox1.isSelected()){
+//            detalle.setIdproducto(102);//codigo correspondiente a reinscripcion
+//        }else{
+//            detalle.setIdproducto(conf.getIdproducto());//codigo correspondiente a pago de matricula
+//        }
+        //---------------------------------------------
+        
         int respuesta = alta.hacerAlta(detalle);
         //return respuesta;
         return maxmeses;
@@ -1187,18 +1240,23 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
         dpAlmacenar.setAnio(Integer.parseInt(String.valueOf(this.jCAnio.getSelectedItem())));
         dpAlmacenar.setMes(Integer.parseInt(String.valueOf(this.jCMes.getSelectedIndex()+1)));
         dpAlmacenar.setImporte(Double.parseDouble(this.jTMonto.getText()));
-        dpAlmacenar.setIdproducto(conf.getIdproducto());
+        
+        dpAlmacenar.setIdproducto(Long.parseLong(this.obtenerTipo()));       
+        
         this.actualizarGrillaPagar(dpAlmacenar);
+        
+        
     }
     
     public void actualizarGrillaPagar(DetallePago dp)
     {        
-        String datos[]= new String[3];
+        String datos[]= new String[4];
         //NumberFormat nf = NumberFormat.getCurrencyInstance();
         DefaultTableModel modelo = (DefaultTableModel)this.jTable3.getModel();             
         datos[0] = String.valueOf(dp.getAnio());
         datos[1] = String.valueOf(dp.getMes());
         datos[2] = String.valueOf(dp.getImporte());
+        datos[3] = String.valueOf(dp.getIdproducto());
         modelo.addRow(datos);
     }
     
@@ -1255,7 +1313,7 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
       this.jBQuitar.setEnabled(true);
       this.jBPagar.setEnabled(true);
       //this.limpiarDatos();
-      this.jBImprimir.setEnabled(false);
+//      this.jBImprimir.setEnabled(false);
       this.jBNuevo.setEnabled(false);
   }
    
@@ -1299,4 +1357,13 @@ public class UICuotasMatriculado1 extends javax.swing.JFrame
         resp = 28;
       return resp;  
     }   
+   private String obtenerTipo()
+ {
+     String resp = "";
+     if(this.jRadioButton1.isSelected()) resp=this.pagoMatricula;
+     if(this.jRadioButton2.isSelected()) resp=this.inscripcion;
+     if(this.jRadioButton3.isSelected()) resp=this.reinscripcion;
+     if(this.jRadioButton4.isSelected()) resp=this.reinscripcion2vez;
+     return resp;
+ }
 }

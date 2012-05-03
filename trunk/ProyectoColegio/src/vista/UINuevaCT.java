@@ -32,9 +32,11 @@ import negocios.DetalleCT;
 import negocios.EncabezadoCT;
 import negocios.Localidad;
 import negocios.Matriculado;
+import negocios.MostrarTotales;
 import negocios.PlanoCTotal;
 import negocios.PlanoTasa;
 import negocios.Provincia;
+import negocios.Redondear;
 import negocios.SerieConstancia;
 import negocios.Tasa;
 import negocios.TasaSeleccionada;
@@ -66,6 +68,7 @@ public class UINuevaCT extends javax.swing.JFrame
     private Collection tasas = new ArrayList();
     private Collection tasasDelPlano = new ArrayList();
     private Collection tasasSeleccionadas = new ArrayList();
+    private Collection totales = new ArrayList();
     private int tamanioVector;
     private int vector[] = new int[10];
     private PlanoCTotal planoCTotal = new PlanoCTotal();    
@@ -76,6 +79,29 @@ public class UINuevaCT extends javax.swing.JFrame
     private Double total=0.0;
     private long nroConst;
 /////////////////    
+    //Limites de campo de formulario:
+    private Long CAMPO_LONG_MAX=Long.MAX_VALUE;;
+    private Integer CAMPO_INTEGER_MAX=Integer.MAX_VALUE;;
+    private double CAMPO_DOBLE=Double.MAX_VALUE;
+    
+    private int CAMPO_DESCRIPCIONPLANO=100;
+    private int CAMPO_PERITO=130;
+    private int CAMPO_PROPIETARIO=130;
+    private int CAMPO_RESPONSABLE=130;
+    private int CAMPO_COMITENTE=130;
+    private int CAMPO_NOMBREPROYECTISTA=130;
+    private int CAMPO_NOMBREDIRECTOR=130;
+    private int CAMPO_NOMBRECONDUCTOR=130;
+    private int CAMPO_NOMBRECONSTRUCTOR=130;
+    
+    private int CAMPO_CALLE=100;
+    private int CAMPO_NUMERO=10;
+    private int CAMPO_MANZANA=10;
+    private int CAMPO_LOTE=10;
+    
+    private int CAMPO_LEYENDA=200;
+    private int CAMPO_ORDENTRABAJO=20;
+    
     
     /** Creates new form UINuevaCT */
     public UINuevaCT()//Sirve cuando entra con clave admin admin
@@ -155,6 +181,8 @@ public class UINuevaCT extends javax.swing.JFrame
         jTableTrabajos = new javax.swing.JTable();
         jCPlanos = new javax.swing.JComboBox();
         jLabel22 = new javax.swing.JLabel();
+        jTDescripcionPlano = new javax.swing.JTextField();
+        jLabel29 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -183,6 +211,10 @@ public class UINuevaCT extends javax.swing.JFrame
         jLabel26 = new javax.swing.JLabel();
         jTOrdenTrabajo = new javax.swing.JTextField();
         jBQuitarDetalle = new javax.swing.JButton();
+        jBVerTotales = new javax.swing.JButton();
+        jCheckSoloMinimo = new javax.swing.JCheckBox();
+        jTLeyenda = new javax.swing.JTextField();
+        jLabel28 = new javax.swing.JLabel();
         jBGuardar = new javax.swing.JButton();
         jBSalir = new javax.swing.JButton();
         jBImprimir = new javax.swing.JButton();
@@ -266,7 +298,7 @@ public class UINuevaCT extends javax.swing.JFrame
         });
 
         jLabel23.setBackground(new java.awt.Color(255, 255, 204));
-        jLabel23.setText("Nro. Serie Factura");
+        jLabel23.setText("Serie Factura");
         jLabel23.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(255, 255, 102), null));
         jLabel23.setOpaque(true);
 
@@ -319,17 +351,17 @@ public class UINuevaCT extends javax.swing.JFrame
                                 .addComponent(jCSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(21, 21, 21)
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTNumeroConstancia, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jTNumeroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jCheckFinObra, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(11, 11, 11))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTNombreSolicitante, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
+                        .addComponent(jTNombreSolicitante, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
                         .addContainerGap())))
         );
         jPanel2Layout.setVerticalGroup(
@@ -471,21 +503,21 @@ public class UINuevaCT extends javax.swing.JFrame
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTNombrePropietario, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTNombreProyectista, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
-                            .addComponent(jTNombreDirector, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)))
+                            .addComponent(jTNombreDirector, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                            .addComponent(jTNombreProyectista, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTNombrePerito, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTNombrePropietario, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jTNombrePerito, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -494,10 +526,10 @@ public class UINuevaCT extends javax.swing.JFrame
                     .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTNombreConstructor, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-                    .addComponent(jTNombreConductor, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-                    .addComponent(jTNombreResponsable, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-                    .addComponent(jTNombreComitente, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)))
+                    .addComponent(jTNombreConstructor, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                    .addComponent(jTNombreConductor, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                    .addComponent(jTNombreResponsable, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                    .addComponent(jTNombreComitente, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -510,25 +542,25 @@ public class UINuevaCT extends javax.swing.JFrame
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTNombreResponsable, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTNombrePerito, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTNombreProyectista, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jTNombreProyectista, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(jTNombreConductor, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTNombreConstructor, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTNombreDirector, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTNombreConstructor, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -570,25 +602,32 @@ public class UINuevaCT extends javax.swing.JFrame
         jLabel22.setFont(new java.awt.Font("Tahoma", 0, 10));
         jLabel22.setText("Tasa aplicada a ...");
 
+        jLabel29.setFont(new java.awt.Font("Tahoma", 0, 10));
+        jLabel29.setText("Descripcion:");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(79, 79, 79)
                 .addComponent(jLabel22)
                 .addGap(18, 18, 18)
-                .addComponent(jCPlanos, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(164, Short.MAX_VALUE))
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
+                .addComponent(jCPlanos, 0, 231, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTDescripcionPlano, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22)
+                    .addComponent(jTDescripcionPlano, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jCPlanos, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel22))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel29))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -677,7 +716,7 @@ public class UINuevaCT extends javax.swing.JFrame
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jTLocalidad)
                             .addComponent(jTCalle, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
                     .addComponent(jLabel14)
@@ -686,21 +725,21 @@ public class UINuevaCT extends javax.swing.JFrame
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(1, 1, 1)
                         .addComponent(jTNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTManzana, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel13)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTLote, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTLote, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jTBarrio, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTDepartamento, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jBUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -723,11 +762,11 @@ public class UINuevaCT extends javax.swing.JFrame
                     .addComponent(jLabel10)
                     .addComponent(jTCalle, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11)
-                    .addComponent(jTNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12)
                     .addComponent(jTManzana, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13)
-                    .addComponent(jTLote, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTLote, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(37, 37, 37))
         );
 
@@ -762,11 +801,17 @@ public class UINuevaCT extends javax.swing.JFrame
         jLabel24.setFont(new java.awt.Font("Tahoma", 0, 10));
         jLabel24.setText("Superficie Total");
 
+        jTSuperficieTotal.setFont(new java.awt.Font("Tahoma", 0, 10));
+
         jLabel25.setFont(new java.awt.Font("Tahoma", 0, 10));
         jLabel25.setText("Total");
 
+        jTTotal.setFont(new java.awt.Font("Tahoma", 0, 10));
+
         jLabel26.setFont(new java.awt.Font("Tahoma", 0, 10));
-        jLabel26.setText("Orden de Trabajo N°");
+        jLabel26.setText("Orden de Trab.N°");
+
+        jTOrdenTrabajo.setFont(new java.awt.Font("Tahoma", 0, 10));
 
         jBQuitarDetalle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/remove.gif"))); // NOI18N
         jBQuitarDetalle.addActionListener(new java.awt.event.ActionListener() {
@@ -775,25 +820,50 @@ public class UINuevaCT extends javax.swing.JFrame
             }
         });
 
+        jBVerTotales.setText("VER TOTALES");
+        jBVerTotales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBVerTotalesActionPerformed(evt);
+            }
+        });
+
+        jCheckSoloMinimo.setSelected(true);
+        jCheckSoloMinimo.setText("Comprobar Minimo de Tasas");
+        jCheckSoloMinimo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckSoloMinimoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jBQuitarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel24)
-                    .addComponent(jLabel25)
-                    .addComponent(jLabel26))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTOrdenTrabajo, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
-                    .addComponent(jTTotal)
-                    .addComponent(jTSuperficieTotal))
-                .addContainerGap())
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel25, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel26, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
+                                .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jTOrdenTrabajo)
+                            .addComponent(jTTotal)
+                            .addComponent(jTSuperficieTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)))
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jCheckSoloMinimo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                            .addComponent(jBQuitarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jBVerTotales, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -802,45 +872,56 @@ public class UINuevaCT extends javax.swing.JFrame
                     .addComponent(jLabel24)
                     .addComponent(jTSuperficieTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel25)
                     .addComponent(jTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTOrdenTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel26))
-                .addContainerGap())
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jBQuitarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel26)
+                    .addComponent(jTOrdenTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckSoloMinimo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jBVerTotales, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBQuitarDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
         );
+
+        jLabel28.setText("Leyenda:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addContainerGap()
+                .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTLeyenda, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
+            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel28)
+                    .addComponent(jTLeyenda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jBGuardar.setText("Guardar");
@@ -899,7 +980,7 @@ public class UINuevaCT extends javax.swing.JFrame
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(104, Short.MAX_VALUE)
+                .addContainerGap(121, Short.MAX_VALUE)
                 .addComponent(jBNueva, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jBImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -907,7 +988,7 @@ public class UINuevaCT extends javax.swing.JFrame
                 .addComponent(jBGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(91, 91, 91))
+                .addGap(94, 94, 94))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -924,6 +1005,14 @@ public class UINuevaCT extends javax.swing.JFrame
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jBVerTotalesActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBVerTotalesActionPerformed
+    {//GEN-HEADEREND:event_jBVerTotalesActionPerformed
+// TODO add your handling code here:
+        UIMostrarTotales mostrar = new UIMostrarTotales(this, true);
+        mostrar.mostrar(this.totales);
+        mostrar.setVisible(true);
+    }//GEN-LAST:event_jBVerTotalesActionPerformed
 
     private void jBGuardarActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBGuardarActionPerformed
     {//GEN-HEADEREND:event_jBGuardarActionPerformed
@@ -966,7 +1055,7 @@ public class UINuevaCT extends javax.swing.JFrame
                     {
                         this.calcular();
                         //if(x == (this.jTableDetalle.getRowCount() - 1))
-                        if(this.jTableDetalle.getValueAt((this.jTableDetalle.getRowCount() - 1),2).toString().trim().length() != 0)
+                        if(this.jTableDetalle.getValueAt((this.jTableDetalle.getRowCount() - 1),2) != null)
                             this.agregarLineaDetalle();
                     }
                     
@@ -976,11 +1065,11 @@ public class UINuevaCT extends javax.swing.JFrame
             else
                 this.calcular();
         }
-         else
+        /* else
              if(y == 2)
                  if(!this.controlarTecla(evt.getKeyCode()))
                      this.jTableDetalle.setValueAt(val, x, 2);
-                 
+          */       
     }//GEN-LAST:event_jTableDetalleKeyReleased
 
     private void jBUbicacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBUbicacionActionPerformed
@@ -1001,7 +1090,7 @@ public class UINuevaCT extends javax.swing.JFrame
             for(int i=0;i<this.jTableTrabajos.getRowCount();i++)
                 if(i != x)
                     this.jTableTrabajos.setValueAt(false,i,y);
-        if(this.jTTotal.getText().trim().length() != 0)
+//        if(this.jTTotal.getText().trim().length() != 0)
             this.calcular();
     }//GEN-LAST:event_jTableTrabajosMouseReleased
 
@@ -1037,7 +1126,7 @@ public class UINuevaCT extends javax.swing.JFrame
             }else{
                 Matriculado mat=this.buscarMatriculado(this.jTMatriculaSolicitante.getText().trim());
             if (mat.getMatricula()!=0){
-                this.jTNombreSolicitante.setText(mat.getApellido().trim()+", "+mat.getNombres().trim());
+                this.jTNombreSolicitante.setText(String.valueOf(mat.getMatricula()).trim()+":"+mat.getTitulo().getAbreviacion().toUpperCase().trim()+" "+mat.getApellido().trim()+", "+mat.getNombres().trim());
                 matriculado=mat;
             }else{
                 JOptionPane.showMessageDialog(this, "El Matriculado no existe en la Base de Datos...","Atencion", JOptionPane.INFORMATION_MESSAGE);
@@ -1239,6 +1328,11 @@ public class UINuevaCT extends javax.swing.JFrame
         if(evt.getKeyCode() == 10)
             this.jTMatriculaSolicitante.requestFocus();
 }//GEN-LAST:event_jTNumeroFacturaKeyPressed
+
+    private void jCheckSoloMinimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckSoloMinimoActionPerformed
+        this.calcular();
+        
+}//GEN-LAST:event_jCheckSoloMinimoActionPerformed
     
     /**
      * @param args the command line arguments
@@ -1261,9 +1355,11 @@ public class UINuevaCT extends javax.swing.JFrame
     private javax.swing.JButton jBQuitarDetalle;
     private javax.swing.JButton jBSalir;
     private javax.swing.JButton jBUbicacion;
+    private javax.swing.JButton jBVerTotales;
     private javax.swing.JComboBox jCPlanos;
     private javax.swing.JComboBox jCSerie;
     private javax.swing.JCheckBox jCheckFinObra;
+    private javax.swing.JCheckBox jCheckSoloMinimo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1284,6 +1380,8 @@ public class UINuevaCT extends javax.swing.JFrame
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1302,7 +1400,9 @@ public class UINuevaCT extends javax.swing.JFrame
     private javax.swing.JTextField jTBarrio;
     private javax.swing.JTextField jTCalle;
     private javax.swing.JTextField jTDepartamento;
+    private javax.swing.JTextField jTDescripcionPlano;
     private javax.swing.JTextField jTFecha;
+    private javax.swing.JTextField jTLeyenda;
     private javax.swing.JTextField jTLocalidad;
     private javax.swing.JTextField jTLote;
     private javax.swing.JTextField jTManzana;
@@ -1335,7 +1435,6 @@ public class UINuevaCT extends javax.swing.JFrame
          this.llenarSeriesActivas();
          this.cargarNroConstanciaCT();
          this.cargarOpcionesDeDetalle();
-    
     }
     private void cargarFecha(){
 //        Obtenemos la fecha actual del sistema
@@ -1344,6 +1443,7 @@ public class UINuevaCT extends javax.swing.JFrame
         DateFormat df=DateFormat.getDateInstance();        
         this.jTFecha.setText(df.format(fecha)); 
     }
+  
     private void cargarNroConstanciaCT(){
   /*
    *Carga el numero de constancia parcial correspondiente para una nueva constancia
@@ -1492,6 +1592,11 @@ public class UINuevaCT extends javax.swing.JFrame
         this.limpiarColumnas();
         // obtengo el plano seleccionado del combo
         this.planoCTotal = this.getPlano(String.valueOf(this.jCPlanos.getSelectedItem()).trim());
+        
+        //agrego la leyenda que le corresponde al tipo de plano
+        this.jTLeyenda.setText("");
+        this.jTLeyenda.setText(this.planoCTotal.getLeyenda().trim());
+        
         // obtengo una coleccion con los objetos tasa que corresponden al plano
         this.tasasDelPlano = this.getTasasDelPlano(this.planoCTotal.getIdplanoCTotal());
         // cargo un vector con el numero de orden de las tasas
@@ -1676,7 +1781,7 @@ public class UINuevaCT extends javax.swing.JFrame
         try{
             fecha=df.parse(this.jTFecha.getText().trim());
         }catch(ParseException pe){
-            System.out.println("FECHA no válida");
+//            System.out.println("FECHA no válida");
         }
         
         encabezadoCT.setFecha(fecha);        
@@ -1710,6 +1815,8 @@ public class UINuevaCT extends javax.swing.JFrame
         encabezadoCT.setComitente(this.jTNombreComitente.getText().trim().toUpperCase());
         encabezadoCT.setPerito(this.jTNombrePerito.getText().trim().toUpperCase());
         encabezadoCT.setResponsable(this.jTNombreResponsable.getText().trim().toUpperCase());
+        
+        
         encabezadoCT.setPlanoCTotal(planoCTotal);        
         
         encabezadoCT.setNombreProyectista(this.jTNombreProyectista.getText().trim().toUpperCase());
@@ -1730,6 +1837,13 @@ public class UINuevaCT extends javax.swing.JFrame
         encabezadoCT.setTotal(total);
         encabezadoCT.setOrdenTrabajo(this.jTOrdenTrabajo.getText().trim().toUpperCase());      
         encabezadoCT.setUsuario(this.usuario); 
+        
+        encabezadoCT.setDescripcionPlano(this.jTDescripcionPlano.getText().trim());
+        encabezadoCT.setLeyenda(this.jTLeyenda.getText().trim());
+        
+//        System.out.println(this.jTLeyenda.getText().trim());
+        
+        
         if(!this.esAutomatico())
         {
             if(this.controlarNumeroRepetido())
@@ -1744,7 +1858,8 @@ public class UINuevaCT extends javax.swing.JFrame
                     if(this.controlarDetalle(fila))
                     //if(String.valueOf(this.jTableDetalle.getValueAt(fila, 2)).trim().length() != 0)
                     {
-                        int resp=this.guardarDetalleCT(fila);
+//                        int resp=this.guardarDetalleCT(fila);
+                        int resp=this.guardarDetalleCT(fila, encabezadoCT);
                         if ((resp==0) && (guardoBien))
                             guardoBien=true;
                         else
@@ -1759,12 +1874,12 @@ public class UINuevaCT extends javax.swing.JFrame
             else
                 guardoBien=false;
             if (guardoBien){
-                JOptionPane.showMessageDialog(null,"Registro almacenado correctamente", "Almacenamiento",JOptionPane.INFORMATION_MESSAGE);        
+                JOptionPane.showMessageDialog(this,"Registro almacenado correctamente", "Almacenamiento",JOptionPane.INFORMATION_MESSAGE);        
                 this.bloquearPantalla();
                 this.jTNumeroConstancia.setText(String.valueOf(this.nroConst));
             }
             else
-                JOptionPane.showMessageDialog(null,"No se pudo almacenar correctament el registro", "Error",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,"No se pudo almacenar correctament el registro", "Error",JOptionPane.ERROR_MESSAGE);
             }
         }
         else
@@ -1779,7 +1894,8 @@ public class UINuevaCT extends javax.swing.JFrame
                 {
                     if(this.jTableDetalle.getValueAt(fila, 2) != null)
                     {
-                        int resp=this.guardarDetalleCT(fila);
+//                        int resp=this.guardarDetalleCT(fila);
+                        int resp=this.guardarDetalleCT(fila, encabezadoCT);
                         if ((resp==0) && (guardoBien))
                             guardoBien=true;
                         else
@@ -1794,22 +1910,24 @@ public class UINuevaCT extends javax.swing.JFrame
             else
                 guardoBien=false;
             if (guardoBien){
-                JOptionPane.showMessageDialog(null,"Registro almacenado correctamente", "Almacenamiento",JOptionPane.INFORMATION_MESSAGE);        
+                JOptionPane.showMessageDialog(this,"Registro almacenado correctamente", "Almacenamiento",JOptionPane.INFORMATION_MESSAGE);        
                 this.jTNumeroConstancia.setText(String.valueOf(this.nroConst));
                 this.bloquearPantalla();
             }else
-                JOptionPane.showMessageDialog(null,"No se pudo almacenar correctament el registro", "Error",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,"No se pudo almacenar correctament el registro", "Error",JOptionPane.ERROR_MESSAGE);
         }
    }
-   private int guardarDetalleCT(int fil){
+   private int guardarDetalleCT(int fil, EncabezadoCT encCT){
          //Asigna a la collection de Detalles los valores
         DetalleCT detalle=new DetalleCT();            
         //
-        detalle.setSerieCT(this.jCSerie.getSelectedItem().toString().trim());
+//        detalle.setSerieCT(this.jCSerie.getSelectedItem().toString().trim());
+        detalle.setSerieCT(encCT.getSerieCT().trim());
         CUltimo cod=new CUltimo();        
         detalle.setIddetalleCT(cod.getUltimo(detalle));//obtengo elultimo iddetalle
         //
-        detalle.setCodigoCT(this.nroConst);
+//        detalle.setCodigoCT(this.nroConst);
+        detalle.setCodigoCT(encCT.getCodigoCT());
         detalle.setTipoSuperficie(this.getSuperficie(String.valueOf(this.jTableDetalle.getValueAt(fil, 0)).trim()));
         detalle.setTipoSeccion(this.getSeccion(String.valueOf(this.jTableDetalle.getValueAt(fil, 1)).trim()));
         
@@ -1834,16 +1952,22 @@ public class UINuevaCT extends javax.swing.JFrame
    
    
    private void calcular(){
-        //Calculo de superficie total
+        //inicializacion de variables:
+        this.totales.clear();
         double superficieTotal = 0.0;
         Double total1=0.0;
         Double total2=0.0;
+        
+        //Calculo de Total de superficie:
         for(int i=0;i<this.jTableDetalle.getRowCount();i++){
             if(this.jTableDetalle.getValueAt(i, 2) != null)
                 superficieTotal = superficieTotal + this.calcularSuperficie(i);
         }        
-        this.jTSuperficieTotal.setText(String.valueOf(superficieTotal));    
+        Redondear r = new Redondear();
         
+        superficieTotal = r.redondear(superficieTotal, 2);
+        r = null;
+        this.jTSuperficieTotal.setText(String.valueOf(superficieTotal));    
         
         //Obtengo los Indices que se ha seleccionado      
         Collection tasasElegidas= this.getValores();
@@ -1853,19 +1977,36 @@ public class UINuevaCT extends javax.swing.JFrame
         while(it.hasNext()){
             Tasa t = (Tasa)it.next();
             Double totalXTasa=superficieTotal*t.getIndice();
-            if (totalXTasa<t.getTasaMinima()){
+            
+            //si esta seleccionado checkbox comprobarminimo entonces comprueba si es minimo o no
+            
+            if (totalXTasa<t.getTasaMinima() && this.jCheckSoloMinimo.isSelected()){
                 total1=t.getTasaMinima();
             }else{                
                 total1=totalXTasa;
             }
+            
+            
+            // creo el objeto MostrarTotales par ir almacenando las tasas que se estan cobrando
+            MostrarTotales m = new MostrarTotales();
+            m.setTasa(t.getIndice());
+            m.setDetalle(t.getDenominacion());
+            m.setSuperficie(superficieTotal);
+            m.setTasaMinima(t.getTasaMinima());
+            // ahora agrego el objeto a la coleccion
+            
+            
             TasaSeleccionada tasaSeleccionada = new TasaSeleccionada();
             tasaSeleccionada.setIdTasa(t.getIdtasa());
             tasaSeleccionada.setMonto(total1);
+            tasaSeleccionada.setSuperficie(Double.parseDouble(this.jTSuperficieTotal.getText()));
             tasasSeleccionadas.add(tasaSeleccionada);
-            total2=total2+total1;            
+            total2=total2+total1;
+            m.setTatal(total1);
+            this.totales.add(m);
           t = null;
         }
-        it = null;               
+        it = null;
         //Muestro el Total:
         NumberFormat nf = NumberFormat.getCurrencyInstance();
         this.jTTotal.setText(nf.format(total2));         
@@ -2051,7 +2192,14 @@ public class UINuevaCT extends javax.swing.JFrame
         // primero desbloque la pantalla para poder ingresar nuevos datos
         this.jTFecha.setEnabled(true);
         this.jCSerie.setEnabled(true);
-        this.jTNumeroConstancia.setEnabled(true);
+        
+        if (this.esAutomatico()){
+            this.jTNumeroConstancia.setEnabled(false);
+        }else{
+            this.jTNumeroConstancia.setEnabled(true);
+        }          
+        
+        
         this.jTMatriculaSolicitante.setEnabled(true);
         this.jTNombreSolicitante.setEnabled(true);
         this.jCheckFinObra.setEnabled(true);
@@ -2151,7 +2299,7 @@ public class UINuevaCT extends javax.swing.JFrame
         if(this.jTNumeroConstancia.getText().trim().length()==0)
         {
             bandera = false;            
-            JOptionPane.showMessageDialog(null,"Debe cargar un numero de constancia","Nro de Constancia nula",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,"Debe cargar un numero de constancia","Nro de Constancia nula",JOptionPane.ERROR_MESSAGE);
         }
         
         if(!this.esAutomatico())
@@ -2159,52 +2307,158 @@ public class UINuevaCT extends javax.swing.JFrame
             if(this.jTNumeroFactura.getText().trim().length()==0)
             {
                 bandera = false;            
-                JOptionPane.showMessageDialog(null,"Debe cargar un numero de factura","Nro de Factura nula",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,"Debe cargar un numero de factura","Nro de Factura nula",JOptionPane.ERROR_MESSAGE);
             }
-            
+            if(this.jTNumeroFactura.getText().trim().length() > this.CAMPO_LONG_MAX){
+                JOptionPane.showMessageDialog(this,"El numero de la factura, debe tener como maximo "+this.CAMPO_LONG_MAX+" digitos","El campo supera la cantidad permitida",JOptionPane.WARNING_MESSAGE);
+                bandera = false;
+            }
             if(this.jTSerieFactura.getText().trim().length()==0)
             {
                 bandera = false;            
-                JOptionPane.showMessageDialog(null,"Debe cargar un numero de serie de factura","Nro de Serie de Factura nula",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,"Debe cargar un numero de serie de factura","Nro de Serie de Factura nula",JOptionPane.ERROR_MESSAGE);
             }
         }
         
         
-        // control de participantes del proyecto
+        // control de participantes del proyecto        
+        if(this.jTNombrePropietario.getText().trim().length() == 0){            
+            JOptionPane.showMessageDialog(this,"Debe cargar un nombre de propietario, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        if(this.jTNombrePropietario.getText().trim().length() > this.CAMPO_PROPIETARIO){
+            JOptionPane.showMessageDialog(this,"Nombre de propietario, debe tener como maximo "+this.CAMPO_PROPIETARIO+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
         
-        if(this.jTNombrePropietario.getText().trim().length() == 0)
+        if(this.jTNombrePerito.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar un nombre de perito, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTNombrePerito.getText().trim().length() == 0)
+        }
+        if(this.jTNombrePerito.getText().trim().length() > this.CAMPO_PERITO){
+            JOptionPane.showMessageDialog(this,"Nombre de perito, debe tener como maximo "+this.CAMPO_PERITO+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTNombreProyectista.getText().trim().length() == 0)
+        }
+        
+        if(this.jTNombreProyectista.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar un nombre de proyectista, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTNombreDirector.getText().trim().length() == 0)
+        }
+        if(this.jTNombreProyectista.getText().trim().length() > this.CAMPO_NOMBREPROYECTISTA){
+            JOptionPane.showMessageDialog(this,"Nombre de proyectista, debe tener como maximo "+this.CAMPO_NOMBREPROYECTISTA+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTNombreComitente.getText().trim().length() == 0)
+        }
+        
+        if(this.jTNombreDirector.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar un nombre de director, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTNombreResponsable.getText().trim().length() == 0)
+        }
+        if(this.jTNombreDirector.getText().trim().length() > this.CAMPO_NOMBREDIRECTOR){
+            JOptionPane.showMessageDialog(this,"Nombre de proyectista, debe tener como maximo "+this.CAMPO_NOMBREDIRECTOR+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTNombreConductor.getText().trim().length() == 0)
+        }
+        
+        if(this.jTNombreComitente.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar un nombre de comitente, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTNombreConstructor.getText().trim().length() == 0)
+        }
+        if(this.jTNombreComitente.getText().trim().length() > this.CAMPO_COMITENTE){
+            JOptionPane.showMessageDialog(this,"Nombre de comitente, debe tener como maximo "+this.CAMPO_COMITENTE+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-            
+        }
+        
+        if(this.jTNombreResponsable.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar un nombre de responsable, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        if(this.jTNombreResponsable.getText().trim().length() > this.CAMPO_RESPONSABLE){
+            JOptionPane.showMessageDialog(this,"Nombre de responsable, debe tener como maximo "+this.CAMPO_RESPONSABLE+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        
+        if(this.jTNombreConductor.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar un nombre de conductor, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        if(this.jTNombreConductor.getText().trim().length() > this.CAMPO_NOMBRECONDUCTOR){
+            JOptionPane.showMessageDialog(this,"Nombre de responsable, debe tener como maximo "+this.CAMPO_NOMBRECONDUCTOR+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        
+        if(this.jTNombreConstructor.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar un nombre de conductor, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
+            bandera = false;            
+        }
+        if(this.jTNombreConstructor.getText().trim().length() > this.CAMPO_NOMBRECONSTRUCTOR){
+            JOptionPane.showMessageDialog(this,"Nombre de responsable, debe tener como maximo "+this.CAMPO_NOMBRECONSTRUCTOR+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        
         // controlar ubicacion de la obra
         if(this.jTBarrio.getText().trim().length() == 0)
             bandera = false;
-        if(this.jTCalle.getText().trim().length() == 0)
+        
+        if(this.jTCalle.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar un nombre de calle, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTNumero.getText().trim().length() == 0)
+        }
+        if(this.jTCalle.getText().trim().length() > this.CAMPO_CALLE){
+            JOptionPane.showMessageDialog(this,"Nombre de calle, debe tener como maximo "+this.CAMPO_CALLE+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTManzana.getText().trim().length() == 0)
+        }
+        
+        if(this.jTNumero.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar un numero de la ubicacion, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
             bandera = false;
-        if(this.jTLote.getText().trim().length() == 0)
+        }
+        if(this.jTNumero.getText().trim().length() > this.CAMPO_NUMERO){
+            JOptionPane.showMessageDialog(this,"El numero de la ubicacion, debe tener como maximo "+this.CAMPO_CALLE+" digitos","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
             bandera = false;
+        }
+        
+        if(this.jTManzana.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar la manzana de la ubicacion, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        if(this.jTManzana.getText().trim().length() > this.CAMPO_MANZANA){
+            JOptionPane.showMessageDialog(this,"La manzana de la ubicacion, debe tener como maximo "+this.CAMPO_MANZANA+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        
+        if(this.jTLote.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar el lote de la ubicacion, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        if(this.jTLote.getText().trim().length() > this.CAMPO_LOTE){
+            JOptionPane.showMessageDialog(this,"El lote de la ubicacion, debe tener como maximo "+this.CAMPO_LOTE+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        
         // controlar las tasas aplicadas
         if(this.jTSuperficieTotal.getText().trim().length() == 0)
             bandera = false;
         if(this.jTTotal.getText().trim().length() == 0)
             bandera = false;
+        
+        //Controlar leyenda
+        if(this.jTLeyenda.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar la leyenda a imprimir, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        if(this.jTLeyenda.getText().trim().length() > this.CAMPO_LEYENDA){
+            JOptionPane.showMessageDialog(this,"La leyenda de impresion, debe tener como maximo "+this.CAMPO_LEYENDA+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        //Controlar orden de trabajo
+        if(this.jTOrdenTrabajo.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(this,"Debe cargar la orden de trabajo, asigne un guion - si no corresponde","Se encontro un campo vacio",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        if(this.jTOrdenTrabajo.getText().trim().length() > this.CAMPO_ORDENTRABAJO){
+            JOptionPane.showMessageDialog(this,"La orden de trabajo, debe tener como maximo "+this.CAMPO_ORDENTRABAJO+" letras","El campo supera la cantidad de letras permitidas",JOptionPane.WARNING_MESSAGE);
+            bandera = false;
+        }
+        
         return bandera;
     }
     
@@ -2212,7 +2466,7 @@ public class UINuevaCT extends javax.swing.JFrame
     private int guardarTasasSeleccionadas(String serie, long codigo)
    {
        int respuesta = 0;
-       System.out.println("Numero de TASAS pagadas: "+this.tasasSeleccionadas.size());
+//       System.out.println("Numero de TASAS pagadas: "+this.tasasSeleccionadas.size());
        
        Iterator it = this.tasasSeleccionadas.iterator();
         CAlta alta = new CAlta();
@@ -2227,4 +2481,5 @@ public class UINuevaCT extends javax.swing.JFrame
        return respuesta;
    }
 
+   
 }   

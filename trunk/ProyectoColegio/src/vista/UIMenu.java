@@ -7,8 +7,14 @@
 package vista;
 
 import controlador.CListar;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import negocios.Caja;
+import negocios.Copiar;
 import negocios.Usuario;
 import reportes.cExport_thread;
 
@@ -47,6 +53,18 @@ public class UIMenu extends javax.swing.JFrame
         jLUsuario = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLCaja = new javax.swing.JLabel();
+        jToolBar1 = new javax.swing.JToolBar();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
+        jBFacturar = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        jButton1 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuMatriculados = new javax.swing.JMenu();
         jMNuevoMatriculado = new javax.swing.JMenuItem();
@@ -62,16 +80,9 @@ public class UIMenu extends javax.swing.JFrame
         jMNuevaCP = new javax.swing.JMenuItem();
         jMNuevaCT = new javax.swing.JMenuItem();
         jMNuevaHabilitacion = new javax.swing.JMenuItem();
-        jMenuVerConstancias = new javax.swing.JMenu();
-        jMVerCP = new javax.swing.JMenuItem();
-        jMVerCT = new javax.swing.JMenuItem();
-        jMVerHabilitacion = new javax.swing.JMenuItem();
         jMenuLegajos = new javax.swing.JMenu();
         jMLegajosParciales = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuFacturacion = new javax.swing.JMenu();
-        jMNuevaFactura = new javax.swing.JMenuItem();
-        jMListarTodas = new javax.swing.JMenuItem();
         jMenuConfiguraciones = new javax.swing.JMenu();
         jMenuNuevoTitulo = new javax.swing.JMenuItem();
         jMenuNuevaEntidadExterna = new javax.swing.JMenuItem();
@@ -95,15 +106,21 @@ public class UIMenu extends javax.swing.JFrame
         jMenuNuevoDatosEmpresa = new javax.swing.JMenuItem();
         jMenuNuevoIva = new javax.swing.JMenuItem();
         jMenuNuevocondicionVenta = new javax.swing.JMenuItem();
-        jMenuNuevoRol = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenuUsuarios = new javax.swing.JMenu();
         jMenuNuevoUsuario = new javax.swing.JMenuItem();
         jMenuModificarUSuario = new javax.swing.JMenuItem();
         jMenuListar = new javax.swing.JMenuItem();
+        jMenuFacturacion = new javax.swing.JMenu();
+        jMNuevaFactura = new javax.swing.JMenuItem();
+        jMListarTodas = new javax.swing.JMenuItem();
         jMenuCaja = new javax.swing.JMenu();
         jMenuCerrarCaja = new javax.swing.JMenuItem();
         jMenuAbrirCaja = new javax.swing.JMenuItem();
         jMenuListarCajas = new javax.swing.JMenuItem();
+        jMenuResumenFacturacion = new javax.swing.JMenuItem();
+        jMenuAyuda = new javax.swing.JMenu();
+        jMenuAcercaDe = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Menu Principal");
@@ -116,6 +133,105 @@ public class UIMenu extends javax.swing.JFrame
         jLabel1.setText("Usuario:");
 
         jLabel2.setText("Caja:");
+
+        jToolBar1.setRollover(true);
+
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/mat.gif"))); // NOI18N
+        jButton4.setToolTipText("Pago Automatico de Matricula");
+        jButton4.setFocusable(false);
+        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton4);
+
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/Users_Group.png"))); // NOI18N
+        jButton5.setToolTipText("Listar Matriculados");
+        jButton5.setFocusable(false);
+        jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton5);
+        jToolBar1.add(jSeparator1);
+
+        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/ct.gif"))); // NOI18N
+        jButton6.setToolTipText("Nueva CT");
+        jButton6.setFocusable(false);
+        jButton6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton6.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton6);
+
+        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/cp.gif"))); // NOI18N
+        jButton7.setToolTipText("Nueva CP");
+        jButton7.setFocusable(false);
+        jButton7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton7.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton7);
+        jToolBar1.add(jSeparator2);
+
+        jBFacturar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/fac.gif"))); // NOI18N
+        jBFacturar.setToolTipText("Nueva Factura");
+        jBFacturar.setFocusable(false);
+        jBFacturar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jBFacturar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jBFacturar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBFacturarActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jBFacturar);
+
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/background.png"))); // NOI18N
+        jButton3.setToolTipText("Listar Facturas");
+        jButton3.setFocusable(false);
+        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton3);
+        jToolBar1.add(jSeparator3);
+
+        jButton1.setBackground(new java.awt.Color(255, 255, 255));
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/Knob_Loop_On.jpg"))); // NOI18N
+        jButton1.setToolTipText("Actualizar estado de Caja");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton1);
+
+        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/exit00c.gif"))); // NOI18N
+        jButton8.setToolTipText("Salir del Sistema");
+        jButton8.setFocusable(false);
+        jButton8.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton8.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton8);
 
         jMenuBar1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -166,7 +282,6 @@ public class UIMenu extends javax.swing.JFrame
         jMenuMatriculados.add(jMenuPadron);
 
         jMenuItem2.setText("Establecer Habilitaciones...");
-        jMenuItem2.setEnabled(false);
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
@@ -227,32 +342,7 @@ public class UIMenu extends javax.swing.JFrame
 
         jMenuConstancias.add(jMenuNuevaConstancia);
 
-        jMenuVerConstancias.setText("Ver Constancias");
-        jMenuVerConstancias.setEnabled(false);
-
-        jMVerCP.setText("Parciales ...");
-        jMVerCP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMVerCPActionPerformed(evt);
-            }
-        });
-        jMenuVerConstancias.add(jMVerCP);
-
-        jMVerCT.setText("Totales ...");
-        jMVerCT.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMVerCTActionPerformed(evt);
-            }
-        });
-        jMenuVerConstancias.add(jMVerCT);
-
-        jMVerHabilitacion.setText("De Habilitacion ...");
-        jMenuVerConstancias.add(jMVerHabilitacion);
-
-        jMenuConstancias.add(jMenuVerConstancias);
-
         jMenuLegajos.setText("Generar Legajos");
-        jMenuLegajos.setEnabled(false);
 
         jMLegajosParciales.setText("Constancias Parciales y Totales...");
         jMLegajosParciales.addActionListener(new java.awt.event.ActionListener() {
@@ -273,26 +363,6 @@ public class UIMenu extends javax.swing.JFrame
         jMenuConstancias.add(jMenuItem1);
 
         jMenuBar1.add(jMenuConstancias);
-
-        jMenuFacturacion.setText("Facturacion");
-
-        jMNuevaFactura.setText("Nueva Factura ...");
-        jMNuevaFactura.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMNuevaFacturaActionPerformed(evt);
-            }
-        });
-        jMenuFacturacion.add(jMNuevaFactura);
-
-        jMListarTodas.setText("Listar Facturas...");
-        jMListarTodas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMListarTodasActionPerformed(evt);
-            }
-        });
-        jMenuFacturacion.add(jMListarTodas);
-
-        jMenuBar1.add(jMenuFacturacion);
 
         jMenuConfiguraciones.setText("Configuraciones");
 
@@ -460,13 +530,13 @@ public class UIMenu extends javax.swing.JFrame
 
         jMenuConfiguraciones.add(jMenuDatosImpositivos);
 
-        jMenuNuevoRol.setText("Rol...");
-        jMenuNuevoRol.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem3.setText("Relacionar tasa y producto...");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuNuevoRolActionPerformed(evt);
+                jMenuItem3ActionPerformed(evt);
             }
         });
-        jMenuConfiguraciones.add(jMenuNuevoRol);
+        jMenuConfiguraciones.add(jMenuItem3);
 
         jMenuBar1.add(jMenuConfiguraciones);
 
@@ -498,6 +568,26 @@ public class UIMenu extends javax.swing.JFrame
 
         jMenuBar1.add(jMenuUsuarios);
 
+        jMenuFacturacion.setText("Facturacion");
+
+        jMNuevaFactura.setText("Nueva Factura ...");
+        jMNuevaFactura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMNuevaFacturaActionPerformed(evt);
+            }
+        });
+        jMenuFacturacion.add(jMNuevaFactura);
+
+        jMListarTodas.setText("Listar Facturas...");
+        jMListarTodas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMListarTodasActionPerformed(evt);
+            }
+        });
+        jMenuFacturacion.add(jMListarTodas);
+
+        jMenuBar1.add(jMenuFacturacion);
+
         jMenuCaja.setText("Caja");
 
         jMenuCerrarCaja.setText("Cerrar Caja...");
@@ -524,7 +614,27 @@ public class UIMenu extends javax.swing.JFrame
         });
         jMenuCaja.add(jMenuListarCajas);
 
+        jMenuResumenFacturacion.setText("Resumen de Facturacion...");
+        jMenuResumenFacturacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuResumenFacturacionActionPerformed(evt);
+            }
+        });
+        jMenuCaja.add(jMenuResumenFacturacion);
+
         jMenuBar1.add(jMenuCaja);
+
+        jMenuAyuda.setText("Acerca");
+
+        jMenuAcercaDe.setText("Acerca de...");
+        jMenuAcercaDe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuAcercaDeActionPerformed(evt);
+            }
+        });
+        jMenuAyuda.add(jMenuAcercaDe);
+
+        jMenuBar1.add(jMenuAyuda);
 
         setJMenuBar(jMenuBar1);
 
@@ -532,23 +642,27 @@ public class UIMenu extends javax.swing.JFrame
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(406, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLCaja, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(429, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLCaja, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -556,7 +670,7 @@ public class UIMenu extends javax.swing.JFrame
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2)
                     .addComponent(jLCaja, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(319, Short.MAX_VALUE))
+                .addContainerGap(298, Short.MAX_VALUE))
         );
 
         getAccessibleContext().setAccessibleName("");
@@ -597,20 +711,6 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
         listar.setVisible(true);
     }//GEN-LAST:event_jMListarTodasActionPerformed
 
-    private void jMVerCTActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMVerCTActionPerformed
-    {//GEN-HEADEREND:event_jMVerCTActionPerformed
-// TODO add your handling code here:
-        UIReporteCT reporte = new UIReporteCT();
-        reporte.setVisible(true);
-    }//GEN-LAST:event_jMVerCTActionPerformed
-
-    private void jMVerCPActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMVerCPActionPerformed
-    {//GEN-HEADEREND:event_jMVerCPActionPerformed
-// TODO add your handling code here:
-        UIReporteCP reporte = new UIReporteCP();
-        reporte.setVisible(true);
-    }//GEN-LAST:event_jMVerCPActionPerformed
-
     private void jMenuReporteActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuReporteActionPerformed
     {//GEN-HEADEREND:event_jMenuReporteActionPerformed
 // TODO add your handling code here:
@@ -628,8 +728,13 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
     private void jMNuevaFacturaActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMNuevaFacturaActionPerformed
     {//GEN-HEADEREND:event_jMNuevaFacturaActionPerformed
 // TODO add your handling code here:
-        UINuevaFactura facturacion = new UINuevaFactura(this.usuario,this.caja2);
-        facturacion.setVisible(true);
+        String cajaEstado=this.comprobarCajas();
+        if (cajaEstado.equals("A")){
+            UINuevaFactura facturacion = new UINuevaFactura(this.usuario,this.caja2);
+            facturacion.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(this,"El estado de la Caja ha cambiado. Por favor actualice la caja","Atencion",JOptionPane.INFORMATION_MESSAGE);
+        }        
     }//GEN-LAST:event_jMNuevaFacturaActionPerformed
 
     private void jMLegajosParcialesActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMLegajosParcialesActionPerformed
@@ -758,13 +863,6 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
         condicionVenta.setVisible(true);
     }//GEN-LAST:event_jMenuNuevocondicionVentaActionPerformed
 
-    private void jMenuNuevoRolActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuNuevoRolActionPerformed
-    {//GEN-HEADEREND:event_jMenuNuevoRolActionPerformed
-// TODO add your handling code here:
-        UINuevoRol nuevoRol = new UINuevoRol();
-        nuevoRol.setVisible(true);
-    }//GEN-LAST:event_jMenuNuevoRolActionPerformed
-
     private void jMenuNuevoUsuarioActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuNuevoUsuarioActionPerformed
     {//GEN-HEADEREND:event_jMenuNuevoUsuarioActionPerformed
 // TODO add your handling code here:
@@ -836,7 +934,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
-        UIAdministrarHabilitaciones hab = new UIAdministrarHabilitaciones();
+        UIAdministrarHabilitaciones hab = new UIAdministrarHabilitaciones(this,true);
         hab.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
@@ -867,10 +965,83 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
 
     private void jMenuBorrarCuotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuBorrarCuotaActionPerformed
         // TODO add your handling code here:
-        UIBorrarCuotas ventanaBorrar=new UIBorrarCuotas(this,false);
+        UIBorrarCuotas ventanaBorrar=new UIBorrarCuotas(this,true);
         ventanaBorrar.setVisible(true);
     }//GEN-LAST:event_jMenuBorrarCuotaActionPerformed
-    
+
+    private void jMenuResumenFacturacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuResumenFacturacionActionPerformed
+        // TODO add your handling code here:
+        UIResumenCajaCerradas ventanaResumen=new UIResumenCajaCerradas(this,true);
+        ventanaResumen.setVisible(true);
+    }//GEN-LAST:event_jMenuResumenFacturacionActionPerformed
+
+private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    this.actualizarEstadoCaja();
+}//GEN-LAST:event_jButton1ActionPerformed
+
+private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+// TODO add your handling code here:
+    UICuotasMatriculado ventanaPago=new UICuotasMatriculado();
+        ventanaPago.setVisible(true);
+}//GEN-LAST:event_jButton4ActionPerformed
+
+private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+// TODO add your handling code here:
+    UIReporteMatriculados reporte = new UIReporteMatriculados();
+        reporte.setVisible(true);
+}//GEN-LAST:event_jButton5ActionPerformed
+
+private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+// TODO add your handling code here:
+     UINuevaCP cp = new UINuevaCP(usuario);
+        cp.setVisible(true);
+}//GEN-LAST:event_jButton7ActionPerformed
+
+private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+// TODO add your handling code here:
+    UINuevaCT nuevaCt = new UINuevaCT(usuario);
+        nuevaCt.setVisible(true);
+}//GEN-LAST:event_jButton6ActionPerformed
+
+private void jBFacturarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFacturarActionPerformed
+// TODO add your handling code here:
+        UINuevaFactura facturacion = new UINuevaFactura(this.usuario,this.caja2);
+        facturacion.setVisible(true);
+}//GEN-LAST:event_jBFacturarActionPerformed
+
+private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+// TODO add your handling code here:
+     UIListadoDeFacturas listar = new UIListadoDeFacturas(this,true,caja2);
+        listar.setVisible(true);
+}//GEN-LAST:event_jButton3ActionPerformed
+
+private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+// TODO add your handling code here:
+    System.exit(0);
+}//GEN-LAST:event_jButton8ActionPerformed
+
+private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+// TODO add your handling code here:
+    UINuevoProductoTasa vPT=new UINuevoProductoTasa();
+    vPT.setVisible(true);
+}//GEN-LAST:event_jMenuItem3ActionPerformed
+
+private void jMenuAcercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuAcercaDeActionPerformed
+// TODO add your handling code here:
+    UIAcercaDe vAcerca=new UIAcercaDe();
+    vAcerca.setVisible(true);
+}//GEN-LAST:event_jMenuAcercaDeActionPerformed
+      private void borrarArchivosBackup(){      
+            try{        
+                String linea = "cmd.exe /K start \\\\192.168.1.3\\\\temp\\\\bd\\\\borrarbackup.bat";
+//                String linea = "cmd.exe /K start \\\\Jorge\\\\temp\\\\bd\\\\borrarbackup.bat";
+                Process procesos = Runtime.getRuntime().exec( linea );
+                JOptionPane.showMessageDialog(this,"Respuesta: Se ha realizado la copia de seguridad de la Base de Datos","Atencion",JOptionPane.INFORMATION_MESSAGE);            
+            }catch(Exception e){
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this,"No se pudo eliminar la copia de la Base de Datos del servidor, hagalo manualmente...","Atencion",JOptionPane.INFORMATION_MESSAGE);
+            }   
+      }
     /**
      * @param args the command line arguments
      */
@@ -886,6 +1057,14 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBFacturar;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLCaja;
     private javax.swing.JLabel jLUsuario;
     private javax.swing.JLabel jLabel1;
@@ -897,10 +1076,9 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
     private javax.swing.JMenuItem jMNuevaFactura;
     private javax.swing.JMenuItem jMNuevaHabilitacion;
     private javax.swing.JMenuItem jMNuevoMatriculado;
-    private javax.swing.JMenuItem jMVerCP;
-    private javax.swing.JMenuItem jMVerCT;
-    private javax.swing.JMenuItem jMVerHabilitacion;
     private javax.swing.JMenuItem jMenuAbrirCaja;
+    private javax.swing.JMenuItem jMenuAcercaDe;
+    private javax.swing.JMenu jMenuAyuda;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuBorrarCuota;
     private javax.swing.JMenu jMenuCaja;
@@ -912,6 +1090,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
     private javax.swing.JMenu jMenuFacturacion;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenu jMenuLegajos;
     private javax.swing.JMenuItem jMenuListar;
     private javax.swing.JMenuItem jMenuListarCajas;
@@ -931,7 +1110,6 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
     private javax.swing.JMenuItem jMenuNuevoDepto;
     private javax.swing.JMenuItem jMenuNuevoIva;
     private javax.swing.JMenuItem jMenuNuevoProducto;
-    private javax.swing.JMenuItem jMenuNuevoRol;
     private javax.swing.JMenuItem jMenuNuevoTipoPlano;
     private javax.swing.JMenuItem jMenuNuevoTipoTrabajo;
     private javax.swing.JMenuItem jMenuNuevoTitulo;
@@ -940,13 +1118,17 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
     private javax.swing.JMenuItem jMenuPadron;
     private javax.swing.JMenu jMenuProductosYServicios;
     private javax.swing.JMenuItem jMenuReporte;
+    private javax.swing.JMenuItem jMenuResumenFacturacion;
     private javax.swing.JMenuItem jMenuSerie;
     private javax.swing.JMenuItem jMenuTasaAplicable;
     private javax.swing.JMenu jMenuUsuarios;
-    private javax.swing.JMenu jMenuVerConstancias;
     private javax.swing.JMenuItem jMenuVerCuotas;
     private javax.swing.JMenuItem jMenuVerCuotasAutomatico;
     private javax.swing.JMenuItem jMenuconfiguraciones;
+    private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 
     private Caja caja2 = new Caja();
@@ -956,7 +1138,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
         CListar listar = new CListar();
         caja2 = listar.ultimaCaja(caja2);
         
-        System.out.println("LA ULTIMA CAJA Q SE OBTUBO ES: " + caja2.getIdcaja());
+//        System.out.println("LA ULTIMA CAJA Q SE OBTUBO ES: " + caja2.getIdcaja());
         listar = null;
    }
     
@@ -968,6 +1150,7 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
            this.jMenuAbrirCaja.setEnabled(true);
            this.jMenuCerrarCaja.setEnabled(false);
            this.jMNuevaFactura.setEnabled(false);
+           this.jBFacturar.setEnabled(false);
            this.jLCaja.setText("CERRADA");
        }
        if(caja2.getEstado().equals("A"))
@@ -975,11 +1158,31 @@ private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_form
            this.jMenuAbrirCaja.setEnabled(false);
            this.jMenuCerrarCaja.setEnabled(true);
            this.jMNuevaFactura.setEnabled(true);
+           this.jBFacturar.setEnabled(true);
            this.jLCaja.setText("ABIERTA");
        }
            
    }
-
-    
-    
+   
+   private void actualizarEstadoCaja() 
+   {
+    this.inicializarVentanas();
+   }
+           
+   private String comprobarCajas()
+   {
+       this.comprobarUltimaCaja();
+//       System.out.println("estado de la caja actulaizada:"+caja2.getEstado().trim());
+       String aux = "";
+       if(this.jLCaja.getText().trim().equals("ABIERTA")) aux = "A"; else aux = "C";
+       if(aux.trim().equals(this.caja2.getEstado().trim()))
+       {
+           //este caso los dos estados son iguales por lo tanto no hago nada
+       }else
+       {
+           JOptionPane.showMessageDialog(this,"El estado de la Caja ha cambiado. Por favor actualice la caja","Atencion",JOptionPane.INFORMATION_MESSAGE);
+       }
+       
+       return(aux);
+   }
 }

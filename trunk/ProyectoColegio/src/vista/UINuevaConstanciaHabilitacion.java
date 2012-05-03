@@ -14,6 +14,7 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -86,6 +87,8 @@ public class UINuevaConstanciaHabilitacion extends javax.swing.JFrame
         jBGenerar = new javax.swing.JButton();
         jBSalir = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
+        jLabel22 = new javax.swing.JLabel();
+        jTfechaHasta = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nueva Constancia de Habilitacion");
@@ -319,7 +322,7 @@ public class UINuevaConstanciaHabilitacion extends javax.swing.JFrame
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -330,9 +333,9 @@ public class UINuevaConstanciaHabilitacion extends javax.swing.JFrame
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTBuscar)
-                            .addComponent(jTNombreEntidad, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE))))
-                .addContainerGap(14, Short.MAX_VALUE))
+                            .addComponent(jTNombreEntidad, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                            .addComponent(jTBuscar))))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -344,8 +347,8 @@ public class UINuevaConstanciaHabilitacion extends javax.swing.JFrame
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
         );
 
         jPanel3Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel1, jTBuscar});
@@ -374,30 +377,45 @@ public class UINuevaConstanciaHabilitacion extends javax.swing.JFrame
             }
         });
 
+        jLabel22.setBackground(new java.awt.Color(255, 255, 204));
+        jLabel22.setText("Habilitado hasta:");
+        jLabel22.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(255, 255, 102), null));
+        jLabel22.setOpaque(true);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jSeparator1)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(153, Short.MAX_VALUE)
                 .addComponent(jBGenerar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(132, 132, 132))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jSeparator1)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTfechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTfechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -478,12 +496,12 @@ public class UINuevaConstanciaHabilitacion extends javax.swing.JFrame
                     Matriculado ma=listamat.soloMatriculado(m); 
                     String rutaImagen=this.obtenerRuta(ma.getMatricula());
                     
-                    System.out.println("ruta:"+rutaImagen+"--Mat:"+String.valueOf(ma.getMatricula())+"Entidad:"+this.jTNombreEntidad.getText().trim());
+//                    System.out.println("ruta:"+rutaImagen+"--Mat:"+String.valueOf(ma.getMatricula())+"Entidad:"+this.jTNombreEntidad.getText().trim());
                     
-                    cExport_thread report = new cExport_thread(321,rutaImagen,String.valueOf(ma.getMatricula()),this.jTNombreEntidad.getText().trim());
+                    cExport_thread report = new cExport_thread(3211,rutaImagen,String.valueOf(ma.getMatricula()),this.jTNombreEntidad.getText().trim(),this.jTfechaHasta.getText().trim());
                     report.start();
                 }else{
-                    cExport_thread report = new cExport_thread(32,this.jTMatriculaSolicitante.getText().trim(),this.jTNombreEntidad.getText().trim());
+                    cExport_thread report = new cExport_thread(322,this.jTMatriculaSolicitante.getText().trim(),this.jTNombreEntidad.getText().trim(),this.jTfechaHasta.getText().trim());
                     report.start();
                 }
                 
@@ -563,6 +581,7 @@ public class UINuevaConstanciaHabilitacion extends javax.swing.JFrame
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -579,6 +598,7 @@ public class UINuevaConstanciaHabilitacion extends javax.swing.JFrame
     private javax.swing.JTextField jTNombreSolicitante;
     private javax.swing.JTextField jTTitulo;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTfechaHasta;
     // End of variables declaration//GEN-END:variables
     
 
@@ -614,7 +634,10 @@ private void buscarMatriculado(){
                 if (tit.getAbreviacion()!=null){
                     this.jTTitulo.setText(tit.getAbreviacion().trim());
                 } 
-
+                
+                this.buscarUltimoPago(ma);
+                
+                
                 this.jLFoto.setText("");
 
                 CListar listaFoto=new CListar();
@@ -627,13 +650,38 @@ private void buscarMatriculado(){
                     ImageIcon tmpIcon = new ImageIcon(i.getImage().getScaledInstance(this.jLFoto.getWidth(), this.jLFoto.getHeight(), Image.SCALE_DEFAULT));
                     this.jLFoto.setIcon(tmpIcon);                      
                 } else {
-                    System.out.println("no existe"+fotoExiste);
+//                    System.out.println("no existe"+fotoExiste);
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Ingrese un numero de matricula existente","Matricula Inexistente", JOptionPane.WARNING_MESSAGE);
             }
         } 
 }
+
+public void buscarUltimoPago(Matriculado matri)
+    {
+        CListar listar = new CListar();
+        
+        Date ultimafecha = listar.ultimaFechaEncabezadoPago(matri.getIdmatriculado());
+        
+//        System.out.println("fehca obtenida de clistar :"+ultimafecha);
+        
+        if(ultimafecha != null){
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(ultimafecha);
+            
+            if(cal.get(Calendar.MONTH) == 1) cal.set(Calendar.DAY_OF_MONTH, 28);
+                else cal.set(Calendar.DAY_OF_MONTH,30);
+            
+            this.jTfechaHasta.setText((cal.get(Calendar.DAY_OF_MONTH))+"/"+(cal.get(Calendar.MONTH)+1)+"/"+cal.get(Calendar.YEAR));
+        }else{
+            int respu=JOptionPane.showConfirmDialog(this,"El matriculado no tiene cuotas pagadas\npor lo tanto no esta habilitado, desea expedirle igualmente una constancia?","Atencion",JOptionPane.OK_CANCEL_OPTION,JOptionPane.WARNING_MESSAGE);
+            if (respu==JOptionPane.YES_OPTION){
+                JOptionPane.showMessageDialog(this, "Debera ingresar una fecha de habilitacion hasta manualmente", "Atencion, esta ingresando una fecha manual", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+        listar = null;
+    }
  private void llenarTabla(EntidadExterna e)
     {
         CListar listar = new CListar();
@@ -675,6 +723,8 @@ private void buscarMatriculado(){
         this.jTLibro.setText("");
         this.jTNombreSolicitante.setText("");
         this.jTTitulo.setText("");
+        this.jTfechaHasta.setText("");
+        this.jLFoto.setIcon(null);
     }
     private String obtenerRuta(int mat){
         Configuracion conf=new Configuracion();

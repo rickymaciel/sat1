@@ -11,6 +11,7 @@ package Datos;
  */
 
 import java.sql.*;
+import java.util.Calendar;
 import negocios.Barrio;
 import negocios.Caja;
 import negocios.CondicionVenta;
@@ -233,8 +234,9 @@ public class Modificacion extends DataManager {
         { 
           conn = super.getConection();
           stmt = conn.createStatement();
-          registrosModificados = stmt.executeUpdate("UPDATE encabezadocp SET seriecp = '"+encCP.getSerieCP()+"', codigocp = "+encCP.getCodigoCP()+", idprovincia = "+encCP.getProvincia().getIdprovincia()+", iddepartamento = "+ encCP.getDepartamento().getIddepartamento()+", idlocalidad = "+encCP.getLocalidad().getIdlocalidad()+", idbarrio = "+encCP.getBarrrio().getIdbarrio()+
-          ", calle = '"+encCP.getCalle()+"', numero = '"+encCP.getNumero()+"', manzana = '"+encCP.getManzana()+"', lote = '"+encCP.getLote()+"', seriefactura = "+encCP.getSerieFactura()+", numerofactura = "+encCP.getNumeroFactura()+", fecha = '"+encCP.getFecha()+"', propietario = '"+encCP.getPropietario()+"', comitente = '"+encCP.getComitente()+"', anulado = '"+encCP.getAnulado()+
+          
+          registrosModificados = stmt.executeUpdate("UPDATE encabezadocp SET seriecp = '"+encCP.getSerieCP().trim()+"', codigocp = "+encCP.getCodigoCP()+", idprovincia = "+encCP.getProvincia().getIdprovincia()+", iddepartamento = "+ encCP.getDepartamento().getIddepartamento()+", idlocalidad = "+encCP.getLocalidad().getIdlocalidad()+", idbarrio = "+encCP.getBarrrio().getIdbarrio()+
+          ", calle = '"+encCP.getCalle().trim()+"', numero = '"+encCP.getNumero().trim()+"', manzana = '"+encCP.getManzana().trim()+"', lote = '"+encCP.getLote().trim()+"', seriefactura = "+encCP.getSerieFactura()+", numerofactura = "+encCP.getNumeroFactura()+", fecha = '"+encCP.getFecha()+"', propietario = '"+encCP.getPropietario().trim()+"', comitente = '"+encCP.getComitente().trim()+"', anulado = '"+encCP.getAnulado().trim()+
           "', idusuario = "+encCP.getUsuario().getIdusuario()+", idmatriculado = "+encCP.getMatriculado().getIdmatriculado()+        
           " WHERE seriecp = '"+encCP.getSerieCP()+"' AND codigocp = "+encCP.getCodigoCP());
           this.cerrar();
@@ -249,6 +251,31 @@ public class Modificacion extends DataManager {
      }
         return registrosModificados;
     }
+    
+    
+    public int modificarCPFacturaCero(EncabezadoCP encCP)
+    {
+        int registrosModificados = 0;
+        try 
+        { 
+          conn = super.getConection();
+          stmt = conn.createStatement();
+          
+          registrosModificados = stmt.executeUpdate("UPDATE encabezadocp SET seriefactura = "+encCP.getSerieFactura()+", numerofactura = "+encCP.getNumeroFactura()+
+          " WHERE seriecp = '"+encCP.getSerieCP()+"' AND codigocp = "+encCP.getCodigoCP());
+          this.cerrar();
+     }
+      catch (SQLException ex)
+     {
+        while (ex !=null)
+        {
+          ex.printStackTrace();
+          ex = ex.getNextException();
+        }
+     }
+        return registrosModificados;
+    }
+
     
     public int anularFactura(EncabezadoFactura enc)
     {
@@ -295,6 +322,7 @@ public class Modificacion extends DataManager {
      }
         return registrosModificados;
     }
+    
     public int modificarPonerCTconFacturaEnCero(String serie, Long codigo)
     {
         int registrosModificados = 0;
@@ -315,6 +343,33 @@ public class Modificacion extends DataManager {
      }
         return registrosModificados;
     }
+    public int modificarNumeroDeFactura(EncabezadoFactura encFOrigen,EncabezadoFactura encFFinal)
+    {
+        int registrosModificados = 0;
+        int registrosModificadosDetF = 0;
+        try 
+        { 
+          conn = super.getConection();
+          stmt = conn.createStatement();
+          
+          //System.out.println("UPDATE encabezadofacturas SET seriefactura = "+encFFinal.getSerieFactura()+ ", numerofactura = "+encFFinal.getNumeroFactura() +" WHERE seriefactura = "+ encFOrigen.getSerieFactura() +" AND numerofactura = "+encFOrigen.getNumeroFactura());          
+          registrosModificados = stmt.executeUpdate("UPDATE encabezadofacturas SET seriefactura = "+encFFinal.getSerieFactura()+ ", numerofactura = "+encFFinal.getNumeroFactura() +" WHERE seriefactura = "+ encFOrigen.getSerieFactura() +" AND numerofactura = "+encFOrigen.getNumeroFactura());
+          registrosModificadosDetF = stmt.executeUpdate("UPDATE detallefacturas SET seriefactura = "+encFFinal.getSerieFactura()+ ", numerofactura = "+encFFinal.getNumeroFactura() +" WHERE seriefactura = "+ encFOrigen.getSerieFactura() +" AND numerofactura = "+encFOrigen.getNumeroFactura());
+          this.cerrar();
+        }
+        catch (SQLException ex)
+        {
+//            while (ex !=null)
+//            {
+//                ex.printStackTrace();
+//                ex = ex.getNextException();
+//            }
+//            System.out.println("Salida: "+registrosModificados);
+        }
+        
+        return registrosModificados;
+    }
+    
     public int modificarPonerCPconFacturaEnCero(String serie, Long codigo)
     {
         int registrosModificados = 0;
@@ -496,6 +551,13 @@ public class Modificacion extends DataManager {
         { 
           conn = super.getConection();
           stmt = conn.createStatement();
+          
+//          System.out.println("UPDATE Matriculados SET idmatriculado = "+mat.getIdmatriculado()+", matricula = "+mat.getMatricula()+", apellido = '"+mat.getApellido()+"', nombres = '"+mat.getNombres()+"', dni = '"+mat.getDni()+"', calle = '"+mat.getCalle()+"', nacimiento = '"+mat.getNacimiento()+"', email = '"+mat.getEmail()+"', telefonotrabajo = '"+mat.getTelefonoTrabajo()+"', web = '"+mat.getWeb()+"', cuit = '"+mat.getCuit()+"', cuil = '"+mat.getCuil()
+//          +"', habilitado = '"+mat.getHabilitado()+"', idbarrio = "+mat.getBarrio().getIdbarrio()+", idprovincia = "+mat.getProvincia().getIdprovincia()+", iddepartamento = "+mat.getDepartamento().getIddepartamento()+", idlocalidad = "+mat.getLocalidad().getIdlocalidad()+", idnacionalidad = "+mat.getNacionalidad().getIdnacionalidad()+", iddepartamentoprofesional = "+mat.getDepartamentoProfesional().getIddepartamento()
+//          +", idlocalidadprofesional = "+mat.getLocalidadProfesional().getIdlocalidad()+", idbarrioprofesional = "+mat.getBarrioProfesional().getIdbarrio()+", calleprofesional = '"+mat.getCalleProfesional()+"', fechainscripcion = '"+mat.getFechaInscripcion()+"', libro = '"+mat.getLibro()+"', folio = '"+mat.getFolio()+"', idescuela = "+mat.getEscuela().getIdescuela()
+//          +", fechaegresodeescuela = '"+mat.getFechaEgresoDeEscuela()+"', idtitulo = "+mat.getTitulo().getIdtitulo()+", especialidad = '"+mat.getEspecialidad()+"', existe = '"+mat.getExiste()+"', telefonoparticular = '"+mat.getTelefonoParticular()+"', telefonocelular = '"+mat.getTelefonoCelular()+"', ingresosBrutos = '"+mat.getIngresosBrutos()+"', idiva = "+mat.getIva().getIdiva()+" WHERE idmatriculado = "+mat.getIdmatriculado());
+          
+          
           registrosModificados = stmt.executeUpdate("UPDATE Matriculados SET idmatriculado = "+mat.getIdmatriculado()+", matricula = "+mat.getMatricula()+", apellido = '"+mat.getApellido()+"', nombres = '"+mat.getNombres()+"', dni = '"+mat.getDni()+"', calle = '"+mat.getCalle()+"', nacimiento = '"+mat.getNacimiento()+"', email = '"+mat.getEmail()+"', telefonotrabajo = '"+mat.getTelefonoTrabajo()+"', web = '"+mat.getWeb()+"', cuit = '"+mat.getCuit()+"', cuil = '"+mat.getCuil()
           +"', habilitado = '"+mat.getHabilitado()+"', idbarrio = "+mat.getBarrio().getIdbarrio()+", idprovincia = "+mat.getProvincia().getIdprovincia()+", iddepartamento = "+mat.getDepartamento().getIddepartamento()+", idlocalidad = "+mat.getLocalidad().getIdlocalidad()+", idnacionalidad = "+mat.getNacionalidad().getIdnacionalidad()+", iddepartamentoprofesional = "+mat.getDepartamentoProfesional().getIddepartamento()
           +", idlocalidadprofesional = "+mat.getLocalidadProfesional().getIdlocalidad()+", idbarrioprofesional = "+mat.getBarrioProfesional().getIdbarrio()+", calleprofesional = '"+mat.getCalleProfesional()+"', fechainscripcion = '"+mat.getFechaInscripcion()+"', libro = '"+mat.getLibro()+"', folio = '"+mat.getFolio()+"', idescuela = "+mat.getEscuela().getIdescuela()
@@ -914,5 +976,36 @@ public class Modificacion extends DataManager {
       }      
     }
  
-    
+    public int modEncabezadoPago(String fecha,java.util.Date fechaDate)
+    {
+        int registrosModificados = 0;
+        int registrosPuestosEnNoHabilitado=0;
+        try 
+        { 
+          conn = super.getConection();
+          stmt = conn.createStatement();
+//          System.out.println("update matriculados set habilitado = 'S' where idmatriculado in (Select Distinct(idmatriculado) from encabezadopago where habilitacionhasta >= '"+fecha+"')");
+          registrosPuestosEnNoHabilitado = stmt.executeUpdate("update matriculados set habilitado = 'N'");
+          
+          Calendar cal = Calendar.getInstance();
+          cal.setTime(fechaDate);
+          int anio=(cal.get(Calendar.YEAR));
+          int mes=(cal.get(Calendar.MONTH)+1);
+          
+//          System.out.println("se esta actualizando: MES:"+mes+"  -- ANIO: "+anio);
+          //registrosModificados = stmt.executeUpdate("update matriculados set habilitado = 'S' where idmatriculado in (Select Distinct(idmatriculado) from encabezadopago where habilitacionhasta >= '"+fecha+"')");
+          registrosModificados = stmt.executeUpdate("update matriculados set habilitado = 'S' where idmatriculado in (SELECT distinct(ep.idmatriculado) from encabezadopago ep, detallepago dp where dp.anio="+anio +" and dp.mes>="+mes+" and ep.idencabezadopago=dp.idencabezadopago and ep.seriefactura>0 and ep.nrofactura>0)");
+          
+          this.cerrar();
+     }
+      catch (SQLException ex)
+     {
+        while (ex !=null)
+        {
+          ex.printStackTrace();
+          ex = ex.getNextException();
+        }
+     }
+        return registrosModificados;
+    }
 }

@@ -261,7 +261,7 @@
                       <Component id="jTCuit" alignment="1" max="32767" attributes="1"/>
                       <Component id="jTIngresosBrutos" alignment="1" pref="257" max="32767" attributes="1"/>
                   </Group>
-                  <EmptySpace pref="8" max="32767" attributes="0"/>
+                  <EmptySpace pref="11" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="jLabel12" min="-2" pref="102" max="-2" attributes="0"/>
@@ -270,7 +270,7 @@
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="71" max="32767" attributes="0"/>
+                          <EmptySpace pref="74" max="32767" attributes="0"/>
                           <Component id="jCIva" min="-2" pref="156" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -410,8 +410,8 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="jLabel19" alignment="0" pref="81" max="32767" attributes="1"/>
-                      <Component id="jLabel20" alignment="0" pref="81" max="32767" attributes="0"/>
+                      <Component id="jLabel19" alignment="0" pref="84" max="32767" attributes="1"/>
+                      <Component id="jLabel20" alignment="0" pref="84" max="32767" attributes="0"/>
                       <Component id="jLabel23" min="-2" pref="61" max="-2" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -428,8 +428,8 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="jTDepartamento" alignment="0" pref="246" max="32767" attributes="1"/>
-                              <Component id="jTBarrio" alignment="0" pref="246" max="32767" attributes="1"/>
+                              <Component id="jTDepartamento" alignment="0" pref="249" max="32767" attributes="1"/>
+                              <Component id="jTBarrio" alignment="0" pref="249" max="32767" attributes="1"/>
                           </Group>
                       </Group>
                       <Group type="102" attributes="0">

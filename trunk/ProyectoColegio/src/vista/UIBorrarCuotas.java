@@ -186,7 +186,7 @@ public class UIBorrarCuotas extends javax.swing.JDialog {
     private void obtenerId()
     {
         long idcaja = Long.parseLong(this.jTextField1.getText().trim()); 
-        System.out.println("id introducida :"+idcaja);
+//        System.out.println("id introducida :"+idcaja);
         this.borrarDatos(idcaja);
     }
     

@@ -17,9 +17,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-//import negocios.Barrio;
 import negocios.Departamento;
-//import negocios.Localidad;
 import negocios.Provincia;
 import reportes.cExport_thread;
 

@@ -6,12 +6,16 @@
 
 package vista;
 
+import Datos.Baja;
+import Datos.Consulta;
 import controlador.CListar;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.NumberFormat;
+/*import java.text.ParseException;
+import java.text.SimpleDateFormat;*/
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,11 +26,14 @@ import java.util.Iterator;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import negocios.Documento;
 import negocios.EncabezadoCP;
 import negocios.EncabezadoCT;
 import negocios.Matriculado;
 import negocios.Tasa;
+import negocios.TasaAplicable;
 import negocios.Titulo;
+import reportes.cExport_thread;
 
 /**
  *
@@ -94,6 +101,11 @@ public class UIReporteConstancias extends javax.swing.JFrame
         jBSalir = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jBAnular = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
@@ -225,11 +237,11 @@ public class UIReporteConstancias extends javax.swing.JFrame
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 762, Short.MAX_VALUE)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTMatriculado, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
+                        .addComponent(jTMatriculado, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -259,7 +271,7 @@ public class UIReporteConstancias extends javax.swing.JFrame
                                 .addComponent(jCMesInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jCAnioInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                         .addComponent(jCHKTodosLasFechas)
                         .addGap(44, 44, 44))))
         );
@@ -314,32 +326,91 @@ public class UIReporteConstancias extends javax.swing.JFrame
             }
         });
 
-        jButton2.setText("Ver");
+        jButton2.setText("Reimprimir");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Imprimir Resumen");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jBAnular.setText("Anular");
+        jBAnular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBAnularActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Ver Anuladas");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Listado Gral CT");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("Listado Gral CP");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 407, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(264, 264, 264)
+                                .addComponent(jBAnular, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBAnular)
+                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3)
+                    .addComponent(jButton5)
+                    .addComponent(jButton6))
                 .addContainerGap())
         );
 
@@ -350,11 +421,11 @@ public class UIReporteConstancias extends javax.swing.JFrame
 
             },
             new String [] {
-                "Codigo", "Fecha", "Tasas", "Calle / Nro", "Localidad", "Orden Trabajo", "Factura", "Monto Factura"
+                "Serie", "Codigo", "Fecha", "Trabajos", "Calle / Nro", "Localidad", "Orden Trabajo", "Factura", "Monto Factura"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -371,7 +442,7 @@ public class UIReporteConstancias extends javax.swing.JFrame
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 790, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 798, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -381,9 +452,9 @@ public class UIReporteConstancias extends javax.swing.JFrame
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -521,8 +592,66 @@ public class UIReporteConstancias extends javax.swing.JFrame
         }
             
         else
-            JOptionPane.showMessageDialog(null, "Debe introducir el numero de matricula de un matriculado", "Falta Matriculado",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Debe introducir el numero de matricula de un matriculado", "Falta Matriculado",JOptionPane.ERROR_MESSAGE);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        String fecha1 = "0";
+        String fecha2 = "0";
+        if(!this.jCHKTodosLasFechas.isSelected()){
+            fecha1 = String.valueOf(this.jCAnioInicio.getSelectedItem())+"-"+String.valueOf(this.jCMesInicio.getSelectedItem())+"-"+String.valueOf(this.jCDiaInicio.getSelectedItem());
+            fecha2 = String.valueOf(this.jCAnioFinal.getSelectedItem())+"-"+String.valueOf(this.jCMesFinal.getSelectedItem())+"-"+String.valueOf(this.jCDiaFinal.getSelectedItem());            
+        }
+        if(this.jTMatriculado.getText().trim().length() != 0){
+            //this.limpiarTabla();
+            this.imprimirListado(fecha1,fecha2);
+        }            
+        else
+            JOptionPane.showMessageDialog(this, "Debe introducir el numero de matricula de un matriculado", "Falta Matriculado",JOptionPane.ERROR_MESSAGE);
+
+
+        
+        
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        if (this.jTable1.getSelectedRow()!=-1){            
+            reimprimir();
+        }else{
+            JOptionPane.showMessageDialog(this,"Elija una constancia de la tabla para tener una vista preliminar","Vista Preliminar",JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jBAnularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAnularActionPerformed
+        // TODO add your handling code here:
+        if (this.jTable1.getSelectedRow()!=-1){            
+            anularConstancia();
+        }else{
+            JOptionPane.showMessageDialog(this,"Elija una constancia de la tabla para anularla","Anular la Constancia",JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+        
+    }//GEN-LAST:event_jBAnularActionPerformed
+
+private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+// TODO add your handling code here:
+    UIAnulados vAnulados=new UIAnulados();
+    vAnulados.setVisible(true);
+}//GEN-LAST:event_jButton3ActionPerformed
+
+private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+// TODO add your handling code here:
+    cExport_thread imprimeCT=new cExport_thread(53);
+    imprimeCT.start();
+}//GEN-LAST:event_jButton5ActionPerformed
+
+private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+// TODO add your handling code here:
+    cExport_thread imprimeCP=new cExport_thread(54);
+    imprimeCP.start();
+}//GEN-LAST:event_jButton6ActionPerformed
     
     /**
      * @param args the command line arguments
@@ -536,11 +665,15 @@ public class UIReporteConstancias extends javax.swing.JFrame
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBAnular;
     private javax.swing.JButton jBBuscar;
     private javax.swing.JButton jBSalir;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JComboBox jCAnioFinal;
     private javax.swing.JComboBox jCAnioInicio;
     private javax.swing.JComboBox jCDiaFinal;
@@ -557,6 +690,7 @@ public class UIReporteConstancias extends javax.swing.JFrame
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTextField jTMatricula;
     private javax.swing.JTextField jTMatriculado;
     private javax.swing.JTable jTable1;
@@ -611,27 +745,30 @@ private void ajustarTamanioColumna()
     switch(i)
     {
         case 0:
-                column.setPreferredWidth(50);
+                column.setPreferredWidth(30);
                 break;
         case 1:
-                column.setPreferredWidth(110);
+                column.setPreferredWidth(50);
                 break;
         case 2:
-                column.setPreferredWidth(300); 
+                column.setPreferredWidth(110);
                 break;
         case 3:
                 column.setPreferredWidth(300); 
                 break;
         case 4:
-                column.setPreferredWidth(110); 
+                column.setPreferredWidth(300); 
                 break;
         case 5:
-                column.setPreferredWidth(100);
+                column.setPreferredWidth(110); 
                 break;
         case 6:
-                column.setPreferredWidth(120); 
+                column.setPreferredWidth(100);
                 break;
         case 7:
+                column.setPreferredWidth(120); 
+                break;
+        case 8:
                 column.setPreferredWidth(100); 
                 break;
     }
@@ -673,7 +810,7 @@ private void listarParciales(String fecha1, String fecha2)
         encCP.setMatriculado(mat);
         this.encabezadosParciales = listar.hacerListadoEncabezadoCP(encCP, 0, fecha1, fecha2);
         if(this.encabezadosParciales.size() == 0)
-            JOptionPane.showMessageDialog(null, "El matriculado no tiene constancias parciales", "No tiene trabajos", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El matriculado no tiene constancias parciales", "No tiene trabajos", JOptionPane.INFORMATION_MESSAGE);
         else
             this.agregarFilaCP();
     }
@@ -687,7 +824,7 @@ private void listarParciales(String fecha1, String fecha2)
         encCT.setMatriculado(mat);
         this.encabezadosTotales = listar.hacerListadoEncabezadoCT(encCT, 0, fecha1, fecha2);
         if(this.encabezadosTotales.size() == 0)
-            JOptionPane.showMessageDialog(null, "El matriculado no tiene constancias totales", "No tiene trabajos", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El matriculado no tiene constancias totales", "No tiene trabajos", JOptionPane.INFORMATION_MESSAGE);
         else
         this.agregarFilaCT();
     }
@@ -698,24 +835,24 @@ private void agregarFilaCT()
     Iterator it = this.encabezadosTotales.iterator();
     NumberFormat nf = NumberFormat.getCurrencyInstance();
     DefaultTableModel  modelo= (DefaultTableModel)this.jTable1.getModel();
-    String datos[] = new String[8];
+    String datos[] = new String[9];
     while(it.hasNext())
     {
         EncabezadoCT e = (EncabezadoCT)it.next();
-        datos[0] = String.valueOf(e.getCodigoCT()).trim();
-        
+        datos[0] = e.getSerieCT().trim();
+        datos[1] = String.valueOf(e.getCodigoCT()).trim();
         DateFormat df = DateFormat.getDateInstance();
-        datos[1] = String.valueOf(df.format(e.getFecha()));
+        datos[2] = String.valueOf(df.format(e.getFecha()));
         
         //datos[1] = e.getFecha().toString();
         
         
-        datos[2] = this.getTasasCT(e);
-        datos[3] = e.getCalle().trim();
-        datos[4] = e.getLocalidad().getNombre().trim();
-        datos[5] = e.getOrdenTrabajo().trim();
-        datos[6] = String.valueOf(e.getSerieFactura()).concat("-").concat(String.valueOf(e.getNumeroFactura())).trim();
-        datos[7] = nf.format(e.getTotal());
+        datos[3] = this.getTasasCT(e);
+        datos[4] = e.getCalle().trim();
+        datos[5] = e.getLocalidad().getNombre().trim();
+        datos[6] = e.getOrdenTrabajo().trim();
+        datos[7] = String.valueOf(e.getSerieFactura()).concat("-").concat(String.valueOf(e.getNumeroFactura())).trim();
+        datos[8] = nf.format(e.getTotal());
         modelo.addRow(datos);
         e = null;
     }
@@ -727,22 +864,23 @@ private void agregarFilaCP()
     Iterator it = this.encabezadosParciales.iterator();
     NumberFormat nf = NumberFormat.getCurrencyInstance();
     DefaultTableModel  modelo= (DefaultTableModel)this.jTable1.getModel();
-    String datos[] = new String[8];
+    String datos[] = new String[9];
     while(it.hasNext())
     {
         EncabezadoCP e = (EncabezadoCP)it.next();
-        datos[0] = String.valueOf(e.getCodigoCP()).trim();
+        datos[0] = e.getSerieCP().trim();
+        datos[1] = String.valueOf(e.getCodigoCP()).trim();
         
         
         DateFormat df = DateFormat.getDateInstance();
-        datos[1] = String.valueOf(df.format(e.getFecha()));
+        datos[2] = String.valueOf(df.format(e.getFecha()));
         //datos[1] = String.valueOf(e.getFecha()).trim();
-        datos[2] = this.getTasasCP(e);
-        datos[3] = e.getCalle().trim();
-        datos[4] = e.getLocalidad().getNombre().trim();
-        datos[5] = e.getOrdenTrabajo().trim();
-        datos[6] = String.valueOf(e.getSerieFactura()).concat("-").concat(String.valueOf(e.getNumeroFactura())).trim();
-        datos[7] = nf.format(e.getTotal());
+        datos[3] = this.getTasasCP(e);
+        datos[4] = e.getCalle().trim();
+        datos[5] = e.getLocalidad().getNombre().trim();
+        datos[6] = e.getOrdenTrabajo().trim();
+        datos[7] = String.valueOf(e.getSerieFactura()).concat("-").concat(String.valueOf(e.getNumeroFactura())).trim();
+        datos[8] = nf.format(e.getTotal());
         modelo.addRow(datos);
         e = null;
     }
@@ -761,9 +899,31 @@ private void limpiarTabla()
 private String getTasasCP(EncabezadoCP encCP)
 {
     StringBuffer cadena = new StringBuffer();
+    Collection tasasAplicables = new ArrayList();
+    Collection documentos = new ArrayList();
+    CListar listar = new CListar();
+    documentos = listar.hacerListado(new Documento());
+    // extraigo el id del tipo de documento CP
+    Iterator doc = documentos.iterator();
+    Documento documento = new Documento();
+    while(doc.hasNext())
+    {
+        Documento d = (Documento)doc.next();
+        if(d.getDescripcion().trim().equals("CONSTANCIA PARCIAL"))
+            documento = d;
+        d = null;
+    }
+    doc = null;
+    documentos = null;
+    
+    Consulta con = new Consulta();
+    // obtengo las tasas aplicables a este tipo de documento
+    tasasAplicables = con.getTasaAplicablexConstancia(documento.getIdDocumento());
+    /////
+    
     boolean bandera = true;
     Collection tasas = new ArrayList();
-    CListar listar = new CListar();
+    
     tasas = listar.armarDetalleFactura(encCP.getSerieCP(), String.valueOf(encCP.getCodigoCP()), "CP");
     Iterator it = tasas.iterator();
     while(it.hasNext())
@@ -773,13 +933,30 @@ private String getTasasCP(EncabezadoCP encCP)
             cadena.append("-");
         else
             bandera = false;
-        cadena.append(t.getDenominacion().trim());
+        cadena.append(this.obtenerLeyenda(t.getIdtasa(), tasasAplicables).trim());
         t = null;
     }
     it = null;
     tasas = null;
     listar = null;
     return cadena.toString();
+}
+
+private String obtenerLeyenda(int idTasa, Collection tasasAplicables)
+{
+    String leyenda = "";
+    Iterator it = tasasAplicables.iterator();
+    while(it.hasNext())
+    {
+        TasaAplicable t = (TasaAplicable)it.next();
+        if(t.getIdtasa() == idTasa)
+        {
+            leyenda = t.getLeyenda().trim();
+            break;
+        }
+        t = null;
+    }
+    return leyenda;
 }
 
 private String getTasasCT(EncabezadoCT encCT)
@@ -805,7 +982,91 @@ private String getTasasCT(EncabezadoCT encCT)
     listar = null;
     return cadena.toString();
 }
+private void imprimirListado(String fecha1, String fecha2){    
+    if (fecha1.equals("0")){//es decir selecciono todas las constancias        
+        if(String.valueOf(this.jCTipoConstancia.getSelectedItem()).equals("PARCIAL")){
+            cExport_thread imprime=new cExport_thread(38,this.jTMatricula.getText().trim());
+            imprime.start();
+        } else{
+            cExport_thread imprime=new cExport_thread(39,this.jTMatricula.getText().trim());
+            imprime.start();
+        }
+    }else{
+        //JOptionPane.showMessageDialog(this,"El reporte entre fechas de cp o ct no esta implementado\nseleccione TODOS para que salga el reporte correspondiente...", "Reporte no implementado", JOptionPane.INFORMATION_MESSAGE);
+        System.out.println("fecha1 es: "+fecha1 + "  fecha2 es: " + fecha2);
+        
+        //Transformo a timestamp
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");        
+        java.sql.Timestamp timestamp1=null;
+        java.sql.Timestamp timestamp2=null;        
+        try{
+            java.util.Date date1 = sdf.parse(fecha1+ " 00:00:00");
+            timestamp1 = new java.sql.Timestamp(date1.getTime());
+            java.util.Date date2 = sdf.parse(fecha2+ " 23:59:59");
+            timestamp2 = new java.sql.Timestamp(date2.getTime());
+        }catch(ParseException pe){
+            System.out.println("FECHA no válida");
+        }
+        
+        if(String.valueOf(this.jCTipoConstancia.getSelectedItem()).equals("PARCIAL")){
+            cExport_thread imprime=new cExport_thread(40,this.jTMatricula.getText().trim(),timestamp1,timestamp2);        
+            imprime.start();
+        }else{
+            cExport_thread imprime=new cExport_thread(41,this.jTMatricula.getText().trim(),timestamp1,timestamp2);        
+            imprime.start();
+        }
+        
+    }
+}
+
+private void reimprimir(){
+        //0 es constancia parcial
+        //1 es constancia total
+        switch (this.jCTipoConstancia.getSelectedIndex()) {
+            case 0: cExport_thread imprimeCT=new cExport_thread(34,this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 0).toString().trim(),this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 1).toString().trim(),"COPIA DE ARCHIVO");
+                    imprimeCT.start();                    
+                    break;
+            case 1: cExport_thread imprimeCP=new cExport_thread(33,this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 0).toString().trim(),this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 1).toString().trim(),"COPIA DE ARCHIVO");
+                    imprimeCP.start();
+                    break;
+        }
+}
+private void anularConstancia(){
+        //0 es constancia parcial
+        //1 es constancia total
+        Baja baja=new Baja();
+        
+        //Primero realizo la baja
+        switch (this.jCTipoConstancia.getSelectedIndex()) {
+            case 0: 
+                    EncabezadoCP encaCP=new EncabezadoCP();
+                    encaCP.setSerieCP(String.valueOf(this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 0)).trim());
+                    encaCP.setCodigoCP(Long.parseLong(String.valueOf(this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 1)).trim()));
+                    baja.eliminar(encaCP);                    
+                    break;
+            case 1:                     
+                    EncabezadoCT encaCT=new EncabezadoCT();
+                    encaCT.setSerieCT(String.valueOf(this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 0)).trim());
+                    encaCT.setCodigoCT(Long.valueOf(String.valueOf(this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 1)).trim()));
+                    baja.eliminar(encaCT);
+                    break;
+        }
+        
+        //Segundo vuelvo a mostrar con los datos sin incluir anulados ni las const. no facturadas
+        String fecha1 = "0";
+        String fecha2 = "0";
+        if(!this.jCHKTodosLasFechas.isSelected()){
+            fecha1 = String.valueOf(this.jCAnioInicio.getSelectedItem())+"-"+String.valueOf(this.jCMesInicio.getSelectedItem())+"-"+String.valueOf(this.jCDiaInicio.getSelectedItem());
+            fecha2 = String.valueOf(this.jCAnioFinal.getSelectedItem())+"-"+String.valueOf(this.jCMesFinal.getSelectedItem())+"-"+String.valueOf(this.jCDiaFinal.getSelectedItem());            
+        }
+        if(this.jTMatriculado.getText().trim().length() != 0){
+            this.limpiarTabla();
+            this.listarParciales(fecha1,fecha2);
+        }else
+            JOptionPane.showMessageDialog(this, "Debe introducir el numero de matricula de un matriculado", "Falta Matriculado",JOptionPane.ERROR_MESSAGE);
+  
+}
 
 
-    
+
 }

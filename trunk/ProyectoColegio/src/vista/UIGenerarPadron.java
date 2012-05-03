@@ -78,7 +78,7 @@ public class UIGenerarPadron extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Generar Padrón de Matriculados");
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Elegir Matriculados que esten:", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10)));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Elegir Matriculados que esten:", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
         jPanel1.setFont(new java.awt.Font("Tahoma", 0, 10));
 
         grupoEstado.add(jRTodos);
@@ -118,7 +118,7 @@ public class UIGenerarPadron extends javax.swing.JFrame {
                 .addContainerGap(31, Short.MAX_VALUE))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Elegir zona del padron:", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10)));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Elegir zona del padron:", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
         jPanel2.setFont(new java.awt.Font("Tahoma", 0, 10));
 
         jCDepartamento.setFont(new java.awt.Font("Tahoma", 0, 10));
@@ -233,7 +233,7 @@ public class UIGenerarPadron extends javax.swing.JFrame {
                         .addContainerGap())))
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Elija tipo de Matriculado:", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10)));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Elija tipo de Matriculado:", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 10))); // NOI18N
         jPanel3.setFont(new java.awt.Font("Tahoma", 0, 10));
 
         jCTitulo.setFont(new java.awt.Font("Tahoma", 0, 10));
@@ -356,17 +356,15 @@ public class UIGenerarPadron extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))
+                .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(32, 32, 32)
                         .addComponent(jBImprimir)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -624,15 +622,13 @@ public class UIGenerarPadron extends javax.swing.JFrame {
        }
        //SI ESTA SELECCIONADO TITULOS
        if (this.jRTitulo.isSelected()){
-            String titulo=this.jCTitulo.getSelectedItem().toString().trim();
+            String titulo=this.jCTitulo.getSelectedItem().toString().trim();            
             cExport_thread report = new cExport_thread(371,estadoHabilitado,d1,l1,d2,l2,titulo);
             report.start();    
        }
        //SI ESTA SELECCIONADO TODOS LOS TITULOS O ESPECIALIDADES
        if (this.jREspecialidad.isSelected()){
-            String especialidad=this.jCEspecialidad.getSelectedItem().toString().trim();
-            System.out.println("ESPECIALIDAD.....:"+especialidad);
-            
+            String especialidad=this.jCEspecialidad.getSelectedItem().toString().trim();            
             cExport_thread report = new cExport_thread(372,estadoHabilitado,d1,l1,d2,l2,especialidad);
             report.start();    
        }

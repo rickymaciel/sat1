@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import negocios.Escuela;
 
 /**
@@ -36,6 +37,7 @@ public class UIListarEscuelas extends javax.swing.JFrame
 	pantalla = Toolkit.getDefaultToolkit().getScreenSize();
 	cuadro = this.getSize();
 	this.setLocation(((pantalla.width - cuadro.width)/2), (pantalla.height - cuadro.height)/2);
+        this.ajustarColumnas();
     }
     
     public UIListarEscuelas(UIEscuelas es) 
@@ -48,6 +50,7 @@ public class UIListarEscuelas extends javax.swing.JFrame
 	cuadro = this.getSize();
 	this.setLocation(((pantalla.width - cuadro.width)/2), (pantalla.height - cuadro.height)/2);
         this.llenarTabla(new Escuela());
+        this.ajustarColumnas();
     }
     
     public UIListarEscuelas(UIMatriculados matriculados) 
@@ -60,6 +63,7 @@ public class UIListarEscuelas extends javax.swing.JFrame
 	cuadro = this.getSize();
 	this.setLocation(((pantalla.width - cuadro.width)/2), (pantalla.height - cuadro.height)/2);
         this.llenarTabla(new Escuela());
+        this.ajustarColumnas();
     }
     /** This method is called from within the constructor to
      * initialize the form.
@@ -139,25 +143,25 @@ public class UIListarEscuelas extends javax.swing.JFrame
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(165, 165, 165)
-                .addComponent(jBInsertar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(162, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(113, Short.MAX_VALUE)
-                .addComponent(jLNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(110, 110, 110))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(155, 155, 155)
+                        .addComponent(jBInsertar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(162, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(110, 110, 110))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -244,9 +248,9 @@ public class UIListarEscuelas extends javax.swing.JFrame
         while(it.hasNext())
         {
             e = (Escuela)it.next();
-            datos[0] = String.valueOf(e.getIdescuela());
-            datos[1] = e.getNombre();
-            datos[2] = e.getLocalidad().getNombre();
+            datos[0] = String.valueOf(e.getIdescuela()).trim();
+            datos[1] = e.getNombre().trim();
+            datos[2] = e.getLocalidad().getNombre().trim();
             modelo.addRow(datos);
         }
     }
@@ -293,4 +297,25 @@ public class UIListarEscuelas extends javax.swing.JFrame
                 modelo.removeRow(0);
         modelo = null;
     }
+    
+    private void ajustarColumnas()
+     {
+         TableColumn column = null;
+         for (int i = 0; i < 3; i++) 
+        {
+            column = jTable1.getColumnModel().getColumn(i);
+            switch(i)
+            {
+                case 0:
+                        column.setPreferredWidth(15);
+                        break;
+                case 1:
+                        column.setPreferredWidth(199);
+                        break;
+                case 2:
+                        column.setPreferredWidth(167); 
+                        break;
+            }
+        }
+     }
 }

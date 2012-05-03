@@ -10,7 +10,6 @@ package Datos;
  * @author asus
  */
  
-import java.io.*;
 import java.sql.*;
 import negocios.Barrio;
 import negocios.CondicionVenta;
@@ -49,7 +48,27 @@ public class Baja extends DataManager{
     {
         
     }
-    
+    public int eliminarProductoTasa(int codprod)
+    {
+        int registrosBorrados = 0;
+        try 
+        { 
+            conn = super.getConection();
+            stmt = conn.createStatement();
+            registrosBorrados = stmt.executeUpdate("DELETE FROM productos_tasas WHERE codigoproducto = "+codprod);  
+            this.cerrar();
+        }
+        catch (SQLException ex)
+        {
+          while (ex !=null)
+        {
+          ex.printStackTrace();
+          ex = ex.getNextException();
+        }
+     }
+        return registrosBorrados;
+    }
+
     public int eliminarEncabezadoPago(long idcuota)
     {
         int registrosBorrados = 0;
@@ -181,7 +200,7 @@ public class Baja extends DataManager{
         { 
             conn = super.getConection();
             stmt = conn.createStatement();
-            System.out.println("UPDATE plano_tasa SET  existe = 'N' WHERE idplano = "+planot.getIdplano());  
+//            System.out.println("UPDATE plano_tasa SET  existe = 'N' WHERE idplano = "+planot.getIdplano());  
             registrosBorrados = stmt.executeUpdate("UPDATE plano_tasa SET  existe = 'N' WHERE idplano = "+planot.getIdplano());  
             this.cerrar();
         }
@@ -245,7 +264,7 @@ public class Baja extends DataManager{
         { 
             conn = super.getConection();
             stmt = conn.createStatement();
-            registrosBorrados = stmt.executeUpdate("UPDATE encabezadocp SET  anulado = 'S' WHERE seriecp = '"+encCP.getCodigoCP()+"' AND codigocp = "+encCP.getCodigoCP());  
+            registrosBorrados = stmt.executeUpdate("UPDATE encabezadocp SET  anulado = 'S' WHERE seriecp = '"+encCP.getSerieCP()+"' AND codigocp = "+encCP.getCodigoCP());              
             this.cerrar();
         }
         catch (SQLException ex)
@@ -266,7 +285,7 @@ public class Baja extends DataManager{
         { 
             conn = super.getConection();
             stmt = conn.createStatement();
-            registrosBorrados = stmt.executeUpdate("UPDATE encabezadoct SET  eliminado = 'S' WHERE seriect = '"+encCT.getSerieCT()+"' AND codigoct = "+encCT.getCodigoCT());  
+            registrosBorrados = stmt.executeUpdate("UPDATE encabezadoct SET  anulado = 'S' WHERE seriect = '"+encCT.getSerieCT()+"' AND codigoct = "+encCT.getCodigoCT());  
             this.cerrar();
         }
         catch (SQLException ex)
@@ -279,6 +298,45 @@ public class Baja extends DataManager{
      }
         return registrosBorrados;
     }
+    
+    public int eliminarFisicamente(EncabezadoCT encCT){
+        int registrosBorrados = 0;
+        try{ 
+            conn = super.getConection();
+            stmt = conn.createStatement();
+            registrosBorrados = stmt.executeUpdate("DELETE FROM encabezadoct WHERE seriect = '"+encCT.getSerieCT()+"' AND codigoct = "+encCT.getCodigoCT());  
+            registrosBorrados = stmt.executeUpdate("DELETE FROM detallect WHERE seriect = '"+encCT.getSerieCT()+"' AND codigoct = "+encCT.getCodigoCT());  
+            registrosBorrados = stmt.executeUpdate("DELETE FROM enc_mat_ct WHERE seriect = '"+encCT.getSerieCT()+"' AND codigoct = "+encCT.getCodigoCT());  
+            
+            this.cerrar();
+        }catch (SQLException ex){
+          while (ex !=null){
+            ex.printStackTrace();
+            ex = ex.getNextException();
+          }
+        }
+        return registrosBorrados;
+    }
+    public int eliminarFisicamente(EncabezadoCP encCP){
+        int registrosBorrados = 0;
+        try{ 
+            conn = super.getConection();
+            stmt = conn.createStatement();
+            registrosBorrados = stmt.executeUpdate("DELETE FROM encabezadocp WHERE seriecp = '"+encCP.getSerieCP()+"' AND codigocp = "+encCP.getCodigoCP());  
+            registrosBorrados = stmt.executeUpdate("DELETE FROM detallecp WHERE seriecp = '"+encCP.getSerieCP()+"' AND codigocp = "+encCP.getCodigoCP());  
+            registrosBorrados = stmt.executeUpdate("DELETE FROM enc_mat_cp WHERE seriecp = '"+encCP.getSerieCP()+"' AND codigocp = "+encCP.getCodigoCP());  
+            registrosBorrados = stmt.executeUpdate("DELETE FROM detallecpparafacturacion WHERE seriecp = '"+encCP.getSerieCP()+"' AND codigocp = "+encCP.getCodigoCP());  
+            
+            this.cerrar();
+        }catch (SQLException ex){
+          while (ex !=null){
+            ex.printStackTrace();
+            ex = ex.getNextException();
+          }
+        }
+        return registrosBorrados;
+    }
+    
     
     public int eliminarFoto(String matricula)
     {
@@ -434,7 +492,7 @@ public class Baja extends DataManager{
         { 
             conn = super.getConection();
             stmt = conn.createStatement();
-            registrosBorrados = stmt.executeUpdate("UPDATE Roles SET  existe = 'N' WHERE idroles = "+roles.getIdrol());  
+            registrosBorrados = stmt.executeUpdate("UPDATE Roles SET  existe = 'N' WHERE idrol = "+roles.getIdrol());  
             this.cerrar();
         }
         catch (SQLException ex)
@@ -447,6 +505,7 @@ public class Baja extends DataManager{
      }
         return registrosBorrados;
     }
+
     
     public int eliminar(Titulo titulo)
     {

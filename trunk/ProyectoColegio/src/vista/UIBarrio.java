@@ -10,7 +10,6 @@ import Datos.Baja;
 import Datos.Modificacion;
 import controlador.CAlta;
 import controlador.CListar;
-//import Datos.Consulta;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;

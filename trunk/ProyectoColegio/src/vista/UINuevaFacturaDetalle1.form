@@ -154,6 +154,9 @@
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="jTDetalle">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
           <Events>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTDetalleKeyPressed"/>
           </Events>
@@ -170,6 +173,9 @@
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="jTPrecioUnitario">
+          <Events>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTPrecioUnitarioKeyPressed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="jTSubTotal">
         </Component>

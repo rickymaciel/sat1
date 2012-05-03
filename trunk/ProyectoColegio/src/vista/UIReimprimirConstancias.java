@@ -6,10 +6,15 @@
 
 package vista;
 
+import Datos.Baja;
+import Datos.Consulta;
+import Datos.Modificacion;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
+import negocios.EncabezadoCP;
+import negocios.EncabezadoCT;
 import reportes.cExport_thread;
 
 /**
@@ -44,11 +49,27 @@ public class UIReimprimirConstancias extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Reimpresion de Constancias Parciales y Totales");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Reimpresión / Eliminacion Fisica");
 
         jCTipoConstancia.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "PARCIAL", "TOTAL" }));
+
+        jTSerie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTSerieActionPerformed(evt);
+            }
+        });
+        jTSerie.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTSerieKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTSerieKeyReleased(evt);
+            }
+        });
 
         jTNumero.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -86,6 +107,20 @@ public class UIReimprimirConstancias extends javax.swing.JFrame {
 
         jLabel3.setText("Numero");
 
+        jButton1.setText("Eliminar Fisicamente");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Poner Factura cero");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -100,7 +135,7 @@ public class UIReimprimirConstancias extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTNumero, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+                        .addComponent(jTNumero, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jBGenerar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
@@ -112,10 +147,14 @@ public class UIReimprimirConstancias extends javax.swing.JFrame {
                         .addGap(76, 76, 76)))
                 .addGap(11, 11, 11))
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(384, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -137,7 +176,10 @@ public class UIReimprimirConstancias extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jBSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -176,7 +218,7 @@ public class UIReimprimirConstancias extends javax.swing.JFrame {
         if (!((Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) ||(c == KeyEvent.VK_ENTER) ||(c == KeyEvent.VK_DELETE)  ||(c == KeyEvent.VK_ESCAPE))))
         {    
             getToolkit().beep();
-            JOptionPane.showMessageDialog(null,"Debe introducir un valor valido ej: 12","Atencion",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,"Debe introducir un valor valido ej: 12","Atencion",JOptionPane.ERROR_MESSAGE);
             this.jTNumero.setText("");
             this.jTNumero.requestFocus();
             nroCorrecto=false;
@@ -187,6 +229,58 @@ public class UIReimprimirConstancias extends javax.swing.JFrame {
         if(evt.getKeyCode()==27)
             this.dispose();
     }//GEN-LAST:event_jTNumeroKeyPressed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        if (this.jTSerie.getText().length()>0 && this.jTNumero.getText().length()>0){
+            int resp=JOptionPane.showConfirmDialog(this, "Esta seguro de eliminar esta constancia\nse eliminara fisicamente de la base de datos\nsolo use esta opcion si quiere borrar una constancia mal confeccionada y no has sido facturada", "Precaucion", JOptionPane.WARNING_MESSAGE);
+            if (resp==JOptionPane.OK_OPTION){
+                this.eliminarConstancia();
+            }else{
+                JOptionPane.showMessageDialog(this, "Se canceló la eliminación", "Eliminacion cancelada", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }else{
+            
+            JOptionPane.showMessageDialog(this, "Ingrese una serie y nro de valido de constancia ", "Faltan datos", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTSerieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTSerieActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTSerieActionPerformed
+
+    private void jTSerieKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTSerieKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTSerieKeyPressed
+
+    private void jTSerieKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTSerieKeyReleased
+        // TODO add your handling code here:
+        if(this.jTSerie.getText().trim().length() > 2)
+        {
+            JOptionPane.showMessageDialog(null, "El nombre de la serie no debe pasar de los dos caracteres","Atencion",JOptionPane.INFORMATION_MESSAGE);
+            this.jTSerie.setText(this.jTSerie.getText().substring(0, 2));
+        }
+
+    }//GEN-LAST:event_jTSerieKeyReleased
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        if (this.jTSerie.getText().length()>0 && this.jTNumero.getText().length()>0)
+        {
+            int resp=JOptionPane.showConfirmDialog(this, "Esta s a punto de poner la constancia con numero de factura cero\n para que esta constancia pueda ser refacturada en una nueva factura\nsea cuidadoso al hacer esta operacion", "Precaucion", JOptionPane.WARNING_MESSAGE);
+            if (resp==JOptionPane.OK_OPTION)
+            {
+                this.facturaCero();
+            }else{
+                JOptionPane.showMessageDialog(this, "Se canceló la modificación", "Modificacion cancelada", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        else
+        {
+            
+            JOptionPane.showMessageDialog(this, "Ingrese una serie y nro de valido de constancia ", "Faltan datos", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
     
     /**
      * @param args the command line arguments
@@ -202,6 +296,8 @@ public class UIReimprimirConstancias extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBGenerar;
     private javax.swing.JButton jBSalir;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox jCTipoConstancia;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -213,20 +309,93 @@ public class UIReimprimirConstancias extends javax.swing.JFrame {
     private void reimprimir(){
         //0 es constancia parcial
         //1 es constancia total
-        
-        
         switch (this.jCTipoConstancia.getSelectedIndex()) {
-            case 0: cExport_thread imprimeCT=new cExport_thread(34,this.jTSerie.getText().trim().toUpperCase(),this.jTNumero.getText().trim(),"COPIA DE ARCHIVO");
+            case 0: cExport_thread imprimeCT=new cExport_thread(34,this.jTSerie.getText().trim().toUpperCase(),this.jTNumero.getText().trim(),"");
                     imprimeCT.start();                    
                     break;
-            case 1: cExport_thread imprimeCP=new cExport_thread(33,this.jTSerie.getText().trim().toUpperCase(),this.jTNumero.getText().trim(),"COPIA DE ARCHIVO");
+            case 1: cExport_thread imprimeCP=new cExport_thread(33,this.jTSerie.getText().trim().toUpperCase(),this.jTNumero.getText().trim(),"");
                     imprimeCP.start();
-                    break;
-            
+                    break;   
         }
-
-
     }
-
-
+    
+    private void facturaCero()
+    {
+        Consulta con=new Consulta();
+        boolean existe=false;
+        
+        switch (this.jCTipoConstancia.getSelectedIndex()) 
+        {
+            case 0: existe=con.verificarNroConstancia(this.jTNumero.getText().trim(),this.jTSerie.getText().trim().toUpperCase());                    
+//                    System.out.println("CP: "+existe);
+                    EncabezadoCP encCP=  new EncabezadoCP();
+                    encCP.setCodigoCP(Long.parseLong(this.jTNumero.getText().trim()));
+                    encCP.setSerieCP(this.jTSerie.getText().trim().toUpperCase());
+                    encCP.setSerieFactura(0);
+                    encCP.setNumeroFactura(0);
+                    if (!existe)
+                    {                        
+                        Modificacion mod = new Modificacion();
+                        int borrados=mod.modificarCPFacturaCero(encCP);
+                        if (borrados>0){
+                            JOptionPane.showMessageDialog(this, "Se actualizo correctamente la constancia:" + encCP.getSerieCP()+"-"+encCP.getSerieCP(), "Actualizacion Correcta", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                    break; 
+            case 1: existe=con.verificarNroConstanciaTotal(this.jTNumero.getText().trim(),this.jTSerie.getText().trim().toUpperCase());                    
+//                    System.out.println("CT: "+existe);
+                    EncabezadoCT encCT=  new EncabezadoCT();
+                    encCT.setCodigoCT(Long.parseLong(this.jTNumero.getText().trim()));
+                    encCT.setSerieCT(this.jTSerie.getText().trim().toUpperCase());
+                    if (!existe){//esta al reves,ver conculta, si existe entonces borra
+                        Modificacion mod = new Modificacion();
+//                        Baja baja=new Baja();
+                        int borrados= mod.modificarPonerCTconFacturaEnCero(encCT.getSerieCT().trim(), encCT.getCodigoCT());
+                        if (borrados>0){
+                            JOptionPane.showMessageDialog(this, "Se modifico correctamente la constancia:" + encCT.getSerieCT()+"-"+encCT.getSerieCT(), "Modificacion correcta", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                    break;
+        }
+    }
+    
+    /**
+     * Permite cambiar el numero de factura asociado con la constancia
+     */
+    
+     
+    private void eliminarConstancia(){
+        Consulta con=new Consulta();
+        boolean existe=false;
+        
+        switch (this.jCTipoConstancia.getSelectedIndex()) {
+            case 0: existe=con.verificarNroConstancia(this.jTNumero.getText().trim(),this.jTSerie.getText().trim().toUpperCase());                    
+                    System.out.println("CP: "+existe);
+                    EncabezadoCP encCP=  new EncabezadoCP();
+                    encCP.setCodigoCP(Long.parseLong(this.jTNumero.getText().trim()));
+                    encCP.setSerieCP(this.jTSerie.getText().trim().toUpperCase());
+                    if (!existe){                        
+                        Baja baja=new Baja();
+                        int borrados=baja.eliminarFisicamente(encCP);
+                        if (borrados>0){
+                            JOptionPane.showMessageDialog(this, "Se elimino correctamente la constancia:" + encCP.getSerieCP()+"-"+encCP.getSerieCP(), "Eliminacion correcta", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                    break; 
+            case 1: existe=con.verificarNroConstanciaTotal(this.jTNumero.getText().trim(),this.jTSerie.getText().trim().toUpperCase());                    
+                    System.out.println("CT: "+existe);
+                    EncabezadoCT encCT=  new EncabezadoCT();
+                    encCT.setCodigoCT(Long.parseLong(this.jTNumero.getText().trim()));
+                    encCT.setSerieCT(this.jTSerie.getText().trim().toUpperCase());
+                    if (!existe){//esta al reves,ver conculta, si existe entonces borra
+                        Baja baja=new Baja();
+                        int borrados=baja.eliminarFisicamente(encCT);
+                        if (borrados>0){
+                            JOptionPane.showMessageDialog(this, "Se elimino correctamente la constancia:" + encCT.getSerieCT()+"-"+encCT.getSerieCT(), "Eliminacion correcta", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                    break;
+        }
+        
+    }
 }

@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import negocios.EntidadExterna;
 import reportes.cExport_thread;
 
@@ -38,6 +39,7 @@ public class UIEntidadesExternas extends javax.swing.JFrame
 	cuadro = this.getSize();
 	this.setLocation(((pantalla.width - cuadro.width)/2), (pantalla.height - cuadro.height)/2);
         this.llenarTabla(new EntidadExterna());
+        this.ajustarColumnas();
     }
     
     /** This method is called from within the constructor to
@@ -297,12 +299,12 @@ public class UIEntidadesExternas extends javax.swing.JFrame
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(4, 4, 4))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jBEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jBImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(4, 4, 4)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -512,8 +514,8 @@ public class UIEntidadesExternas extends javax.swing.JFrame
         while(it.hasNext())
         {
             e = (EntidadExterna)it.next();
-            datos[0] = String.valueOf(e.getIdentidadExterna());
-            datos[1] = e.getNombre();
+            datos[0] = String.valueOf(e.getIdentidadExterna()).trim();
+            datos[1] = e.getNombre().trim();
             modelo.addRow(datos);
         }
     }
@@ -607,5 +609,23 @@ public class UIEntidadesExternas extends javax.swing.JFrame
      private void limpiarCampos(){
         this.jTCodigo.setText("");
         this.jTNombreEntidad1.setText("");        
+     }
+     
+     private void ajustarColumnas()
+     {
+         TableColumn column = null;
+         for (int i = 0; i < 2; i++) 
+        {
+            column = jTable1.getColumnModel().getColumn(i);
+            switch(i)
+            {
+                case 0:
+                        column.setPreferredWidth(15);
+                        break;
+                case 1:
+                        column.setPreferredWidth(241);
+                        break;
+            }
+        }
      }
 }
