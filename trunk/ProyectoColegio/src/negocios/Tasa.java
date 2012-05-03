@@ -18,6 +18,8 @@ public class Tasa {
     private String observacion;
 
     private String existe;
+    
+    private double superficie;
 
     public Tasa () {
     }
@@ -68,6 +70,14 @@ public class Tasa {
 
     public void setTasaMinima (double val) {
         this.tasaMinima = val;
+    }
+
+    public double getSuperficie() {
+        return superficie;
+    }
+
+    public void setSuperficie(double superficie) {
+        this.superficie = superficie;
     }
 
 }

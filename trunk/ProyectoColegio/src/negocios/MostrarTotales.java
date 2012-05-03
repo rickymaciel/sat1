@@ -13,6 +13,9 @@ package negocios;
 public class MostrarTotales 
 {
     private String detalle;
+    private double tasaMinima;
+    private double tasa;
+    private double superficie;
     private double tatal;
     
     public MostrarTotales()
@@ -38,6 +41,36 @@ public class MostrarTotales
     public void setTatal(double tatal)
     {
         this.tatal = tatal;
+    }
+
+    public double getTasaMinima()
+    {
+        return tasaMinima;
+    }
+
+    public void setTasaMinima(double tasaMinima)
+    {
+        this.tasaMinima = tasaMinima;
+    }
+
+    public double getSuperficie()
+    {
+        return superficie;
+    }
+
+    public void setSuperficie(double superficie)
+    {
+        this.superficie = superficie;
+    }
+
+    public double getTasa()
+    {
+        return tasa;
+    }
+
+    public void setTasa(double tasa)
+    {
+        this.tasa = tasa;
     }
 
 }

@@ -13,6 +13,7 @@ public class TasaAplicable extends Tasa
 {
     private int idTasaAplicable;
     private int idTipoConstancia;
+    private String leyenda;
     
     public TasaAplicable()
     {
@@ -33,5 +34,13 @@ public class TasaAplicable extends Tasa
 
     public void setIdTipoConstancia(int idTipoConstancia) {
         this.idTipoConstancia = idTipoConstancia;
+    }
+
+    public String getLeyenda() {
+        return leyenda;
+    }
+
+    public void setLeyenda(String leyenda) {
+        this.leyenda = leyenda;
     }
 }

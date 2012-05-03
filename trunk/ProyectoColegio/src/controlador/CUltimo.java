@@ -5,13 +5,13 @@
 
 package controlador;
 import Datos.Consulta;
-import java.sql.*;
 import java.util.*;
 import negocios.Barrio;
 import negocios.Caja;
 import negocios.CondicionVenta;
 import negocios.Departamento;
 import negocios.DetalleCP;
+import negocios.DetalleCPParaFacturacion;
 import negocios.DetalleCT;
 import negocios.DetallePago;
 import negocios.Documento;
@@ -287,6 +287,13 @@ public class CUltimo {
     {
         Consulta consulta = new Consulta();
         long ultimo = consulta.getIdDetalleCPxSerie(detCP.getSerieCP());
+        return ultimo;     
+    }
+   
+   public long getUltimo(DetalleCPParaFacturacion detalle)
+    {
+        Consulta consulta = new Consulta();
+        long ultimo = consulta.getIdDetalleFacturacionCPxSerie(detalle.getSerieCP());
         return ultimo;     
     }
 

@@ -21,6 +21,7 @@ import negocios.Configuracion;
 import negocios.ConstanciaHabilitacion;
 import negocios.Departamento;
 import negocios.DetalleCP;
+import negocios.DetalleCPParaFacturacion;
 import negocios.DetalleCT;
 import negocios.DetalleFactura;
 import negocios.DetallePago;
@@ -39,6 +40,7 @@ import negocios.Nacionalidad;
 import negocios.PlanoCTotal;
 import negocios.PlanoTasa;
 import negocios.Producto;
+import negocios.ProductoTasa;
 import negocios.Provincia;
 import negocios.Rol;
 import negocios.SerieConstancia;
@@ -59,7 +61,20 @@ public class CAlta {
     public CAlta()
     {
     }
-    
+    public int hacerAlta(ProductoTasa pt)
+    {
+        Alta alta = new Alta();
+        int respuesta = alta.almacenar(pt);
+        if (respuesta == 0)
+        {
+            respuesta = 3;
+        }
+        else{
+            respuesta = 0;
+        }
+        return respuesta;
+    }
+
     public int hacerAlta(EncabezadoPago encp)
     {
         Alta alta = new Alta();
@@ -78,10 +93,13 @@ public class CAlta {
     }
     public int hacerAlta(EncabezadoFactura encf){
         Alta alta = new Alta();
-        Collection co = new ArrayList();
-        long ul = ultimo.getUltimo(encf);
-        encf.setNumeroFactura(ul);
-        int respuesta = alta.almacenar(encf);
+        //Collection co = new ArrayList();
+        
+        //long ul = ultimo.getUltimo(encf);
+        
+        //encf.setNumeroFactura(ul);
+        
+        int respuesta = alta.almacenar(encf);        
         if (respuesta == 0)
         {
             respuesta = 3;
@@ -91,6 +109,7 @@ public class CAlta {
         }
         return respuesta;
     }
+
     public int hacerAlta(DetallePago detp)
     {
         Alta alta = new Alta();
@@ -125,6 +144,7 @@ public class CAlta {
         }
         return respuesta;
     }
+
     
     public int hacerAlta(Documento doc)
     {
@@ -260,6 +280,28 @@ public class CAlta {
         }
         return respuesta;
     }
+    
+    /**
+     * Este metodo lleva a cabo el alta dell detalle de la facturacion para la cp
+     * @param detCP
+     * @return
+     */
+     public int hacerAltaDetalleFacturacionCP(DetalleCPParaFacturacion detCP)
+    {
+        Alta alta = new Alta();
+        long ul = ultimo.getUltimo(detCP);
+        detCP.setIddetalle(Integer.parseInt(String.valueOf(ul)));
+        int respuesta = alta.almacenar(detCP);
+        if (respuesta == 0)
+        {
+            respuesta = 3;
+        }
+        else{
+            respuesta = 0;
+        }
+        return respuesta;
+    }
+
     
     public int hacerAltaDetalleCT(DetalleCT detCT)
     {

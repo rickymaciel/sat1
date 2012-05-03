@@ -21,6 +21,8 @@ public class EncabezadoPago {
     private long seriefactura;
     private long nrofactura;
     private long matricula;
+    private String apellidoMatriculado;
+    private String nombresMatriculado;
         
     public EncabezadoPago()
     {
@@ -91,5 +93,21 @@ public class EncabezadoPago {
     public void setMatricula(long matricula)
     {
         this.matricula = matricula;
+    }
+
+    public String getApellidoMatriculado() {
+        return apellidoMatriculado;
+    }
+
+    public void setApellidoMatriculado(String apellidoMatriculado) {
+        this.apellidoMatriculado = apellidoMatriculado;
+    }
+
+    public String getNombresMatriculado() {
+        return nombresMatriculado;
+    }
+
+    public void setNombresMatriculado(String nombresMatriculado) {
+        this.nombresMatriculado = nombresMatriculado;
     }
 }
