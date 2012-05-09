@@ -7,6 +7,7 @@ package test;
 import Datos.AlumnosSql;
 import java.util.Iterator;
 import dominio.Alumno;
+import vista.UIAsociarProductoAlumnos;
 import vista.UIBuscarAlumnos;
 
 /**
@@ -31,6 +32,9 @@ public class Test
 //        }
         UIBuscarAlumnos ui = new UIBuscarAlumnos();
         ui.setVisible(true);
+        
+//        UIAsociarProductoAlumnos ui= new UIAsociarProductoAlumnos();
+//        ui.setVisible(true);
     }
     
 }

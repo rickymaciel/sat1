@@ -7,15 +7,26 @@ package vista.util;
 import Datos.CarrerasSql;
 import Datos.CuotasSql;
 import Datos.InscripcionesSql;
+import Datos.PagosSql;
 import dominio.Carrera;
 import dominio.Cuota;
+import dominio.DetallePago;
 import dominio.Inscripcion;
+import dominio.Pago;
+import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import negocios.Fecha;
+import negocios.Producto;
+import vista.UISeleccionarProductoAplicable;
 
 /**
  *
@@ -26,16 +37,24 @@ public class UIPagarCuotaAlumnoUtil
     private Collection<Carrera> carreras;
     private Collection<Inscripcion> inscripciones;
     private Collection<Cuota> cuotas;
+    private Collection<Pago> pagos;
     private InscripcionesSql inscripcionesSql = new InscripcionesSql();
     private CarrerasSql carrerasSql = new CarrerasSql();
     private long idAlumno;
+    private Collection<Producto> productos = new ArrayList<Producto>();
+    private JTextField jTextMonto;
+    private JTextField jTextEntregado;
+    private JTextField jTextSaldo;
 
     public UIPagarCuotaAlumnoUtil() 
     {
     }
-    public UIPagarCuotaAlumnoUtil(long idAlumno) 
+    public UIPagarCuotaAlumnoUtil(long idAlumno,JTextField monto, JTextField entregado, JTextField saldo) 
     {
         this.idAlumno = idAlumno;
+        this.jTextMonto = monto;
+        this.jTextEntregado = entregado;
+        this.jTextSaldo = saldo;
     }
     
     public void cargarComboCarreras(JComboBox combo, long idAlumno)
@@ -111,18 +130,6 @@ public class UIPagarCuotaAlumnoUtil
     }
     
         
-//    private int getIdCarrera(String nombre)
-//    {
-//        Carrera c = new Carrera();
-//        while(this.carreras.hasNext())
-//        {
-//            c = this.carreras.next();
-//            if(c.getNombre().trim().toUpperCase().equals(nombre.trim().toUpperCase()))
-//                break;
-//        }
-//        return c.getId();
-//    }
-    
     private int getIdCarrera(String nombre)
     {
         Carrera c = new Carrera();
@@ -155,5 +162,199 @@ public class UIPagarCuotaAlumnoUtil
         return id;
     }
     
+    public void llenarDatosDePago(JTextField monto, JTextField entregado, JTextField saldo, JTextField aPagar, JTable tabla, JLabel mensaje)
+    {
+        PagosSql sql = new PagosSql();
+        this.pagos = sql.getPagosAlumno(Long.parseLong(String.valueOf(tabla.getValueAt(tabla.getSelectedRow(), 0))));
+//        if(!this.verificarProducto())
+//        {
+            UISeleccionarProductoAplicable uiSeleccionar = new UISeleccionarProductoAplicable(this);
+            uiSeleccionar.setVisible(true);
+//        }
+//        else
+//        {
+            monto.setText(String.valueOf(tabla.getValueAt(tabla.getSelectedRow(), 2)));
+            entregado.setText(String.valueOf(tabla.getValueAt(tabla.getSelectedRow(), 3)));
+            saldo.setText(String.valueOf(Double.parseDouble(monto.getText()) - Double.parseDouble(entregado.getText())));
+            aPagar.setText(saldo.getText());
+//        }
+        Fecha f= new Fecha();
+        int dias = f.verficarVencimiento(this.getFechaVencimiento(Long.parseLong(String.valueOf(tabla.getValueAt(tabla.getSelectedRow(), 0)))));
+        if(dias !=0)
+        {
+            mensaje.setForeground(Color.red);
+            mensaje.setText("CUOTA VENCIDA");
+        }
+        else
+        {
+            if(String.valueOf(tabla.getValueAt(tabla.getSelectedRow(), 5)).trim().equals("PAGADO"))
+            {
+                mensaje.setForeground(Color.green);
+                mensaje.setText("CUOTA CANCELADA");
+            }
+            else
+                mensaje.setText("");
+        }
+    }
+    
+    private boolean verificarProducto()
+    {
+        boolean bandera = true;
+        Iterator<Pago> it = this.pagos.iterator();
+        while(it.hasNext())
+        {
+            Pago p = it.next();
+            if(p.getDetalles().isEmpty())
+            {
+                bandera = false;
+                break;
+            }
+        }
+        return bandera;
+    }
+    
+    private double calcularMontoEntregado()
+    {
+        double total =0.0;
+        Iterator<Pago> it = this.pagos.iterator();
+        while(it.hasNext())
+        {
+            Pago p = it.next();
+            total += p.getMonto();
+        }
+        return total;
+    }
+    
+    public void actualizarSaldo(JTextField recargo, JTextField saldo, JTextField aPagar)
+    {
+        saldo.setText(String.valueOf(Double.parseDouble(saldo.getText()) + Double.parseDouble(recargo.getText())));
+        aPagar.setText(saldo.getText());
+    }
+    
+    public void pagarCuota(JTable tabla, JTextField pago)
+    {
+        Pago p = new Pago();
+        p.setSerFactura(0);
+        p.setNumeroFactura(0);
+        p.setFecha(new Date());
+        p.setIdCuota(Long.parseLong(String.valueOf(tabla.getValueAt(tabla.getSelectedRow(), 0))));
+        p.setMonto(Double.parseDouble(pago.getText()));
+        //ahora tengo que guardar el detalle de pago
+        p.setDetalles(this.getDetalle(p));
+        //ahora tengo que ver si es necesario actualizar el valor del campo "monto" en cuotas
+        if(Double.parseDouble(String.valueOf(tabla.getValueAt(tabla.getSelectedRow(), 2))) == 0)
+        {
+            //actualizo el campo monto
+            Cuota c = this.getCuota(Long.parseLong(String.valueOf(tabla.getValueAt(tabla.getSelectedRow(), 0))));
+            c.setMonto(Double.parseDouble(this.jTextMonto.getText()));
+            CuotasSql sqlCuotas = new CuotasSql();
+            sqlCuotas.modificarCuota(c);
+        }
+        PagosSql sql = new PagosSql();
+        sql.guardarPago(p);
+    }
+    
+    private Cuota getCuota(long idCuota)
+    {
+        Cuota c = null;
+        Iterator<Cuota> it = this.cuotas.iterator();
+        while(it.hasNext())
+        {
+            Cuota cu = it.next();
+            if(cu.getId() == idCuota)
+            {
+                c = cu;
+                break;
+            }
+        }
+        return c;
+    }
+    
+    private Collection<DetallePago> getDetalle(Pago pa)
+    {
+        Collection<DetallePago> detalles = new ArrayList<DetallePago>();
+        Iterator<Producto> it = this.productos.iterator();
+        while(it.hasNext())
+        {
+            Producto p = it.next();
+            DetallePago d = new DetallePago();
+            d.setProducto(p);
+            d.setIdPago(pa.getIdPago());
+            detalles.add(d);
+        }
+        return detalles;
+    }
+    
+    
+    
+    private Date getFechaVencimiento(long idCuota)
+    {
+        Date fecha = null;
+        Iterator<Cuota> it = this.cuotas.iterator();
+        while(it.hasNext())
+        {
+            Cuota c = it.next();
+            if(c.getId() == idCuota)
+            {
+                fecha = c.getPeriodo();
+                break;
+            }
+        }
+        return fecha;
+    }
+    
+//    public void setProducto(Producto p)
+//    {
+//        this.producto = p;
+//    }
+
+    public JTextField getjTextEntregado() {
+        return jTextEntregado;
+    }
+
+    public void setjTextEntregado(JTextField jTextEntregado) {
+        this.jTextEntregado = jTextEntregado;
+    }
+
+    public JTextField getjTextMonto() {
+        return jTextMonto;
+    }
+
+    public void setjTextMonto(JTextField jTextMonto) {
+        this.jTextMonto = jTextMonto;
+    }
+
+    public JTextField getjTextSaldo() {
+        return jTextSaldo;
+    }
+
+    public void setjTextSaldo(JTextField jTextSaldo) {
+        this.jTextSaldo = jTextSaldo;
+    }
+    
+    
+    public void aplicarProducto(Producto p)
+    {
+        this.productos.add(p);
+        this.recalcularSaldo();
+    }
+    
+    private void recalcularSaldo()
+    {
+        double saldo = 0.0;
+        Iterator<Producto> it = this.productos.iterator();
+        boolean bandera = true;
+        while(it.hasNext())
+        {
+            Producto p = it.next();
+            saldo += p.getPrecio();
+            if(bandera)
+            {
+                this.jTextMonto.setText(String.valueOf(p.getPrecio()));
+                bandera = false;
+            }
+        }
+        this.jTextSaldo.setText(String.valueOf(saldo));
+    }
     
 }

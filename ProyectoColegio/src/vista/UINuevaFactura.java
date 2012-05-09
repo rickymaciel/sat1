@@ -6,11 +6,17 @@
 
 package vista;
 
+import Datos.AlumnosSql;
 import Datos.Consulta;
+import Datos.CuotasSql;
 import Datos.Modificacion;
+import Datos.PagosSql;
 import controlador.CFacturacion;
 import controlador.CListar;
 import controlador.CUltimo;
+import dominio.Alumno;
+import dominio.Cuota;
+import dominio.Pago;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -23,6 +29,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -55,10 +62,13 @@ public class UINuevaFactura extends javax.swing.JFrame {
     private Usuario usuario=new Usuario();
     private Caja caja=new Caja();
     private Matriculado matriculado=new Matriculado();
+    private Alumno alumno = new Alumno();
     //maRCELIN****
     private Collection constanciasParciales = new ArrayList();
     private Collection constanciasTotales = new ArrayList();
     private Collection tasasSeleccionadas = new ArrayList();
+    private Collection<Pago> cuotasAlumnos = new ArrayList<Pago>();
+    private Collection<Pago> cuotasAlumnosFacturadas = new ArrayList<Pago>();
     private Collection series = new ArrayList();
     private Boolean nroAutomatico=false;
     
@@ -660,6 +670,14 @@ public class UINuevaFactura extends javax.swing.JFrame {
         if(evt.getKeyCode()==27)
             this.dispose();
         if(evt.getKeyChar()==10 && numeroCorrecto)
+            if (JOptionPane.showConfirmDialog(new JFrame(),"¿Desea buscar un matriculado?", "Buscar Matriculado", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+                this.buscarMatriculado();    
+            else
+                this.buscarAlumno();
+
+            
+            
+            
             this.buscarMatriculado();    
     }//GEN-LAST:event_jTMatriculaKeyPressed
 
@@ -1589,6 +1607,33 @@ private void jTNumeroFacturaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST
         this.constanciasParciales = this.mostrarConstanciasParciales(listar);
         this.constanciasTotales = this.mostrarConstanciasTotales(listar);
         this.cuotas = this.mostrarCuotas(listar);
+        this.cuotasAlumnos = this.mostrarCuotasAlumnos();
+    }
+    
+    private Collection<Pago> mostrarCuotasAlumnos()
+    {
+        PagosSql sql = new PagosSql();
+        Collection<Pago> co = sql.getPagosAFacturar();
+        Iterator<Pago> it = co.iterator();
+        DefaultTableModel modelo = (DefaultTableModel)this.jTable2.getModel();
+        String datos[] = new String[4];
+        datos[0] = "CA";
+        while(it.hasNext())
+        {
+            Pago p = it.next();
+            datos[1] = String.valueOf(p.getIdCuota());
+            datos[2] = String.valueOf(p.getIdPago());
+            datos[3] = this.getDni(p.getIdCuota());
+            modelo.addRow(datos);
+        }
+        return co;
+    }
+    
+    private String getDni(long idCuota)
+    {
+        long dni = 0;
+        CuotasSql sql = new CuotasSql();
+        return sql.getDni(idCuota);
     }
     
     private Collection mostrarConstanciasParciales(CListar listar)
@@ -1912,104 +1957,6 @@ private void jTNumeroFacturaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST
         else
                 JOptionPane.showMessageDialog(null, "No se pueden agregar el documento a la factura", "El doc supera las lineas disponibles",JOptionPane.ERROR_MESSAGE);
     }
-
-
-//    private void facturarCP(Collection detalle, CListar listar, Collection tasas, int fila)
-//    {
-//        int filas = 0;
-//        EncabezadoCP encCP = new EncabezadoCP();
-//        encCP = this.getEncabezadoCP(Long.parseLong(String.valueOf(this.jTable2.getValueAt(fila, 2))));
-//        DetalleCP de = new DetalleCP();
-//            de.setCodigoCP(encCP.getCodigoCP());
-//            de.setSerieCP(encCP.getSerieCP());
-//            detalle = listar.hacerListadoDetalleCP(de);
-//            tasas = listar.armarDetalleFactura(encCP.getSerieCP(), String.valueOf(encCP.getCodigoCP()), "CP");
-//            filas = this.jTableDetalleFactura.getRowCount();
-//            if((18-filas) >= tasas.size()) // aqui controlo que el detalle entre en la grilla (Que no supere las 18 lineas)
-//            {
-//                
-//                de = null;
-//                Iterator it = detalle.iterator();
-//                double superficieRelevamiento = 0.0;
-//                double superficieProyecto = 0.0;
-//                double superficieCambioTecho = 0.0;
-//                StringBuffer det = new StringBuffer(); // contienen el detalle de la factura
-//                det.append("CP:");
-//                det.append(encCP.getSerieCP());
-//                det.append("-");
-//                det.append(encCP.getCodigoCP());
-//                det.append(" - MAT:");
-//                det.append(encCP.getMatriculado().getMatricula());
-//                // aqui solo se suman las superficies de los tipos de trabajo
-//                while(it.hasNext())
-//                {
-//                    DetalleCP d = (DetalleCP)it.next();
-//                    if(d.getTipoTrabajo().getNombre().trim().equals("RELEVAMIENTO"))
-//                        superficieRelevamiento += d.getSuperficie();
-//                    else
-//                        if(d.getTipoTrabajo().getNombre().trim().equals("PROYECTO"))
-//                            superficieProyecto += d.getSuperficie();
-//                        else
-//                            if(d.getTipoTrabajo().getNombre().trim().equals("CAMBIO DE TECHO"))
-//                                superficieCambioTecho += d.getSuperficie();
-//                    d=null;
-//                }
-//            // ya tengo los valores de superficie, ahora armo el detalle
-//                it = null;
-//                Iterator i = tasas.iterator();
-//                double indiceRelevamiento = 0.0; // tiene el valor en pesos 
-//                //double tasaMinimaCalculo = 0.0;
-//                double indiceConduccion = 0.0; // tiene el valor en pesos
-//                double indiceCalculo = 0.0; // tiene la suma de indices
-//                double indiceCambioTecho = 0.0;
-//            // ahora es cuando se realiza el calculo
-//                while(i.hasNext())
-//                {
-//                    Tasa t = (Tasa)i.next();
-//                    Producto producto = new Producto();
-//                    producto = listar.listar(t);
-//                    DetalleFactura detalleFactura = new DetalleFactura();
-//                    if(t.getDenominacion().trim().equals("RELEVAMIENTO"))
-//                    {
-//                        indiceRelevamiento = superficieRelevamiento * t.getIndice();
-//                        if(indiceRelevamiento < t.getTasaMinima())
-//                            indiceRelevamiento = t.getTasaMinima();
-//                        detalleFactura = this.llenarDetalleFactura(detalleFactura, det, indiceRelevamiento, producto);
-//                    }
-//                    else    
-//                        if(t.getDenominacion().trim().equals("CONDUCCION TECNICA"))
-//                        {
-//                            indiceConduccion = superficieProyecto * t.getIndice();
-//                            if(indiceConduccion < t.getTasaMinima())
-//                                indiceConduccion = t.getTasaMinima();
-//                            detalleFactura = this.llenarDetalleFactura(detalleFactura, det, indiceConduccion, producto);
-//                        }
-//                        else
-//                            if(t.getDenominacion().trim().equals("CAMBIO DE TECHO"))
-//                            {
-//                                indiceCambioTecho = superficieCambioTecho * t.getIndice();
-//                                if(indiceCambioTecho < t.getTasaMinima())
-//                                    indiceCambioTecho = t.getTasaMinima();
-//                                detalleFactura = this.llenarDetalleFactura(detalleFactura, det, indiceCambioTecho, producto);
-//                            }
-//                            else
-//                            {
-//                                indiceCalculo = superficieProyecto * t.getIndice();
-//                                if(indiceCalculo < t.getTasaMinima())
-//                                    indiceCalculo = t.getTasaMinima();
-//                                detalleFactura = this.llenarDetalleFactura(detalleFactura, det, indiceCalculo, producto);
-//                            }
-//                    t = null;
-//                // aqui tengo que pasarle el objeto detalleFactura al metodo que se encarga de agregarlo a la grilla
-//                    this.agregarLineaDetalle(detalleFactura);
-//                    producto = null;
-//                    detalleFactura = null;
-//                }
-//                this.bloquedas.add(fila);
-//            }
-//            else
-//                JOptionPane.showMessageDialog(null, "No se pueden agregar el documento a la factura", "El doc supera las lineas disponibles",JOptionPane.ERROR_MESSAGE);
-//    }
     
     private void facturarCuota(CListar listar, int fila)
     {
@@ -2098,6 +2045,110 @@ private void jTNumeroFacturaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST
         }
     }
     
+//    private void facturarCuotaAlumno(int fila)
+//    {
+//        if((18-this.jTableDetalleFactura.getRowCount()) == 0)
+//            JOptionPane.showMessageDialog(this, "No se pueden agregar el documento a la factura", "El doc supera las lineas disponibles",JOptionPane.ERROR_MESSAGE);
+//        else
+//        {
+//            //obtener el pago a realizar
+//            Pago p = this.facturarCuota(Long.parseLong(String.valueOf(this.jTable2.getValueAt(this.jTable2.getSelectedRow(), 2))));
+//            DetalleFactura detalleFactura2 = new DetalleFactura();
+//            detalleFactura2.setCantidad(1);
+//            detalleFactura2.setDetalle("");
+//            detalleFactura2.setSubTotal(p.getMonto());
+//            Producto prod2 = new Producto();                                       
+//            prod2 = this.getProducto(Integer.parseInt(String.valueOf(d.getIdproducto()).trim()), listar);
+//            prod2.setPrecio(d.getImporte());
+//            detalleFactura2.setProducto(prod2);
+//            this.agregarLineaDetalle(detalleFactura2);
+//            
+//            
+//            // obtener las cuotas a pagar de la linea seleccionada
+//            boolean bandera = true;
+//            int anioBase = 0;
+//            Collection vCuotas = new ArrayList();
+//            DetalleFactura detalleFactura = new DetalleFactura();
+//            
+//            
+//            DetallePago detallePago = new DetallePago();
+//            EncabezadoPago encPago = new EncabezadoPago();
+//            encPago = this.getEncabezadoPago(Long.parseLong(String.valueOf(this.jTable2.getValueAt(fila, 2))));
+//            // ya tengo el objeto encabezado Pago
+//            detallePago.setIdencabezadopago(encPago.getIdencabezado());
+//            
+//            GregorianCalendar fec = new GregorianCalendar();
+//            fec.setGregorianChange(encPago.getFechapago());
+//            detallePago.setAnio(fec.get(Calendar.YEAR));
+//            
+//            Consulta con=new Consulta();
+//            vCuotas = con.getDetallePago(detallePago.getIdencabezadopago());
+//            //-----
+//            Iterator it = vCuotas.iterator();
+//            StringBuffer detalleFac = new StringBuffer();
+//            double importe = 0.0;
+//            while(it.hasNext()){
+//                DetallePago d = (DetallePago)it.next();
+//                
+//                //---
+//                if (d.getIdproducto()==Integer.parseInt(this.reinscripcion)||d.getIdproducto()==Integer.parseInt(this.inscripcion)||d.getIdproducto()==Integer.parseInt(this.reinscripcion2vez)){
+//                    detalleFactura2.setCantidad(1);
+//                    detalleFactura2.setDetalle("");
+//                    detalleFactura2.setSubTotal(importe);
+//                    Producto prod2 = new Producto();                                       
+//                    prod2 = this.getProducto(Integer.parseInt(String.valueOf(d.getIdproducto()).trim()), listar);
+//                    prod2.setPrecio(d.getImporte());
+//                    detalleFactura2.setProducto(prod2);
+//                    this.agregarLineaDetalle(detalleFactura2);
+//                }
+//                //---
+//                
+//                
+//                if (d.getIdproducto()==Integer.parseInt(this.pagoMatricula)){ //--------
+//                    if(bandera){
+//                        bandera = false;
+//                        anioBase = d.getAnio();
+//                        detalleFac.append("CU:"+d.getIdencabezadopago()+":"+encPago.getMatricula()+"-");
+//                 
+//                        detalleFac.append(anioBase);
+//                        detalleFac.append(":");
+//                        detallePago.setIdproducto(d.getIdproducto());
+//                    }else {
+//                        if(anioBase != d.getAnio()){
+//                            detalleFac.append(";");
+//                            detalleFac.append(d.getAnio());
+//                            detalleFac.append(":");
+//                            anioBase = d.getAnio();
+//                        }else
+//                            detalleFac.append(",");
+//                    }
+//                    detalleFac.append(this.getMes(d.getMes()));                
+//                    importe = importe + d.getImporte();
+//                    d = null;
+//                    
+//                } //--------
+//            }
+//            
+//            detalleFactura.setCantidad(1);
+//            detalleFactura.setDetalle(detalleFac.toString());
+//            detalleFactura.setSubTotal(importe);
+//            
+//            Producto prod = new Producto();
+//            prod = this.getProducto(Integer.parseInt(String.valueOf(detallePago.getIdproducto())), listar);
+//            prod.setPrecio(importe);
+//            detalleFactura.setProducto(prod);
+//            this.agregarLineaDetalle(detalleFactura);
+//            
+//            
+//            it = null;
+//            this.bloquedas.add(fila);
+//        }
+//    }
+
+
+    
+    
+    
     
     private Producto getProducto(int id, CListar listar)
     {
@@ -2161,13 +2212,17 @@ private void facturar(int fila)
 {
         Collection tasas = new ArrayList();
         CListar listar = new CListar();
-        if(String.valueOf(this.jTable2.getValueAt(fila, 0)).equals("CP"))
+        String doc = String.valueOf(this.jTable2.getValueAt(fila, 0));
+        if(doc.equals("CP"))
             this.facturarCP(fila);
         else
-            if(String.valueOf(this.jTable2.getValueAt(fila, 0)).equals("CT"))
+            if(doc.equals("CT"))
                 this.facturarCT(listar, tasas, fila);
             else
-                this.facturarCuota(listar, fila);
+                if(doc.equals("CA"))
+                    System.out.println();
+                else        
+                    this.facturarCuota(listar, fila);
 
         //JORGE**************************************************************            
         //ESTA LINEA LA AGREGUE PARA IDENTIFICAR LA FILA
@@ -2327,6 +2382,7 @@ private void actualizarDocumentos()
     private void actualizar(){
         this.constanciasParciales.clear();
         this.constanciasTotales.clear();
+        this.cuotasAlumnos.clear();
         this.cuotas.clear();
         if(this.jTableDetalleFactura.getRowCount() == 0)
             this.bloquedas.clear();
@@ -2365,5 +2421,32 @@ private void actualizarDocumentos()
                         break;
             }
         }
+    }
+    
+    private void buscarAlumno()
+    {
+        AlumnosSql sql = new AlumnosSql();
+        this.alumno = sql.getAlumno(Long.parseLong(this.jTMatricula.getText()));
+        if(alumno != null)
+        {
+            this.jLNombreMatriculado.setText(this.alumno.getApellido().trim()+", "+this.alumno.getNombres().trim());
+        }
+    }
+    
+    private Pago facturarCuota(long idPago)
+    {
+        Iterator<Pago> it = this.cuotasAlumnos.iterator();
+        Pago pago = null;
+        while(it.hasNext())
+        {
+            Pago p = it.next();
+            if(p.getIdPago() == idPago)
+            {
+                this.cuotasAlumnosFacturadas.add(p);
+                pago = p;
+                break;
+            }
+        }
+        return pago;
     }
 }

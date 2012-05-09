@@ -4,7 +4,9 @@
  */
 package dominio;
 
+import java.util.Collection;
 import java.util.Date;
+import negocios.Producto;
 
 /**
  *
@@ -21,7 +23,10 @@ public class Cuota
     private int serieFactura;
     private long numeroFactura;
     private boolean cuota;
+    private Collection <Pago> pagos;
     private Pago pago;
+    private Producto producto;
+    
 
     public Cuota() {
     }
@@ -98,6 +103,22 @@ public class Cuota
         this.serieFactura = serieFactura;
     }
 
+    public Collection<Pago> getPagos() {
+        return pagos;
+    }
+
+    public void setPago(Collection<Pago> pagos) {
+        this.pagos = pagos;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
     public Pago getPago() {
         return pago;
     }
@@ -105,6 +126,7 @@ public class Cuota
     public void setPago(Pago pago) {
         this.pago = pago;
     }
+
     
     
 }

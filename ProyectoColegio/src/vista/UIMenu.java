@@ -107,6 +107,7 @@ public class UIMenu extends javax.swing.JFrame
         jMenuNuevoIva = new javax.swing.JMenuItem();
         jMenuNuevocondicionVenta = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItemRelacionarProductos = new javax.swing.JMenuItem();
         jMenuUsuarios = new javax.swing.JMenu();
         jMenuNuevoUsuario = new javax.swing.JMenuItem();
         jMenuModificarUSuario = new javax.swing.JMenuItem();
@@ -537,6 +538,14 @@ public class UIMenu extends javax.swing.JFrame
             }
         });
         jMenuConfiguraciones.add(jMenuItem3);
+
+        jMenuItemRelacionarProductos.setText("Relacionar Productos...");
+        jMenuItemRelacionarProductos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemRelacionarProductosActionPerformed(evt);
+            }
+        });
+        jMenuConfiguraciones.add(jMenuItemRelacionarProductos);
 
         jMenuBar1.add(jMenuConfiguraciones);
 
@@ -1031,6 +1040,12 @@ private void jMenuAcercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     UIAcercaDe vAcerca=new UIAcercaDe();
     vAcerca.setVisible(true);
 }//GEN-LAST:event_jMenuAcercaDeActionPerformed
+
+    private void jMenuItemRelacionarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRelacionarProductosActionPerformed
+        // TODO add your handling code here:
+        UIAsociarProductoAlumnos relacionarProductos = new UIAsociarProductoAlumnos();
+        relacionarProductos.setVisible(true);
+    }//GEN-LAST:event_jMenuItemRelacionarProductosActionPerformed
       private void borrarArchivosBackup(){      
             try{        
                 String linea = "cmd.exe /K start \\\\192.168.1.3\\\\temp\\\\bd\\\\borrarbackup.bat";
@@ -1091,6 +1106,7 @@ private void jMenuAcercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItemRelacionarProductos;
     private javax.swing.JMenu jMenuLegajos;
     private javax.swing.JMenuItem jMenuListar;
     private javax.swing.JMenuItem jMenuListarCajas;

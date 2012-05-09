@@ -9,6 +9,11 @@
 
 package negocios;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  *
  * @author marcelo gonzalez
@@ -143,6 +148,57 @@ public class Fecha
                     break;
         }
         return devolver;
+    }
+    
+    public int verficarVencimiento(Date fecha)
+    {
+        int dias = 0;
+        Date hoy = new Date();
+        if(hoy.compareTo(fecha)>0)
+        {
+            dias = (int)this.restarFechas(hoy, fecha);
+        }
+        return dias;
+    }
+    
+    private double restarFechas(Date fechaInicial, Date fechaFinal)
+    {
+        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        String fechaInicioString = df.format(fechaInicial);
+        try {
+        fechaInicial = df.parse(fechaInicioString);
+        }
+        catch (ParseException ex) {
+        }
+
+        String fechaFinalString = df.format(fechaFinal);
+        try {
+        fechaFinal = df.parse(fechaFinalString);
+        }
+        catch (ParseException ex) 
+        {
+        }
+
+        long fechaInicialMs = fechaInicial.getTime();
+        long fechaFinalMs = fechaFinal.getTime();
+        long diferencia = fechaFinalMs - fechaInicialMs;
+        double dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+        return dias;
+    }
+    
+    public Date convertirStringEnDate(String fechaStr)
+    {
+        SimpleDateFormat formatoDelTexto = new SimpleDateFormat("yyyy-MM-dd");
+        Date fecha = null;
+         try 
+         {
+            fecha = formatoDelTexto.parse(fechaStr);
+        } catch (ParseException ex) {
+
+         ex.printStackTrace();
+
+        }
+         return fecha;
     }
     
 }
