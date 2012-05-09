@@ -4,6 +4,7 @@
  */
 package dominio;
 
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -19,6 +20,7 @@ public class Pago
     private Date fecha;
     private int serFactura;
     private long numeroFactura;
+    private Collection<DetallePago> detalles;
 
     public Pago() {
     }
@@ -70,7 +72,13 @@ public class Pago
     public void setSerFactura(int serFactura) {
         this.serFactura = serFactura;
     }
-    
-    
+
+    public Collection<DetallePago> getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(Collection<DetallePago> detalles) {
+        this.detalles = detalles;
+    }
     
 }
